@@ -1,12 +1,14 @@
 import React from 'react'
 import { useState } from 'react';
 import { NavLink } from 'react-router';
+import useAuthStore from '../stores/use-auth-store';
 
 function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
+    const {userLogged} = useAuthStore();
   return (
     <div className=" text-white font-bold py-4 fixed top-0 left-0 w-full z-50 shadow">
-    <nav className="container mx-auto flex justify-between items-center h-10">
+    <nav className="container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
       {/* Logo o nombre de la marca */}
       <div className="h-16 flex items-center ml-5">
         <NavLink to="/">
@@ -70,13 +72,13 @@ function NavBar() {
         <li>
           <NavLink
             to="/about"
-            className="hover:text-[#797777] block md:inline-block py-2 md:py-0 mr-5"
+            className="hover:text-[#797777] block md:inline-block py-2 md:py-0 "
             activeClassName="text-blue-500"
           >
             Sobre nosotros
           </NavLink>
         </li>
-        {/* {!userLooged && 
+        {!userLogged && 
         <li>
           <NavLink
             to="/login"
@@ -87,16 +89,16 @@ function NavBar() {
           </NavLink>
         </li>
         }
-        {userLooged && (
+        {userLogged && (
           <li>
             <button
-              onClick={handleLogout}
+              // onClick={handleLogout}
               className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             >
               Log Out
             </button>
           </li>
-        )} */}
+        )}
        
       </ul>
     </nav>
