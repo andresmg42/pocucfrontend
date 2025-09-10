@@ -10,16 +10,17 @@ const {
 
 const handleGoogleLogin=async ()=>{
   try{
-    await loginGooglePopUp();
+    const res=await loginGooglePopUp();
     
-
-    if (userLogged){
-       const {displayName,email}=userLogged
-       const res= await api.post('/observer/create/',{name:displayName,email:email})
-       console.log(res.data)
+    // console.log('respuesta en handleGoogleLogin:',res)
+    if (res.user){
+       const {displayName,email}=res.user
+       const resback= await api.post('/observer/create/',{name:displayName,email:email})
+      //  console.log(resback.data)
+       localStorage.setItem('user_id',resback.data.user.id)
     }
     else{
-      console.log('el usuario no esta logeado')
+      console.log('the user is not loged')
     }    
    
   }

@@ -5,7 +5,12 @@ import useAuthStore from '../stores/use-auth-store';
 
 function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
-    const {userLogged} = useAuthStore();
+    const {userLogged,logout} = useAuthStore();
+
+  const handleLogout = ()=>{
+    logout()
+  }
+
   return (
     <div className=" text-white font-bold py-4 fixed top-0 left-0 w-full z-50 shadow">
     <nav className="container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
@@ -92,7 +97,7 @@ function NavBar() {
         {userLogged && (
           <li>
             <button
-              // onClick={handleLogout}
+              onClick={handleLogout}
               className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             >
               Log Out

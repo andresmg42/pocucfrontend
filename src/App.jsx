@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "./home/Home.jsx";
 import Login from "./session/Login.jsx";
 import Layout from "./layout/Layout.jsx";
+import SurveySession from "./pages/survey_sessions/SurveySession.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route index path="/" element={<Home />}></Route>
           <Route index path="login/" element={<Login />}></Route>
+          <Route index path="surveysession/:id" element={<SurveySession />}></Route>
         </Routes>
       </Layout>
     </BrowserRouter>
