@@ -1,12 +1,14 @@
 import React from 'react'
 import SessionList from '../../components/surveysession/SessionList'
 import { useParams } from 'react-router'
+import CreateSession from '../../components/surveysession/CreateSession'
 
 const SurveySession = () => {
     const {id} =useParams();
   return (
     <div>
-        <SessionList survey_id={id}/>
+      <CreateSession survey_id={id}/>
+        {/* <SessionList survey_id={id}/> */}
     </div>
   )
 }
