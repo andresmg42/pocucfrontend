@@ -1,0 +1,29 @@
+<!-- red "Add" button SVG (48x48 default) -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="48" height="48" viewBox="0 0 48 48"
+     role="button" tabindex="0" aria-label="Add item"
+     onkeydown="if(event.key==='Enter' || event.key===' ') this.click()"
+     style="cursor:pointer; user-select:none;">
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- red circular background with subtle shadow -->
+  <circle cx="24" cy="24" r="20" fill="#e53935" filter="url(#shadow)"/>
+
+  <!-- white plus sign -->
+  <g transform="translate(24,24)">
+    <rect x="-10" y="-2.5" width="20" height="5" rx="2" fill="#fff"/>
+    <rect x="-2.5" y="-10" width="5" height="20" rx="2" fill="#fff"/>
+  </g>
+
+  <!-- focus ring (visually appears when used inside an HTML document and focused) -->
+  <style>
+    svg:focus { outline: none; }
+    svg:focus circle { stroke: #fff3; stroke-width: 3; }
+    svg:hover circle { transform-origin: 24px 24px; transform: scale(1.03); }
+    svg:active circle { transform-origin: 24px 24px; transform: scale(0.98); }
+  </style>
+</svg>

@@ -1,12 +1,13 @@
-import React from "react";
 import { useState } from "react";
 import api from "../../api/user.api";
 import useAuthStore from "../../stores/use-auth-store";
+import usePageStore from "../../stores/use-page-store";
+import toast from "react-hot-toast";
 
 const CreateSession = ({survey_id}) => {
 
-  const{userLogged}=useAuthStore();
-
+  const {userLogged}=useAuthStore();
+  const {setAddTrigger,addTrigger}=usePageStore();
   const [formData, setFormData] = useState({
     zone: "",
     number_session: "",
@@ -35,6 +36,13 @@ const CreateSession = ({survey_id}) => {
     try {
         setLoading(true)
         const res= await api.post('surveysession/create/',formData)
+
+        if (res.status=200){
+          
+          setAddTrigger(!addTrigger)
+          toast.success('Sesión creada exitosamente!')
+
+        }
         console.log('response in handle submit:',res)
         
     } catch (error) {
@@ -49,9 +57,20 @@ const CreateSession = ({survey_id}) => {
 
  }
 
+ const handleCloseClick =(e)=>{
+  e.preventDefault();
+  setAddTrigger(!addTrigger)
+ }
+
+
   return (
     <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <div className="w-full h-10 flex justify-end">
+        <button onClick={handleCloseClick}>
+          <img src="/surveysession/closebutton.svg" alt="closebutton" className="w-10 h-10"  />
+        </button>
+        </div>
         <div className="text-center">
           {/* {error && <Error error={error} />} */}
           <h2 className="mt-6 text-3xl font-bold text-gray-900">

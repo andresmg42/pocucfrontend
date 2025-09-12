@@ -7,9 +7,11 @@ import Home from "./home/Home.jsx";
 import Login from "./session/Login.jsx";
 import Layout from "./layout/Layout.jsx";
 import SurveySession from "./pages/survey_sessions/SurveySession.jsx";
+import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <BrowserRouter>
+      <Toaster/>
       <Layout>
         <Routes>
           <Route index path="/" element={<Home />}></Route>
