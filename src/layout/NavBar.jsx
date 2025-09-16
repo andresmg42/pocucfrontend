@@ -15,8 +15,8 @@ function NavBar() {
   }
 
   return (
-    <div className=" text-white font-bold py-4 fixed top-0 left-0 w-full z-50 shadow">
-    <nav className="container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
+    <div className=" text-white font-bold py-4 fixed top-0 left-0 w-full  shadow">
+    <nav className="  container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
       {/* Logo o nombre de la marca */}
       <div className="h-16 flex items-center ml-5">
         <NavLink to="/">

@@ -11,5 +11,6 @@ body {
     font-family: 'Arial', sans-serif; /* Ajusta la tipografía */
     height: 100%;
     padding:0;
+    padding-top: 72px;
 
 }
