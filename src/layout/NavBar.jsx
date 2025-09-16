@@ -2,13 +2,16 @@ import React from 'react'
 import { useState } from 'react';
 import { NavLink } from 'react-router';
 import useAuthStore from '../stores/use-auth-store';
+import { useNavigate } from 'react-router';
 
 function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
     const {userLogged,logout} = useAuthStore();
+    const navigate=useNavigate();
 
   const handleLogout = ()=>{
     logout()
+    navigate('/login')
   }
 
   return (

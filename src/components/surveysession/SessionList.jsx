@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import api from '../../api/user.api'
 import useAuthStore from '../../stores/use-auth-store'
+import { useNavigate } from 'react-router'
 
 const SessionList = ({survey_id}) => {
+
+   const navigate=useNavigate();
 
     const [sessions,setSessions]=useState([])
     
@@ -38,6 +41,14 @@ const SessionList = ({survey_id}) => {
     if (loading){
       return <div className="text-center p-10 text-white">Loading users...</div>;
     }
+
+    const handleRowClick=(session_id)=>{
+
+      navigate(`visits/${session_id}`)
+
+    }
+
+
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">
@@ -61,7 +72,9 @@ const SessionList = ({survey_id}) => {
           </thead>
           <tbody>
             {sessions.map((session) => (
-              <tr key={session.id} className="bg-white border-b hover:bg-gray-100">
+              <tr 
+              onClick={()=>handleRowClick(session.id)}
+              key={session.id} className="bg-white border-b hover:bg-gray-100">
                 {/* ID is bolded to make it stand out */}
                 <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
                   {session.id}

@@ -7,6 +7,8 @@ const usePageStore=create((set)=>({
         setAddTrigger:(boolean)=>set({addTrigger:boolean}),
         addTriggerVisit:true,
         setAddTriggerVisit:(boolean)=>set({addTriggerVisit:boolean}),
+        visitTrigger:true,
+        setVisitTrigger:(boolean)=>set({visitTrigger:boolean}),
     }));
 
 export default usePageStore;

@@ -1,5 +1,6 @@
 import useAuthStore from "../stores/use-auth-store";
 import api from "../api/user.api";
+import { useNavigate } from "react-router";
 
 function Login() {
 
@@ -8,16 +9,18 @@ const {
   userLogged
 }=useAuthStore();
 
+const navigate=useNavigate();
+
 const handleGoogleLogin=async ()=>{
   try{
     const res=await loginGooglePopUp();
     
-    // console.log('respuesta en handleGoogleLogin:',res)
+    
     if (res.user){
        const {displayName,email}=res.user
        const resback= await api.post('/observer/create/',{name:displayName,email:email})
-      //  console.log(resback.data)
        localStorage.setItem('user_id',resback.data.user.id)
+       navigate('/')
     }
     else{
       console.log('the user is not loged')
@@ -49,7 +52,7 @@ const handleGoogleLogin=async ()=>{
           className="flex mx-auto items-center justify-center px-6 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200"
           onClick={handleGoogleLogin}
         >
-          <img src="logo/google.svg" alt="Google" className="w-5 h-5 mr-2" />
+          <img src="/logo/google.svg" alt="Google" className="w-5 h-5 mr-2" />
           Iniciar secion con Google
         </button>
       </div>
