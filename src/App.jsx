@@ -9,6 +9,7 @@ import Layout from "./layout/Layout.jsx";
 import SurveySession from "./pages/survey_sessions/SurveySession.jsx";
 import { Toaster } from "react-hot-toast";
 import Visits from "./pages/visits/Visits.jsx";
+import Form from "./pages/survey/Form.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +20,7 @@ function App() {
           <Route index path="login/" element={<Login />}></Route>
           <Route index path="surveysession/:id" element={<SurveySession />}></Route>
           <Route index path="surveysession/:id/visits/:id" element={<Visits />}></Route>
+          <Route index path="surveysession/:id/visits/:id/form/:id" element={<Form />}></Route>
           
         </Routes>
       </Layout>
