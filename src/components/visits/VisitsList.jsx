@@ -43,7 +43,7 @@ const VisitsList = ({surveysession_id}) => {
 
     const handleClickRow= ()=>{
        console.log('este es el surveysession_id',surveysession_id)
-        navigate(`form/${surveysession_id}`)
+        navigate(`categories/${surveysession_id}`)
 
 
     }

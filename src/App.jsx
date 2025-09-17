@@ -10,6 +10,7 @@ import SurveySession from "./pages/survey_sessions/SurveySession.jsx";
 import { Toaster } from "react-hot-toast";
 import Visits from "./pages/visits/Visits.jsx";
 import Form from "./pages/survey/Form.jsx";
+import Category from "./pages/categories/Category.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -20,7 +21,8 @@ function App() {
           <Route index path="login/" element={<Login />}></Route>
           <Route index path="surveysession/:id" element={<SurveySession />}></Route>
           <Route index path="surveysession/:id/visits/:id" element={<Visits />}></Route>
-          <Route index path="surveysession/:id/visits/:id/form/:id" element={<Form />}></Route>
+          <Route index path="surveysession/:id/visits/:id/categories/:id/form/:category_id/:surveysession_id" element={<Form />}></Route>
+          <Route index path="surveysession/:id/visits/:id/categories/:id" element={<Category />}></Route>
           
         </Routes>
       </Layout>

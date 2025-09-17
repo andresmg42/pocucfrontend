@@ -6,17 +6,17 @@ import { useState } from 'react';
 
 const Form = () => {
 
-  const {id}=useParams();
+  const {category_id,surveysession_id}=useParams();
   const [questions,setQuestions]=useState([])
 
   useEffect(()=>{
 
     async function getSurveyQuestions(){
       try {
-        console.log('survey_question_id in form',id)
-        const res= await api.get(`survey/get_survey/?surveysession_id=${id}`) 
+        console.log('category_id in form',category_id)
+        const res= await api.get(`survey/get_survey/?surveysession_id=${surveysession_id}&category_id=${category_id}`) 
         setQuestions(res.data)
-        // console.log('resp from questions request: ',res)
+        console.log('resp from questions request: ',res)
       } catch (error) {
         console.log(error)
         
