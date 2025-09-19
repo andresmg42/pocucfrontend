@@ -6,8 +6,9 @@ import { useState } from "react";
 const Form = () => {
   const { category_id, surveysession_id } = useParams();
   const [questions, setQuestions] = useState([]);
-  const[selectedValue,setSelectedValue]=useState('');
-  const [otherValue,setOtherValue]=useState('');
+  const [answers,setAnswers]=useState({})
+  const [openTextFields,setOpenTextFields]=useState({});
+  
 
   useEffect(() => {
     async function getSurveyQuestions() {
@@ -26,82 +27,72 @@ const Form = () => {
     getSurveyQuestions();
   }, []);
 
+  const handleRadioChange=(questionId,value)=>{
+
+    if (value=='other'){
+      setOpenTextFields(prev=>({...prev,[questionId]:true}))
+      setAnswers(prev=>({...prev,[questionId]:''}));
+    }
+    else{
+      setOpenTextFields(prev=>({...prev,[questionId]:false}));
+      setAnswers(prevAnswers=>({
+      ...prevAnswers,
+      [questionId]: value,
+    }))
+
+    }
+    
+  };
+
+  const handleOtherTextChange=(questionId,textValue)=>{
+    setAnswers(prev=>({...prev,[questionId]:textValue}))
+
+  }
+
+  const handleSubmit=()=>{
+
+  }
+
   return (
     <div className="flex  items-center justify-center">
       <form
-        action="/submit"
-        method="post"
+        onSubmit={handleSubmit}
         class="w-full max-w-2xl bg-white shadow-lg rounded-2xl p-6 space-y-8"
       >
         {questions.map((q) => {
+
+          const isOtherOpen= openTextFields[q.question.id]
+
+          const isOtherSelected= isOtherOpen || (answers[q.question.id] && !q.options.some(opt=>opt.description==answers[q.question.id]))
           switch (q.question.question_type) {
-            case "unique_response":
+            case "range":
               return (
                 <fieldset key={q.question.id} class="space-y-0">
                   <legend class="text-lg text-black text-left font-semibold mb-2">
                     {q.question.description}
                   </legend>
 
-                  <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
+                  {['1','2','3','4','5','mas'].map((value)=>(
+
+                    <label key={value} class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
                     <input
                       type="radio"
                       name={q.question.id}
-                      value="1"
+                      value={value}
+                      checked={answers[q.question.id]===value}
+                      onChange={()=>handleRadioChange(q.question.id,value)}
                       required
                       class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                     />
-                    <span className="font-bold text-black">1</span>
+                    <span className="font-bold text-black">{value}</span>
                   </label>
 
-                  <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name={q.question.id}
-                      value="2"
-                      class="w-5 h-5 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="font-bold text-black">2</span>
-                  </label>
 
-                  <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name={q.question.id}
-                      value="3"
-                      class="w-5 h-5 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="font-bold text-black">3</span>
-                  </label>
-                  <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name={q.question.id}
-                      value="4"
-                      class="w-5 h-5 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="font-bold text-black">4</span>
-                  </label>
-                  <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name={q.question.id}
-                      value="5"
-                      class="w-5 h-5 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="font-bold text-black">5</span>
-                  </label>
-                  <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name={q.question.id}
-                      value="mas"
-                      class="w-5 h-5 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="font-bold text-black">mas</span>
-                  </label>
+                  ))}
+
                 </fieldset>
               );
-            case "multiple_option":
+            case "unique_response":
               return (
                 <fieldset key={q.question.id}>
                   <legend class="text-lg text-black text-left font-semibold mb-2">
@@ -119,6 +110,8 @@ const Form = () => {
                         name={q.question.id}
                         value={option.description}
                         required
+                        checked={answers[q.question.id]===option.description}
+                        onChange={()=>handleRadioChange(q.question.id,option.description)}
                         class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="font-bold text-black">
@@ -136,6 +129,8 @@ const Form = () => {
                         name={q.question.id}
                         value="other"
                         required
+                        checked={isOtherSelected}
+                        onChange={()=>handleRadioChange(q.question.id,'other')}
                         class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="font-bold text-black">
@@ -143,15 +138,17 @@ const Form = () => {
                       </span>
                     </label>
 
-                  
-
-                   
-                    <input
+                    {isOtherOpen && (
+                       <input
                       type="text"
                       id={q.question.id}
-                      placeholder="Otra?"
-                      class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Especifique su respuesta"
+                      value={answers[q.question.id] || ''}
+                      onChange={(e)=>handleOtherTextChange(q.question.id,e.target.value)}
+                      autoFocus
+                      className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
+                    )}                  
                     </div>                  
                   
                 </fieldset>
@@ -161,6 +158,7 @@ const Form = () => {
               break;
           }
         })}
+       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Submit</button>
       </form>
     </div>
   );
