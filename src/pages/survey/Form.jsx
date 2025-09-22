@@ -6,9 +6,8 @@ import { useState } from "react";
 const Form = () => {
   const { category_id, surveysession_id } = useParams();
   const [questions, setQuestions] = useState([]);
-  const [answers,setAnswers]=useState({})
-  const [openTextFields,setOpenTextFields]=useState({});
-  
+  const [answers, setAnswers] = useState({});
+  const [openTextFields, setOpenTextFields] = useState({});
 
   useEffect(() => {
     async function getSurveyQuestions() {
@@ -27,31 +26,24 @@ const Form = () => {
     getSurveyQuestions();
   }, []);
 
-  const handleRadioChange=(questionId,value)=>{
-
-    if (value=='other'){
-      setOpenTextFields(prev=>({...prev,[questionId]:true}))
-      setAnswers(prev=>({...prev,[questionId]:''}));
+  const handleRadioChange = (questionId, value) => {
+    if (value == "other") {
+      setOpenTextFields((prev) => ({ ...prev, [questionId]: true }));
+      setAnswers((prev) => ({ ...prev, [questionId]: "" }));
+    } else {
+      setOpenTextFields((prev) => ({ ...prev, [questionId]: false }));
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [questionId]: value,
+      }));
     }
-    else{
-      setOpenTextFields(prev=>({...prev,[questionId]:false}));
-      setAnswers(prevAnswers=>({
-      ...prevAnswers,
-      [questionId]: value,
-    }))
-
-    }
-    
   };
 
-  const handleOtherTextChange=(questionId,textValue)=>{
-    setAnswers(prev=>({...prev,[questionId]:textValue}))
+  const handleOtherTextChange = (questionId, textValue) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: textValue }));
+  };
 
-  }
-
-  const handleSubmit=()=>{
-
-  }
+  const handleSubmit = () => {};
 
   return (
     <div className="flex  items-center justify-center">
@@ -60,43 +52,18 @@ const Form = () => {
         class="w-full max-w-2xl bg-white shadow-lg rounded-2xl p-6 space-y-8"
       >
         {questions.map((q) => {
+          const isOtherOpen = openTextFields[q.id];
 
-          const isOtherOpen= openTextFields[q.question.id]
-
-          const isOtherSelected= isOtherOpen || (answers[q.question.id] && !q.options.some(opt=>opt.description==answers[q.question.id]))
-          switch (q.question.question_type) {
-            case "range":
-              return (
-                <fieldset key={q.question.id} class="space-y-0">
-                  <legend class="text-lg text-black text-left font-semibold mb-2">
-                    {q.question.description}
-                  </legend>
-
-                  {['1','2','3','4','5','mas'].map((value)=>(
-
-                    <label key={value} class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name={q.question.id}
-                      value={value}
-                      checked={answers[q.question.id]===value}
-                      onChange={()=>handleRadioChange(q.question.id,value)}
-                      required
-                      class="w-5 h-5 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="font-bold text-black">{value}</span>
-                  </label>
-
-
-                  ))}
-
-                </fieldset>
-              );
+          const isOtherSelected =
+            isOtherOpen ||
+            (answers[q.id] &&
+              !q.options.some((opt) => opt.description == answers[q.id]));
+          switch (q.question_type) {
             case "unique_response":
               return (
-                <fieldset key={q.question.id}>
+                <fieldset key={q.id}>
                   <legend class="text-lg text-black text-left font-semibold mb-2">
-                    {q.question.description}
+                    {q.description}
                   </legend>
 
                   {q.options.map((option) => (
@@ -107,11 +74,13 @@ const Form = () => {
                       <input
                         type="radio"
                         id={option.id}
-                        name={q.question.id}
+                        name={q.id}
                         value={option.description}
                         required
-                        checked={answers[q.question.id]===option.description}
-                        onChange={()=>handleRadioChange(q.question.id,option.description)}
+                        checked={answers[q.id] === option.description}
+                        onChange={() =>
+                          handleRadioChange(q.id, option.description)
+                        }
                         class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="font-bold text-black">
@@ -119,38 +88,116 @@ const Form = () => {
                       </span>
                     </label>
                   ))}
-                  <div >
-                   <label
-                      class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50"
-                    >
+                  <div>
+                    <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
                       <input
                         type="radio"
-                        id={`${q.question.id}-other`}
-                        name={q.question.id}
+                        id={`${q.id}-other`}
+                        name={q.id}
                         value="other"
                         required
                         checked={isOtherSelected}
-                        onChange={()=>handleRadioChange(q.question.id,'other')}
+                        onChange={() => handleRadioChange(q.id, "other")}
                         class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="font-bold text-black">
-                        Otra
-                      </span>
+                      <span className="font-bold text-black">Otra</span>
                     </label>
 
                     {isOtherOpen && (
-                       <input
-                      type="text"
-                      id={q.question.id}
-                      placeholder="Especifique su respuesta"
-                      value={answers[q.question.id] || ''}
-                      onChange={(e)=>handleOtherTextChange(q.question.id,e.target.value)}
-                      autoFocus
-                      className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    />
-                    )}                  
-                    </div>                  
-                  
+                      <input
+                        type="text"
+                        id={q.id}
+                        placeholder="Especifique su respuesta"
+                        value={answers[q.id] || ""}
+                        onChange={(e) =>
+                          handleOtherTextChange(q.id, e.target.value)
+                        }
+                        autoFocus
+                        className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      />
+                    )}
+                  </div>
+                </fieldset>
+              );
+
+            case "matrix_parent":
+              return (
+                <fieldset key={q.id}>
+                  <legend class="text-lg text-black text-left font-semibold mb-2">
+                    {q.description}
+                  </legend>
+
+                  {q.sub_questions.map((sub_q) => {
+                    const isOtherOpen = openTextFields[sub_q.id];
+                    const isOtherSelected =
+                      isOtherOpen ||
+                      (answers[sub_q.id] &&
+                        !q.options.some(
+                          (opt) => opt.description == answers[sub_q.id]
+                        ));
+
+                    return (
+                      <fieldset key={sub_q.id} className="flex flex-wrap">
+                        <legend class="text-lg text-black text-left font-semibold mb-2">
+                          {sub_q.description}
+                        </legend>
+
+                        {q.options.map((option) => (
+                          <label
+                            key={option.id}
+                            class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50"
+                          >
+                            <input
+                              type="radio"
+                              id={option.id}
+                              name={sub_q.id}
+                              value={option.description}
+                              required
+                              onChange={() =>
+                                handleRadioChange(sub_q.id, option.description)
+                              }
+                              checked={answers[sub_q.id] === option.description}
+                              class="w-5 h-5 text-blue-600 focus:ring-blue-500"
+                            />
+                            <span className="font-bold text-black">
+                              {option.description}
+                            </span>
+                          </label>
+                        ))}
+                        <div>
+                          <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
+                            <input
+                              type="radio"
+                              id={`${sub_q.id}-other`}
+                              name={sub_q.id}
+                              value="other"
+                              required
+                              checked={isOtherSelected}
+                              onChange={() =>
+                                handleRadioChange(sub_q.id, "other")
+                              }
+                              class="w-5 h-5 text-blue-600 focus:ring-blue-500"
+                            />
+                            <span className="font-bold text-black">Otra</span>
+                          </label>
+
+                          {isOtherOpen && (
+                            <input
+                              type="text"
+                              id={sub_q.id}
+                              placeholder="Especifique su respuesta"
+                              value={answers[sub_q.id] || ""}
+                              onChange={(e) =>
+                                handleOtherTextChange(sub_q.id, e.target.value)
+                              }
+                              autoFocus
+                              className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            />
+                          )}
+                        </div>
+                      </fieldset>
+                    );
+                  })}
                 </fieldset>
               );
 
@@ -158,7 +205,12 @@ const Form = () => {
               break;
           }
         })}
-       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Submit</button>
+        <button
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Submit
+        </button>
       </form>
     </div>
   );
