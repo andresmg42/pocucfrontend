@@ -47,13 +47,16 @@ const Form = () => {
   const handleOtherTextChange = (questionId, textValue) => {
     setAnswers((prev) => ({ ...prev, [questionId]: {
       optionId:'',
-      numeric_value:textValue
+      numeric_value:textValue,
+      visitId:visit_id
     } }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+
+      console.log('answers',answers)
 
       setLoading(true)
       const res=await api.post('response/create/',answers)
