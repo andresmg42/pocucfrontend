@@ -10,6 +10,16 @@ const Form = () => {
   const [openTextFields, setOpenTextFields] = useState({});
   const [loading,setLoading]=useState(false)
 
+  function isAllDigits(str) {
+  // Ensure we have a string to test and it's not empty
+  if (typeof str !== 'string' || str.length === 0) {
+    return false;
+  }
+  
+  const digitRegex = /^\d+$/;
+  return digitRegex.test(str);
+}
+
   useEffect(() => {
     async function getSurveyQuestions() {
       try {
@@ -33,21 +43,26 @@ const Form = () => {
       setAnswers((prev) => ({ ...prev, [questionId]: {} }));
     } else {
       setOpenTextFields((prev) => ({ ...prev, [questionId]: false }));
-      setAnswers((prevAnswers) => ({
+      setAnswers((prevAnswers) => {
+        const isDigit=isAllDigits(questionV)
+        return {
         ...prevAnswers,
         [questionId]: {
-          numeric_value:questionV,
+          numeric_value: isDigit ? questionV:null,
+          textValue: !isDigit? questionV:null,
           optionId:optionId,
           visitId:visit_id
         },
-      }));
+      }});
     }
   };
 
   const handleOtherTextChange = (questionId, textValue) => {
+    const isDigit=isAllDigits(textValue)
     setAnswers((prev) => ({ ...prev, [questionId]: {
       optionId:'',
-      numeric_value:textValue,
+      numeric_value:isDigit? textValue:null,
+      textValue: !isDigit? textValue : null,
       visitId:visit_id
     } }));
   };
@@ -86,7 +101,7 @@ const Form = () => {
           const isOtherSelected =
             isOtherOpen ||
             (answers[q.id] &&
-              !q.options.some((opt) => opt.description == answers[q.id]?.numeric_value));
+              !q.options.some((opt) => opt.description == answers[q.id]?.numeric_value ||  opt.description == answers[q.id]?.textValue ));
           switch (q.question_type) {
             case "unique_response":
               return (
@@ -106,7 +121,7 @@ const Form = () => {
                         name={q.id}
                         value={option.description}
                         required
-                        checked={answers[q.id]?.numeric_value === option.description}
+                        checked={answers[q.id]?.numeric_value === option.description || answers[q.id]?.textValue === option.description}
                         onChange={() =>
                           handleRadioChange(q.id, option.description,option.id)
                         }
@@ -137,7 +152,7 @@ const Form = () => {
                         type="text"
                         id={q.id}
                         placeholder="Especifique su respuesta"
-                        value={answers[q.id]?.numeric_value || ""}
+                        value={answers[q.id]?.numeric_value || answers[q.id]?.textValue || ""}
                         onChange={(e) =>
                           handleOtherTextChange(q.id, e.target.value)
                         }
@@ -163,7 +178,7 @@ const Form = () => {
                       isOtherOpen ||
                       (answers[sub_q.id] &&
                         !q.options.some(
-                          (opt) => opt.description == answers[sub_q.id]?.numeric_value
+                          (opt) => opt.description == answers[sub_q.id]?.numeric_value || opt.description == answers[sub_q.id]?.textValue
                         ));
 
                     return (
@@ -186,7 +201,7 @@ const Form = () => {
                               onChange={() =>
                                 handleRadioChange(sub_q.id, option.description,option.id)
                               }
-                              checked={answers[sub_q.id]?.numeric_value === option.description}
+                              checked={answers[sub_q.id]?.numeric_value === option.description || answers[sub_q.id]?.textValue === option.description}
                               class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                             />
                             <span className="font-bold text-black">
@@ -216,7 +231,7 @@ const Form = () => {
                               type="text"
                               id={sub_q.id}
                               placeholder="Especifique su respuesta"
-                              value={answers[sub_q.id]?.numeric_value || ""}
+                              value={answers[sub_q.id]?.numeric_value || answers[sub_q.id]?.textValue || ""}
                               onChange={(e) =>
                                 handleOtherTextChange(sub_q.id, e.target.value)
                               }
