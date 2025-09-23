@@ -4,10 +4,11 @@ import api from "../../api/user.api";
 import { useState } from "react";
 
 const Form = () => {
-  const { category_id, surveysession_id } = useParams();
+  const { category_id, surveysession_id,visit_id } = useParams();
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [openTextFields, setOpenTextFields] = useState({});
+  const [loading,setLoading]=useState(false)
 
   useEffect(() => {
     async function getSurveyQuestions() {
@@ -36,7 +37,8 @@ const Form = () => {
         ...prevAnswers,
         [questionId]: {
           numeric_value:questionV,
-          optionId:optionId
+          optionId:optionId,
+          visitId:visit_id
         },
       }));
     }
@@ -49,9 +51,24 @@ const Form = () => {
     } }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('estas son las repuestas:',answers)
+    try {
+
+      setLoading(true)
+      const res=await api.post('response/create/',answers)
+      console.log('respuesta en el form',res)
+
+      
+    } catch (error) {
+
+      console.log('error in handlesumbmit form',error)
+      setLoading(false)
+      
+    }
+    finally{
+      setLoading(false)
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ const CategoryCard = ({category,surveysession_id}) => {
         hover:cursor-pointer"
 
         onClick={()=>{
-            navigate(`form/${category.id}/${surveysession_id}`)
+            navigate(`form/${category.id}`)
         }}
         >
             

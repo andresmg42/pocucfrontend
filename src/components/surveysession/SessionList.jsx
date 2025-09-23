@@ -42,9 +42,9 @@ const SessionList = ({survey_id}) => {
       return <div className="text-center p-10 text-white">Loading users...</div>;
     }
 
-    const handleRowClick=(session_id)=>{
+    const handleRowClick=(surveysession_id)=>{
 
-      navigate(`visits/${session_id}`)
+      navigate(`visits/${surveysession_id}`)
 
     }
 

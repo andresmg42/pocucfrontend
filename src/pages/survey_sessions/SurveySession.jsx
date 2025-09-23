@@ -5,7 +5,7 @@ import CreateSession from '../../components/surveysession/CreateSession'
 import usePageStore from '../../stores/use-page-store'
 
 const SurveySession = () => {
-    const {id} =useParams();
+    const {survey_id} =useParams();
 
     const {addTrigger,setAddTrigger}=usePageStore();
     
@@ -18,9 +18,9 @@ const SurveySession = () => {
   return (
     <div>
       {addTrigger? 
-      <SessionList survey_id={id}/>
+      <SessionList survey_id={survey_id}/>
       :
-      <CreateSession survey_id={id}/>
+      <CreateSession survey_id={survey_id}/>
       }
 
       <button

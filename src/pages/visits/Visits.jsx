@@ -4,7 +4,7 @@ import VisitsList from "../../components/visits/VisitsList";
 import CreateVisit from "../../components/visits/CreateVisit";
 
 const Visits = () => {
-  const { id } = useParams();
+  const { surveysession_id } = useParams();
 
   const { addTriggerVisit,setAddTriggerVisit } = usePageStore();
 
@@ -16,9 +16,9 @@ const Visits = () => {
   return (
     <div>
       {addTriggerVisit ? (
-        <VisitsList surveysession_id={id} />
+        <VisitsList surveysession_id={surveysession_id} />
       ) : (
-        <CreateVisit surveysession_id={id} />
+        <CreateVisit surveysession_id={surveysession_id} />
       )}
 
       <button onClick={handleAddClick}>

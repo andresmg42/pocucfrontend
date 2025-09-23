@@ -5,14 +5,14 @@ import CategoryCard from '../../components/categories/CategoryCard'
 
 const Category = () => {
 
-    const {id}=useParams();
+    const {surveysession_id}=useParams();
 
     const [categories,setCategories]=useState([])
 
     useEffect(()=>{
         async function getCategories(){
             try {
-                const res=await api.get(`category/list?surveysession_id=${id}`)
+                const res=await api.get(`category/list?surveysession_id=${surveysession_id}`)
                 console.log('response from category page:',res)
                 setCategories(res.data)
 
@@ -29,7 +29,7 @@ const Category = () => {
    <div className='grid grid-cols-3 gap-3'>
     {categories.map(category=>
         (
-            <CategoryCard key={category.id} category={category} surveysession_id={id}/>
+            <CategoryCard key={category.id} category={category} surveysession_id={surveysession_id}/>
         )
     )}
    </div>

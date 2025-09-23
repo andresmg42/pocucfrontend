@@ -41,11 +41,9 @@ const VisitsList = ({surveysession_id}) => {
       return <div className="text-center p-10 text-white">Loading users...</div>;
     }
 
-    const handleClickRow= ()=>{
+    const handleClickRow= (visit_id)=>{
        console.log('este es el surveysession_id',surveysession_id)
-        navigate(`categories/${surveysession_id}`)
-
-
+        navigate(`categories/${visit_id}`)
     }
 
   return (
@@ -70,7 +68,7 @@ const VisitsList = ({surveysession_id}) => {
           <tbody>
             {visits.map((visit) => (
               <tr 
-              onClick={handleClickRow}
+              onClick={()=>handleClickRow(visit.id)}
               key={visit.id} className="bg-white border-b hover:bg-gray-100">
                 {/* ID is bolded to make it stand out */}
                 <th   scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
