@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import api from "../../api/user.api";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Form = () => {
-  const { category_id, surveysession_id,visit_id } = useParams();
+  const { category_id, surveysession_id,visit_id,survey_id } = useParams();
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [openTextFields, setOpenTextFields] = useState({});
   const [loading,setLoading]=useState(false)
+  const navigate=useNavigate()
 
   function isAllDigits(str) {
   // Ensure we have a string to test and it's not empty
@@ -75,7 +77,14 @@ const Form = () => {
 
       setLoading(true)
       const res=await api.post('response/create/',answers)
+      
       console.log('respuesta en el form',res)
+
+      const targetPath = `/surveysession/${survey_id}/visits/${surveysession_id}/categories/${visit_id}`;
+      toast.success('Survey saved successfully')
+      navigate(targetPath)
+      
+
 
       
     } catch (error) {
@@ -86,6 +95,7 @@ const Form = () => {
     }
     finally{
       setLoading(false)
+      
     }
   };
 
