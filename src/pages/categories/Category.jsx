@@ -5,7 +5,7 @@ import CategoryCard from '../../components/categories/CategoryCard'
 
 const Category = () => {
 
-    const {surveysession_id}=useParams();
+    const {surveysession_id,visit_id}=useParams();
 
     const [categories,setCategories]=useState([])
 
@@ -29,7 +29,7 @@ const Category = () => {
    <div className='grid  grid-cols-1 md:grid-cols-3 gap-3 '>
     {categories.map(category=>
         (
-            <CategoryCard key={category.id} category={category} surveysession_id={surveysession_id}/>
+            <CategoryCard key={category.id} category={category} visit_id={visit_id} surveysession_id={surveysession_id}/>
         )
     )}
    </div>
