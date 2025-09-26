@@ -1,53 +1,58 @@
-import React, { useEffect, useState } from 'react'
-import api from '../../api/user.api'
-import useAuthStore from '../../stores/use-auth-store'
-import { useNavigate } from 'react-router'
+import React, { useEffect, useState } from "react";
+import api from "../../api/user.api";
+import useAuthStore from "../../stores/use-auth-store";
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
-const SessionList = ({survey_id}) => {
+const SessionList = ({ survey_id }) => {
+  const navigate = useNavigate();
 
-   const navigate=useNavigate();
+  const [sessions, setSessions] = useState([]);
 
-    const [sessions,setSessions]=useState([])
-    
-    const [loading,setLoading]=useState(true);
+  const [loading, setLoading] = useState(true);
 
-    const {userLogged}=useAuthStore();
+  const { userLogged } = useAuthStore();
 
-    useEffect(()=>{
-        async function getSession(){
+  const [sessionIsDeleted, setSessionIsDeleted] = useState(false);
 
-          
-          
-          try {
-            const res= await api.get(`surveysession/get_survey_session_by_id?survey_id=${survey_id}&email=${userLogged.email}`)
-            console.log('esta es la respuesta en sessionlist',res)
-            setSessions(res.data)
-            
-           
-            
-        }
-        catch (error){
-            console.log('error in SessionList',error)
-        }
-        finally{
-          setLoading(false)
-        }
-        }
-        getSession();
-    },[userLogged])
-
-    
-
-    if (loading){
-      return <div className="text-center p-10 text-white">Loading users...</div>;
+  useEffect(() => {
+    async function getSession() {
+      try {
+        const res = await api.get(
+          `surveysession/get_survey_session_by_id?survey_id=${survey_id}&email=${userLogged.email}`
+        );
+        console.log("esta es la respuesta en sessionlist", res);
+        setSessions(res.data);
+      } catch (error) {
+        console.log("error in SessionList", error);
+      } finally {
+        setLoading(false);
+      }
     }
+    getSession();
+  }, [userLogged,sessionIsDeleted]);
 
-    const handleRowClick=(surveysession_id)=>{
+  if (loading) {
+    return <div className="text-center p-10 text-white">Loading users...</div>;
+  }
 
-      navigate(`visits/${surveysession_id}`)
+  const handleClickStart = (surveysession_id) => {
+    navigate(`visits/${surveysession_id}`);
+  };
 
+  const handleClickDelete = async (surveysession_id) => {
+    try {
+      const res = await api.delete(`surveysession/delete/${surveysession_id}`);
+
+      toast.success("Secion de Encuesta Eliminada Exitosamente");
+
+      setSessionIsDeleted((prev) => !prev);
+
+      
+    } catch (error) {
+      console.log("error deleting Encuesta", error);
     }
-
+  };
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
@@ -59,24 +64,49 @@ const SessionList = ({survey_id}) => {
         <table className="w-full text-sm text-left text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-              <th scope="col" className="py-3 px-6">ID</th>
-              <th scope="col" className="py-3 px-6">Numero de Observador</th>
-              <th scope="col" className="py-3 px-6">Numemro de Encuesta</th>
-              <th scope="col" className="py-3 px-6">Numero de Zona</th>
-              <th scope="col" className="py-3 px-6">Fecha de Inicio</th>
-              <th scope="col" className="py-3 px-6">Fecha de Finalizacion</th>
-              <th scope="col" className="py-3 px-6">Distancia de Observacion(m)</th>
-              <th scope="col" className="py-3 px-6">Fecha de Carga</th>
-              <th scope="col" className="py-3 px-6">Url Evidencia</th>
+              <th scope="col" className="py-3 px-6">
+                ID
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Numero de Observador
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Numemro de Encuesta
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Numero de Zona
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Fecha de Inicio
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Fecha de Finalizacion
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Distancia de Observacion(m)
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Fecha de Carga
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Url Evidencia
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Accion
+              </th>
             </tr>
           </thead>
           <tbody>
             {sessions.map((session) => (
-              <tr 
-              onClick={()=>handleRowClick(session.id)}
-              key={session.id} className="bg-white border-b hover:bg-gray-100">
+              <tr
+                key={session.id}
+                className="bg-white border-b hover:bg-gray-100"
+              >
                 {/* ID is bolded to make it stand out */}
-                <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                <th
+                  scope="row"
+                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+                >
                   {session.id}
                 </th>
                 <td className="py-4 px-6">{session.observer}</td>
@@ -87,15 +117,34 @@ const SessionList = ({survey_id}) => {
                 <td className="py-4 px-6">{session.observational_distance}</td>
                 <td className="py-4 px-6">{session.uploaded_at}</td>
                 <td className="py-4 px-6">{session.url}</td>
-                
+                <td className="py-4 px-6">
+                  {
+                    <div className="flex">
+                      <button
+                        type="button"
+                        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                        onClick={() => handleClickStart(session.id)}
+                      >
+                        Iniciar
+                      </button>
+
+                      <button
+                        type="button"
+                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                        onClick={() => handleClickDelete(session.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  }
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      
     </div>
-  )
-}
+  );
+};
 
-export default SessionList
+export default SessionList;
