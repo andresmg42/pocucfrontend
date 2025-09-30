@@ -1,27 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../api/user.api";
 import useAuthStore from "../../stores/use-auth-store";
 import usePageStore from "../../stores/use-page-store";
 import toast from "react-hot-toast";
+import { useParams } from "react-router";
 
-const CreateSession = ({survey_id}) => {
+const CreateSession = ({ survey_id }) => {
+  const { setAddTrigger, addTrigger, session, setSession,update,setUpdate } = usePageStore();
+  const { userLogged } = useAuthStore();
 
-  const {userLogged}=useAuthStore();
-  const {setAddTrigger,addTrigger}=usePageStore();
-  const [formData, setFormData] = useState({
-    zone: "",
-    number_session: "",
-    start_date: "",
-    end_date: "",
-    observational_distance:"",
-    url:"",
-    email:userLogged.email,
-    survey_id:survey_id,
-  });
+  // setFormData(
+
+  //   session && update? 
+  //   {
+  //         zone: session.zone,
+  //         number_session: session.number_session,
+  //         start_date: session.start_date,
+  //         end_date: session.end_date,
+  //         observational_distance: session.observational_distance,
+  //         url: session.url,
+  //         observer: userLogged.email,
+  //         survey: survey_id,
+  //       }
+  //     : {
+  //         zone: "",
+  //         number_session: "",
+  //         start_date: "",
+  //         end_date: "",
+  //         observational_distance: "",
+  //         url: "",
+  //         observer: userLogged.email,
+  //         survey: survey_id,
+  //       }
+  // )
+
+  const [formData, setFormData] = useState(
+    session && update? 
+    {
+          zone: session.zone,
+          number_session: session.number_session,
+          start_date: session.start_date,
+          end_date: session.end_date,
+          observational_distance: session.observational_distance,
+          url: session.url,
+          observer: userLogged.email,
+          survey: survey_id,
+        }
+      : {
+          zone: "",
+          number_session: "",
+          start_date: "",
+          end_date: "",
+          observational_distance: "",
+          url: "",
+          observer: userLogged.email,
+          survey: survey_id,
+        }
+  );
 
   
 
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,46 +69,61 @@ const CreateSession = ({survey_id}) => {
     });
   };
 
- const handleSubmit= async (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-        setLoading(true)
-        const res= await api.post('surveysession/create/',formData)
+      setLoading(true);
+      
+        const res = session && update? await api.put(`surveysession/${session.id}/`, formData): 
+        await api.post("surveysession/", formData);
+     
+       
+      
 
-        if (res.status=200){
-          
-          setAddTrigger(!addTrigger)
-          toast.success('Sesión creada exitosamente!')
+      if ((res.status = 200)) {
 
+        setAddTrigger(!addTrigger);
+        setUpdate(false)
+        setFormData(
+          {
+          zone: "",
+          number_session: "",
+          start_date: "",
+          end_date: "",
+          observational_distance: "",
+          url: "",
+          observer: userLogged.email,
+          survey: survey_id,
         }
-        console.log('response in handle submit:',res)
-        
+        )
+        toast.success("Sesión creada o actualizada exitosamente!");
+      }
+      // console.log('response in handle submit:',res)
     } catch (error) {
-
-        console.log('error in handlesubmit of createSession',error)
-        
-    }finally{
-        setLoading(false)
+      console.error("error in handlesubmit of createSession", error);
+      toast.error("Datos incorrectos, el numero de  sesion no se debe repetir");
+    } finally {
+      setLoading(false);
     }
+  };
 
-
-
- }
-
- const handleCloseClick =(e)=>{
-  e.preventDefault();
-  setAddTrigger(!addTrigger)
- }
-
+  const handleCloseClick = (e) => {
+    e.preventDefault();
+    setAddTrigger(!addTrigger);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="w-full h-10 flex justify-end">
-        <button onClick={handleCloseClick}>
-          <img src="/surveysession/closebutton.svg" alt="closebutton" className="w-10 h-10"  />
-        </button>
+          <button onClick={handleCloseClick}>
+            <img
+              src="/surveysession/closebutton.svg"
+              alt="closebutton"
+              className="w-10 h-10"
+            />
+          </button>
         </div>
         <div className="text-center">
           {/* {error && <Error error={error} />} */}
@@ -77,7 +131,7 @@ const CreateSession = ({survey_id}) => {
             Registro de Sesiónes para Observadores
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Porfavor llene todos los campos y haga click en enviar
+            Porfavor llene todos los campos y haga click en Registrar
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -122,7 +176,7 @@ const CreateSession = ({survey_id}) => {
                 placeholder="Fecha de finalizacion"
                 onChange={handleChange}
               />
-              
+
               <input
                 type="number"
                 id="observational_distance"

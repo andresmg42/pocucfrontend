@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import Visits from "./pages/visits/Visits.jsx";
 import Form from "./pages/survey/Form.jsx";
 import Category from "./pages/categories/Category.jsx";
+import CreateSession from "./components/surveysession/CreateSession.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -23,6 +24,7 @@ function App() {
           <Route index path="surveysession/:survey_id/visits/:surveysession_id" element={<Visits />}></Route>
           <Route index path="surveysession/:survey_id/visits/:surveysession_id/categories/:visit_id/form/:category_id" element={<Form />}></Route>
           <Route index path="surveysession/:survey_id/visits/:surveysession_id/categories/:visit_id" element={<Category />}></Route>
+          
           
         </Routes>
       </Layout>
