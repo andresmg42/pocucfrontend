@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import usePageStore from "../../stores/use-page-store";
 import VisitsList from "../../components/visits/VisitsList";
 import CreateVisit from "../../components/visits/CreateVisit";
+import VisitsList2 from "../../components/visits/VisitsList2";
 
 const Visits = () => {
   const { surveysession_id } = useParams();
@@ -16,7 +17,7 @@ const Visits = () => {
   return (
     <div>
       {addTriggerVisit ? (
-        <VisitsList surveysession_id={surveysession_id} />
+        <VisitsList2 surveysession_id={surveysession_id} />
       ) : (
         <CreateVisit surveysession_id={surveysession_id} />
       )}

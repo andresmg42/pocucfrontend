@@ -3,7 +3,7 @@ import SessionList from "../../components/surveysession/SessionList";
 import { useParams } from "react-router";
 import CreateSession from "../../components/surveysession/CreateSession";
 import usePageStore from "../../stores/use-page-store";
-
+import SessionList2 from "../../components/surveysession/SessionList2";
 const SurveySession = () => {
   const { survey_id } = useParams();
 
@@ -13,21 +13,12 @@ const SurveySession = () => {
     e.preventDefault();
     setAddTrigger(!addTrigger);
     setUpdate(false)
-    // setFormData({
-    //   zone: "",
-    //   number_session: "",
-    //   start_date: "",
-    //   end_date: "",
-    //   observational_distance: "",
-    //   url: "",
-    //   observer: userLogged.email,
-    //   survey: survey_id,
-    // });
+    
   };
   return (
     <div>
       {addTrigger ? (
-        <SessionList survey_id={survey_id} />
+        <SessionList2 survey_id={survey_id} />
       ) : (
         <CreateSession survey_id={survey_id} />
       )}
