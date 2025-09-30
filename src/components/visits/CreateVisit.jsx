@@ -4,59 +4,81 @@ import useAuthStore from "../../stores/use-auth-store";
 import usePageStore from "../../stores/use-page-store";
 import toast from "react-hot-toast";
 
-const CreateVisit = ({surveysession_id}) => {
-
-    const {addTriggerVisit,setAddTriggerVisit}=usePageStore();
-    const [loading,setLoading]=useState(false)
-    const [formData,setFormData]=useState({
-        surveysession:surveysession_id,
-        visit_number:"",
-        visit_date:"",
-        start_time:"",
-        end_time:"",
-        complete:false        
-    })
-
-    const handleChange=(e)=>{
-        setFormData({
-            ...formData,
-            [e.target.id]:e.target.value,
-        });
-    };
-
-    const handleSubmit=async (e)=>{
-        e.preventDefault();
-        try {
-            setLoading(true)
-
-            const res=await api.post('visit/create/',formData)
-            if(res.status=200){
-                setAddTriggerVisit(!addTriggerVisit)
-                toast.success('Visita Registrada exitosamente')
-            }
-            console.log('response in handle sumbmit de visita',res)
-            
-        } catch (error) {
-
-            console.log('error in handlesubmit of CreateVisit',error)
-            
-        }finally{
-            setLoading(false)
+const CreateVisit = ({ surveysession_id }) => {
+  const {
+    addTriggerVisit,
+    setAddTriggerVisit,
+    updateVisit,
+    visit,
+    setUpdateVisit,
+  } = usePageStore();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState(
+    visit && updateVisit
+      ? {
+          surveysession: surveysession_id,
+          visit_number: visit.visit_number,
+          visit_date: visit.visit_date,
+          start_time: visit.start_time,
+          end_time: visit.end_time,
+          complete: visit.complete,
         }
-    }
+      : {
+          surveysession: surveysession_id,
+          visit_number: "",
+          visit_date: "",
+          start_time: "",
+          end_time: "",
+          complete: false,
+        }
+  );
 
-    const handleCloseClick= (e)=>{
-        e.preventDefault();
-        setAddTriggerVisit(!addTriggerVisit)
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      
+      const res =
+        visit && updateVisit
+          ? await api.put(`visit/${visit.id}/`, formData)
+          : await api.post("visit/", formData);
+      if ((res.status = 200)) {
+        setUpdateVisit(false);
+
+        setAddTriggerVisit(!addTriggerVisit);
+        toast.success("Visita Registrada exitosamente");
+      }
+      console.log("response in handle sumbmit de visita", res);
+    } catch (error) {
+      console.log("error in handlesubmit of CreateVisit", error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleCloseClick = (e) => {
+    e.preventDefault();
+    setAddTriggerVisit(!addTriggerVisit);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="w-full h-10 flex justify-end">
-        <button onClick={handleCloseClick}>
-          <img src="/surveysession/closebutton.svg" alt="closebutton" className="w-10 h-10"  />
-        </button>
+          <button onClick={handleCloseClick}>
+            <img
+              src="/surveysession/closebutton.svg"
+              alt="closebutton"
+              className="w-10 h-10"
+            />
+          </button>
         </div>
         <div className="text-center">
           {/* {error && <Error error={error} />} */}
@@ -70,7 +92,6 @@ const CreateVisit = ({surveysession_id}) => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              
               <input
                 type="number"
                 id="visit_number"
@@ -100,7 +121,7 @@ const CreateVisit = ({surveysession_id}) => {
                 placeholder="Hora de Inicio"
                 onChange={handleChange}
               />
-              
+
               <input
                 type="time"
                 id="end_time"
@@ -126,4 +147,4 @@ const CreateVisit = ({surveysession_id}) => {
   );
 };
 
-export default CreateVisit
+export default CreateVisit;

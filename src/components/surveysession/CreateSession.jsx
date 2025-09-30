@@ -9,30 +9,6 @@ const CreateSession = ({ survey_id }) => {
   const { setAddTrigger, addTrigger, session, setSession,update,setUpdate } = usePageStore();
   const { userLogged } = useAuthStore();
 
-  // setFormData(
-
-  //   session && update? 
-  //   {
-  //         zone: session.zone,
-  //         number_session: session.number_session,
-  //         start_date: session.start_date,
-  //         end_date: session.end_date,
-  //         observational_distance: session.observational_distance,
-  //         url: session.url,
-  //         observer: userLogged.email,
-  //         survey: survey_id,
-  //       }
-  //     : {
-  //         zone: "",
-  //         number_session: "",
-  //         start_date: "",
-  //         end_date: "",
-  //         observational_distance: "",
-  //         url: "",
-  //         observer: userLogged.email,
-  //         survey: survey_id,
-  //       }
-  // )
 
   const [formData, setFormData] = useState(
     session && update? 

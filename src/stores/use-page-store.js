@@ -15,8 +15,10 @@ const usePageStore=create((set)=>({
         setSession:(session)=>set({session:session}),
         update:false,
         setUpdate:(boolean)=>set({update:boolean}),
-        formData:null,
-        setFormData:(formData)=>set({formData:formData})
+        visit:null,
+        setVisit:(visit)=>set({visit:visit}),
+        updateVisit:false,
+        setUpdateVisit:(boolean)=>set({updateVisit:boolean})
         
     }));
 
