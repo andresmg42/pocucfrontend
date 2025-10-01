@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import CreateSession from "./CreateSession";
 import usePageStore from "../../stores/use-page-store";
+import Placeholder1 from "../placeholders/Placeholder1";
 
 const SessionList2 = ({ survey_id }) => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const SessionList2 = ({ survey_id }) => {
   const [sessionIsDeleted, setSessionIsDeleted] = useState(false);
 
   useEffect(() => {
+    if (!userLogged) return;
     async function getSession() {
       try {
         const res = await api.get(
@@ -63,16 +65,22 @@ const SessionList2 = ({ survey_id }) => {
     setUpdate(true);
   };
 
+  if(sessions.length===0) return (
+    <div className="flex items-center justify-center">
+      <Placeholder1 page_name={'Sesion'} plural_page_name={'Sesiones'} onButtonClick={()=>setAddTrigger(!addTrigger)}/>
+    </div>
+  )
+
   return (
     <>
       {addTrigger && (
         <div className=" min-h-screen p-4 sm:p-6 md:p-8">
-      {/* Changed from a grid to a vertical flex container to stack cards */}
+      
       <div className="flex flex-col items-center gap-6">
         {sessions.map((session) => (
-          // Each card now lives inside a flex item. Added width constraints.
+          
           <div
-            key={session.id} // React requires a unique key for list items
+            key={session.id} 
             className="
               bg-white 
               rounded-xl
@@ -92,20 +100,17 @@ const SessionList2 = ({ survey_id }) => {
               max-w-2xl
             "
           >
-            {/* This div will grow to push the buttons to the bottom, ensuring vertical alignment */}
+            
             <div className="flex-grow w-full">
               <h1 className="font-bold text-xl uppercase text-gray-800">
                 {session.number_session}
               </h1>
               <p className="text-gray-500 text-sm mt-1">Zona: {session.zone}</p>
-              {/* `break-all` prevents long URLs from overflowing the card */}
+              
               <p className="text-gray-500 text-sm break-all">Url: {session.url}</p>
             </div>
 
-            {/* Responsive button container.
-              - `flex-col`: Stacks buttons vertically on mobile.
-              - `sm:flex-row`: Arranges buttons in a row on small screens and up.
-            */}
+            
             <div className="flex items-center justify-center gap-8  mt-6 w-full sm:w-auto">
               <button
                 type="button"

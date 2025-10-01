@@ -1,103 +1,125 @@
 import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { replace, useNavigate, useParams } from "react-router";
 import api from "../../api/user.api";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 const Form = () => {
-  const { category_id, surveysession_id,visit_id,survey_id } = useParams();
+  const { category_id, surveysession_id, visit_id, survey_id,category_name } = useParams();
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [openTextFields, setOpenTextFields] = useState({});
-  const [loading,setLoading]=useState(false)
-  const navigate=useNavigate()
+  const [isCompleted,setIsCompleted]=useState();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function isAllDigits(str) {
-  // Ensure we have a string to test and it's not empty
-  if (typeof str !== 'string' || str.length === 0) {
-    return false;
+    
+    if (typeof str !== "string" || str.length === 0) {
+      return false;
+    }
+
+    const digitRegex = /^\d+$/;
+    return digitRegex.test(str);
   }
-  
-  const digitRegex = /^\d+$/;
-  return digitRegex.test(str);
-}
 
   useEffect(() => {
-    async function getSurveyQuestions() {
+    
+    async function initializeForm() {
       try {
-        console.log("category_id in form", category_id);
-        const res = await api.get(
+        
+        const completionResponse = await api.get(
+          `category/category_completed?category_id=${category_id}&visit_id=${visit_id}`
+        );
+
+        
+        if (completionResponse.data.is_completed) {
+          
+          toast.error("This section has already been completed.");
+          
+          setIsCompleted(true)
+        }else{
+
+          
+          const questionsResponse = await api.get(
           `survey/get_survey/?surveysession_id=${surveysession_id}&category_id=${category_id}`
         );
-        setQuestions(res.data);
-        console.log("resp from questions request: ", res);
+        setQuestions(questionsResponse.data);
+
+        }
+
+       
+        
       } catch (error) {
-        console.log(error);
+        console.error(
+          "An unexpected error occurred while initializing the form",
+          error
+        );
       }
     }
 
-    getSurveyQuestions();
+    initializeForm();
   }, []);
 
-    const handleRadioChange = (questionId, questionV,optionId) => {
+
+  const handleRadioChange = (questionId, questionV, optionId) => {
     if (questionV == "other") {
       setOpenTextFields((prev) => ({ ...prev, [questionId]: true }));
       setAnswers((prev) => ({ ...prev, [questionId]: {} }));
     } else {
       setOpenTextFields((prev) => ({ ...prev, [questionId]: false }));
       setAnswers((prevAnswers) => {
-        const isDigit=isAllDigits(questionV)
+        const isDigit = isAllDigits(questionV);
         return {
-        ...prevAnswers,
-        [questionId]: {
-          numeric_value: isDigit ? questionV:null,
-          textValue: !isDigit? questionV:null,
-          optionId:optionId,
-          visitId:visit_id
-        },
-      }});
+          ...prevAnswers,
+          [questionId]: {
+            numeric_value: isDigit ? questionV : null,
+            textValue: !isDigit ? questionV : null,
+            optionId: optionId,
+            visitId: visit_id,
+          },
+        };
+      });
     }
   };
 
   const handleOtherTextChange = (questionId, textValue) => {
-    const isDigit=isAllDigits(textValue)
-    setAnswers((prev) => ({ ...prev, [questionId]: {
-      optionId:'',
-      numeric_value:isDigit? textValue:null,
-      textValue: !isDigit? textValue : null,
-      visitId:visit_id
-    } }));
+    const isDigit = isAllDigits(textValue);
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: {
+        optionId: "",
+        numeric_value: isDigit ? textValue : null,
+        textValue: !isDigit ? textValue : null,
+        visitId: visit_id,
+      },
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("answers", answers);
 
-      console.log('answers',answers)
+      setLoading(true);
+      const res = await api.post("response/create/", answers);
 
-      setLoading(true)
-      const res=await api.post('response/create/',answers)
-      
-      console.log('respuesta en el form',res)
+      console.log("respuesta en el form", res);
 
       const targetPath = `/surveysession/${survey_id}/visits/${surveysession_id}/categories/${visit_id}`;
-      toast.success('Survey saved successfully')
-      navigate(targetPath)
-      
-
-
-      
+      toast.success("Survey saved successfully");
+      navigate(-1);
     } catch (error) {
-
-      console.log('error in handlesumbmit form',error)
-      setLoading(false)
-      
-    }
-    finally{
-      setLoading(false)
-      
+      console.log("error in handlesumbmit form", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if(isCompleted) return (
+    <div>Questions of Category {category_name} COMPLETED</div>
+  )
 
   return (
     <div className="flex  items-center justify-center">
@@ -111,7 +133,11 @@ const Form = () => {
           const isOtherSelected =
             isOtherOpen ||
             (answers[q.id] &&
-              !q.options.some((opt) => opt.description == answers[q.id]?.numeric_value ||  opt.description == answers[q.id]?.textValue ));
+              !q.options.some(
+                (opt) =>
+                  opt.description == answers[q.id]?.numeric_value ||
+                  opt.description == answers[q.id]?.textValue
+              ));
           switch (q.question_type) {
             case "unique_response":
               return (
@@ -131,9 +157,12 @@ const Form = () => {
                         name={q.id}
                         value={option.description}
                         required
-                        checked={answers[q.id]?.numeric_value === option.description || answers[q.id]?.textValue === option.description}
+                        checked={
+                          answers[q.id]?.numeric_value === option.description ||
+                          answers[q.id]?.textValue === option.description
+                        }
                         onChange={() =>
-                          handleRadioChange(q.id, option.description,option.id)
+                          handleRadioChange(q.id, option.description, option.id)
                         }
                         class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                       />
@@ -151,7 +180,7 @@ const Form = () => {
                         value="other"
                         required
                         checked={isOtherSelected}
-                        onChange={() => handleRadioChange(q.id, "other",'')}
+                        onChange={() => handleRadioChange(q.id, "other", "")}
                         class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="font-bold text-black">Otra</span>
@@ -162,7 +191,11 @@ const Form = () => {
                         type="text"
                         id={q.id}
                         placeholder="Especifique su respuesta"
-                        value={answers[q.id]?.numeric_value || answers[q.id]?.textValue || ""}
+                        value={
+                          answers[q.id]?.numeric_value ||
+                          answers[q.id]?.textValue ||
+                          ""
+                        }
                         onChange={(e) =>
                           handleOtherTextChange(q.id, e.target.value)
                         }
@@ -188,7 +221,10 @@ const Form = () => {
                       isOtherOpen ||
                       (answers[sub_q.id] &&
                         !q.options.some(
-                          (opt) => opt.description == answers[sub_q.id]?.numeric_value || opt.description == answers[sub_q.id]?.textValue
+                          (opt) =>
+                            opt.description ==
+                              answers[sub_q.id]?.numeric_value ||
+                            opt.description == answers[sub_q.id]?.textValue
                         ));
 
                     return (
@@ -209,9 +245,18 @@ const Form = () => {
                               value={option.description}
                               required
                               onChange={() =>
-                                handleRadioChange(sub_q.id, option.description,option.id)
+                                handleRadioChange(
+                                  sub_q.id,
+                                  option.description,
+                                  option.id
+                                )
                               }
-                              checked={answers[sub_q.id]?.numeric_value === option.description || answers[sub_q.id]?.textValue === option.description}
+                              checked={
+                                answers[sub_q.id]?.numeric_value ===
+                                  option.description ||
+                                answers[sub_q.id]?.textValue ===
+                                  option.description
+                              }
                               class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                             />
                             <span className="font-bold text-black">
@@ -229,7 +274,7 @@ const Form = () => {
                               required
                               checked={isOtherSelected}
                               onChange={() =>
-                                handleRadioChange(sub_q.id, "other",'')
+                                handleRadioChange(sub_q.id, "other", "")
                               }
                               class="w-5 h-5 text-blue-600 focus:ring-blue-500"
                             />
@@ -241,7 +286,11 @@ const Form = () => {
                               type="text"
                               id={sub_q.id}
                               placeholder="Especifique su respuesta"
-                              value={answers[sub_q.id]?.numeric_value || answers[sub_q.id]?.textValue || ""}
+                              value={
+                                answers[sub_q.id]?.numeric_value ||
+                                answers[sub_q.id]?.textValue ||
+                                ""
+                              }
                               onChange={(e) =>
                                 handleOtherTextChange(sub_q.id, e.target.value)
                               }

@@ -5,6 +5,7 @@ import api from "../../api/user.api";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import usePageStore from "../../stores/use-page-store";
+import Placeholder1 from "../placeholders/Placeholder1";
 
 const VisitsList2 = ({ surveysession_id }) => {
   const [visits, setVisits] = useState([]);
@@ -33,6 +34,7 @@ const VisitsList2 = ({ surveysession_id }) => {
         );
 
         setVisits(res.data);
+        console.log('respuesta en visitas fetch',res.data)
       } catch (error) {
         console.log("error in SessionList", error);
       } finally {
@@ -68,6 +70,12 @@ const VisitsList2 = ({ surveysession_id }) => {
     setAddTriggerVisit(!addTriggerVisit);
     setUpdateVisit(true);
   };
+
+  if(visits.length===0) return (
+    <div className="flex items-center justify-center">
+      <Placeholder1 page_name={'Visita'} plural_page_name={'Visitas'} onButtonClick={()=>setAddTriggerVisit(!addTriggerVisit)}/>
+    </div>
+  )
 
   return (
     <>
