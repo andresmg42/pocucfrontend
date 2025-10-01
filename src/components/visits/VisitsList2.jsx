@@ -75,6 +75,7 @@ const VisitsList2 = ({ surveysession_id }) => {
         <div className="flex flex-col items-center gap-6">
           {visits.map((visit) => (
             <div
+            key={visit.id}
               className="
               bg-white 
               rounded-xl
