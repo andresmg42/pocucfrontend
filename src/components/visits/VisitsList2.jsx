@@ -72,11 +72,27 @@ const VisitsList2 = ({ surveysession_id }) => {
   return (
     <>
       {addTriggerVisit && (
-        <div>
+        <div className="flex flex-col items-center gap-6">
           {visits.map((visit) => (
             <div
-              className="bg-white p-3 hover:bg-gray-200 transition duration-300 ease-in-out m-5
-        hover:cursor-pointer"
+              className="
+              bg-white 
+              rounded-xl
+              shadow-md
+              p-6 
+              flex 
+              flex-col 
+              items-center 
+              text-center
+              transition 
+              duration-300 
+              ease-in-out 
+              hover:shadow-xl
+              transform
+              hover:-translate-y-1
+              w-full
+              max-w-2xl
+            "
             >
               <h1 className="font-bold uppercase text-black">
                 Numero visita: {visit.visit_number}
@@ -92,32 +108,31 @@ const VisitsList2 = ({ surveysession_id }) => {
               </p>
               <p className="text-black opacity-40">
                 Estado:
-                {visit.complete ? 'Completa' : 'Incompleta'}
+                {visit.complete ? "Completa" : "Incompleta"}
               </p>
 
-              <div className="flex mt-8">
+              <div className="flex items-center justify-center gap-8  mt-6 w-full sm:w-auto">
                 <button
                   type="button"
-                  class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                  className="cursor-pointer"
                   onClick={() => handleClickStart(visit.id)}
                 >
-                  Iniciar
+                  <img src="/buttons/start.svg" alt="start" />
                 </button>
-
                 <button
                   type="button"
-                  class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="cursor-pointer"
                   onClick={() => handleClickEdit(visit)}
                 >
-                  Editar
+                  <img src="/buttons/edit.svg" alt="edit" />
                 </button>
 
                 <button
                   type="button"
-                  class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                  className="cursor-pointer"
                   onClick={() => handleClickDelete(visit.id)}
                 >
-                  Eliminar
+                  <img src="/buttons/trash.svg" alt="trash" />
                 </button>
               </div>
             </div>
