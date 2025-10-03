@@ -98,11 +98,14 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const timestamp=new Date().toISOString()
+    console.log('timestamp:',timestamp)
     try {
       console.log("answers", answers);
 
       setLoading(true);
-      const res = await api.post("response/create/", answers);
+      const res = await api.post("response/create/", {'data':answers,'timestamp':timestamp});
+      // const res = await api.post("response/create/",answers);
 
       console.log("respuesta en el form", res);
 
