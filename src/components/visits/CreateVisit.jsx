@@ -69,81 +69,115 @@ const CreateVisit = ({ surveysession_id }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-        <div className="w-full h-10 flex justify-end">
-          <button onClick={handleCloseClick}>
-            <img
-              src="/surveysession/closebutton.svg"
-              alt="closebutton"
-              className="w-10 h-10"
-            />
-          </button>
-        </div>
-        <div className="text-center">
-          {/* {error && <Error error={error} />} */}
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Registro de visitas para Observadores
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Porfavor llene todos los campos y haga click en Registrar
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <input
-                type="number"
-                id="visit_number"
-                required
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Numero de Visita"
-                value={formData.visit_number}
-                onChange={handleChange}
-              />
-
-              <input
-                type="date"
-                id="visit_date"
-                required
-                value={formData.visit_date}
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Fecha de visita"
-                onChange={handleChange}
-              />
-
-              <input
-                type="time"
-                id="start_time"
-                required
-                value={formData.start_time}
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Hora de Inicio"
-                onChange={handleChange}
-              />
-
-              <input
-                type="time"
-                id="end_time"
-                required
-                value={formData.end_time}
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Hora de Finalizacion"
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <button
-            disabled={loading}
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2  focus:ring-blue-500"
-          >
-            {loading ? "loading..." : "Registrar"}
-          </button>
-        </form>
-      </div>
+    <div className="flex items-center justify-center  p-4 sm:p-6 lg:p-8">
+  
+  {/* The form card with a responsive max-width and relative positioning for the close button */}
+  <div className="relative w-full max-w-md lg:max-w-xl space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+    
+    {/* Close Button: Styled and positioned for better UX */}
+    <div className="absolute top-4 right-4">
+      <button 
+        onClick={handleCloseClick}
+        type="button"
+        aria-label="Cerrar formulario"
+        className="h-9 w-9 flex items-center justify-center rounded-full text-slate-500 bg-slate-100 hover:bg-slate-200 hover:text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
+
+    {/* Header Section */}
+    <div className="text-center">
+      <h2 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+        Registro de Visitas
+      </h2>
+      <p className="mt-2 text-sm text-slate-600">
+        Porfavor llene todos los campos para continuar.
+      </p>
+    </div>
+
+    {/* Form with improved spacing */}
+    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      {/* Responsive Grid for Inputs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+        
+        {/* Numero de Visita */}
+        <div>
+          <label htmlFor="visit_number" className="block text-sm font-medium text-slate-700 mb-1">
+            Número de Visita
+          </label>
+          <input
+            type="number"
+            id="visit_number"
+            required
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Ej: 1"
+            value={formData.visit_number}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Fecha de visita */}
+        <div>
+          <label htmlFor="visit_date" className="block text-sm font-medium text-slate-700 mb-1">
+            Fecha de Visita
+          </label>
+          <input
+            type="date"
+            id="visit_date"
+            required
+            value={formData.visit_date}
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Hora de Inicio */}
+        <div>
+          <label htmlFor="start_time" className="block text-sm font-medium text-slate-700 mb-1">
+            Hora de Inicio
+          </label>
+          <input
+            type="time"
+            id="start_time"
+            required
+            value={formData.start_time}
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Hora de Finalizacion */}
+        <div>
+          <label htmlFor="end_time" className="block text-sm font-medium text-slate-700 mb-1">
+            Hora de Finalización
+          </label>
+          <input
+            type="time"
+            id="end_time"
+            required
+            value={formData.end_time}
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <div>
+        <button
+          disabled={loading}
+          type="submit"
+          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-colors"
+        >
+          {loading ? "Registrando..." : "Registrar"}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
   );
 };
 

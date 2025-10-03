@@ -15,9 +15,9 @@ function NavBar() {
   }
 
   return (
-    <div className=" text-white font-bold py-4 fixed top-0 left-0 w-full  shadow">
-    <nav className="  container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
-      {/* Logo o nombre de la marca */}
+    <div className="bg-zinc-700 text-white font-bold py-4 fixed top-0 left-0 w-full  shadow">
+    <nav className="container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
+      
       <div className="h-16 flex items-center ml-5">
         <NavLink to="/">
         
@@ -29,10 +29,10 @@ function NavBar() {
         </NavLink>
       </div>
 
-      {/* Ícono de hamburguesa para móviles */}
+      
       <div className="block md:hidden">
         <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)} // Alternar la visibilidad del menú
+          onClick={() => setIsMenuOpen(!isMenuOpen)} 
           className="text-white focus:outline-none"
         >
           <svg
@@ -52,7 +52,7 @@ function NavBar() {
         </button>
       </div>
 
-      {/* Menú de navegación */}
+      
       <ul
         className={`${
           isMenuOpen ? "block" : "hidden"
@@ -93,7 +93,7 @@ function NavBar() {
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             activeClassName="text-blue-500"
           >
-            Sign In
+            Iniciar Sesión
           </NavLink>
         </li>
         }
@@ -103,7 +103,7 @@ function NavBar() {
               onClick={handleLogout}
               className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             >
-              Log Out
+              Cerrar Sesión
             </button>
           </li>
         )}

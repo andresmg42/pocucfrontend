@@ -90,100 +90,148 @@ const CreateSession = ({ survey_id }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-        <div className="w-full h-10 flex justify-end">
-          <button onClick={handleCloseClick}>
-            <img
-              src="/surveysession/closebutton.svg"
-              alt="closebutton"
-              className="w-10 h-10"
-            />
-          </button>
-        </div>
-        <div className="text-center">
-          {/* {error && <Error error={error} />} */}
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Registro de Sesiónes para Observadores
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Porfavor llene todos los campos y haga click en Registrar
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <input
-                type="number"
-                id="zone"
-                required
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Zona"
-                value={formData.zone}
-                onChange={handleChange}
-              />
-
-              <input
-                type="number"
-                id="number_session"
-                required
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Numero de Sesion"
-                value={formData.number_session}
-                onChange={handleChange}
-              />
-
-              <input
-                type="date"
-                id="start_date"
-                required
-                value={formData.start_date}
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Fecha de inicio"
-                onChange={handleChange}
-              />
-
-              <input
-                type="date"
-                id="end_date"
-                required
-                value={formData.end_date}
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Fecha de finalizacion"
-                onChange={handleChange}
-              />
-
-              <input
-                type="number"
-                id="observational_distance"
-                required
-                value={formData.observational_distance}
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Distancia observacional en Metros"
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                id="url"
-                required
-                className="mt-1 text-black block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Url de carpetra drive de evidencias"
-                value={formData.url}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <button
-            disabled={loading}
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2  focus:ring-blue-500"
-          >
-            {loading ? "loading..." : "Registrar"}
-          </button>
-        </form>
-      </div>
+    <div className=" flex items-center justify-center  p-4 sm:p-6 lg:p-8">
+  
+  {/* The form card with a responsive max-width and relative positioning for the close button */}
+  <div className="relative w-full max-w-md lg:max-w-2xl space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+    
+    {/* Close Button: Styled and positioned for better UX */}
+    <div className="absolute top-4 right-4">
+      <button 
+        onClick={handleCloseClick}
+        type="button"
+        aria-label="Cerrar formulario"
+        className="h-9 w-9 flex items-center justify-center rounded-full text-slate-500 bg-slate-100 hover:bg-slate-200 hover:text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
+
+    {/* Header Section */}
+    <div className="text-center">
+      <h2 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+        Registro de Sesiónes
+      </h2>
+      <p className="mt-2 text-sm text-slate-600">
+        Porfavor llene todos los campos para continuar.
+      </p>
+    </div>
+
+    {/* Form with improved spacing */}
+    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      {/* Responsive Grid for Inputs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+        
+        {/* Zona */}
+        <div>
+          <label htmlFor="zone" className="block text-sm font-medium text-slate-700 mb-1">
+            Zona
+          </label>
+          <input
+            type="number"
+            id="zone"
+            required
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Ej: 14"
+            value={formData.zone}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Numero de Sesion */}
+        <div>
+          <label htmlFor="number_session" className="block text-sm font-medium text-slate-700 mb-1">
+            Número de Sesión
+          </label>
+          <input
+            type="number"
+            id="number_session"
+            required
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Ej: 3"
+            value={formData.number_session}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Fecha de inicio */}
+        <div>
+          <label htmlFor="start_date" className="block text-sm font-medium text-slate-700 mb-1">
+            Fecha de Inicio
+          </label>
+          <input
+            type="date"
+            id="start_date"
+            required
+            value={formData.start_date}
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Fecha de finalizacion */}
+        <div>
+          <label htmlFor="end_date" className="block text-sm font-medium text-slate-700 mb-1">
+            Fecha de Finalización
+          </label>
+          <input
+            type="date"
+            id="end_date"
+            required
+            value={formData.end_date}
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Distancia observacional - Spanning full width */}
+        <div className="sm:col-span-2">
+          <label htmlFor="observational_distance" className="block text-sm font-medium text-slate-700 mb-1">
+            Distancia Observacional (Metros)
+          </label>
+          <input
+            type="number"
+            id="observational_distance"
+            required
+            value={formData.observational_distance}
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Ej: 100"
+            onChange={handleChange}
+          />
+        </div>
+        
+        {/* URL de carpeta drive - Spanning full width */}
+        <div className="sm:col-span-2">
+          <label htmlFor="url" className="block text-sm font-medium text-slate-700 mb-1">
+            URL de Carpeta Drive
+          </label>
+          <input
+            type="text"
+            id="url"
+            required
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="https://drive.google.com/..."
+            value={formData.url}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <div>
+        <button
+          disabled={loading}
+          type="submit"
+          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-colors"
+        >
+          {loading ? "Registrando..." : "Registrar"}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
   );
 };
 
