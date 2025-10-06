@@ -126,11 +126,14 @@ const VisitsList = ({ surveysession_id }) => {
                       <td className="py-4 px-6">{visit.start_time}</td>
                       <td className="py-4 px-6">{visit.end_time}</td>
                       <td className="py-4 px-6">
-                        {visit.complete ? (
+                        {
+                        visit.state===2 ? 
                           <h1>Completa</h1>
-                        ) : (
-                          <h1>Incompleta</h1>
-                        )}
+                        : visit.state===1?
+                        <h1>Iniciada</h1>
+                        :
+                        <h1>Sin Iniciar</h1>
+                      }
                       </td>
 
                       <td className="py-4 px-6">
