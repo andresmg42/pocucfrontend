@@ -33,7 +33,12 @@ const VisitsList2 = ({ surveysession_id }) => {
           `visit/sessionvisits?surveysession_id=${surveysession_id}`
         );
 
-        setVisits(res.data);
+        if (res.data){
+          const sortedData=res.data.sort((a,b)=>a.visit_number-b.visit_number);
+          setVisits(sortedData);
+        }
+
+        
         console.log("respuesta en visitas fetch", res.data);
       } catch (error) {
         console.log("error in SessionList", error);
