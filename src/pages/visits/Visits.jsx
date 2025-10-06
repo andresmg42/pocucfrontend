@@ -7,11 +7,13 @@ import VisitsList2 from "../../components/visits/VisitsList2";
 const Visits = () => {
   const { surveysession_id } = useParams();
 
-  const { addTriggerVisit,setAddTriggerVisit } = usePageStore();
+  const { addTriggerVisit,setAddTriggerVisit,updateVisit,setUpdateVisit } = usePageStore();
 
   const handleAddClick = (e) => {
     e.preventDefault();
     setAddTriggerVisit(!addTriggerVisit);
+    setUpdateVisit(false)
+   
   };
 
   return (
