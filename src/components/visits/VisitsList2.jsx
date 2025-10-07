@@ -121,6 +121,7 @@ const VisitsList2 = ({ surveysession_id }) => {
                   dateStyle: "full", 
                   timeStyle: "short", 
                 });
+              }
 
               if (visit.visit_end_date_time){
                 const dateObj = new Date(visit.visit_end_date_time);
@@ -132,7 +133,7 @@ const VisitsList2 = ({ surveysession_id }) => {
               }
                 
                 console.log('localtime',localTimeStart)
-              }
+              
 
               return (
                 <div

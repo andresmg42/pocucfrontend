@@ -10,7 +10,7 @@ function Home() {
   const { userLogged } = useAuthStore();
 
  useEffect(() => {
-     console.log('entro a useEffect')
+     
     if (userLogged==null) {
       navigate("login/");
     }

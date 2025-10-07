@@ -15,8 +15,8 @@ const CreateSession = ({ survey_id }) => {
     {
           zone: session.zone,
           number_session: session.number_session,
-          start_date: session.start_date,
-          end_date: session.end_date,
+          // start_date: session.start_date,
+          // end_date: session.end_date,
           observational_distance: session.observational_distance,
           url: session.url,
           observer: userLogged.email,
@@ -25,8 +25,8 @@ const CreateSession = ({ survey_id }) => {
       : {
           zone: "",
           number_session: "",
-          start_date: "",
-          end_date: "",
+          // start_date: "",
+          // end_date: "",
           observational_distance: "",
           url: "",
           observer: userLogged.email,
@@ -65,8 +65,8 @@ const CreateSession = ({ survey_id }) => {
           {
           zone: "",
           number_session: "",
-          start_date: "",
-          end_date: "",
+          // start_date: "",
+          // end_date: "",
           observational_distance: "",
           url: "",
           observer: userLogged.email,
@@ -75,7 +75,7 @@ const CreateSession = ({ survey_id }) => {
         )
         toast.success("Sesión creada o actualizada exitosamente!");
       }
-      // console.log('response in handle submit:',res)
+      
     } catch (error) {
       console.error("error in handlesubmit of createSession", error);
       toast.error("Datos incorrectos, el numero de  sesion no se debe repetir");
@@ -92,10 +92,10 @@ const CreateSession = ({ survey_id }) => {
   return (
     <div className=" flex items-center justify-center  p-4 sm:p-6 lg:p-8">
   
-  {/* The form card with a responsive max-width and relative positioning for the close button */}
+  
   <div className="relative w-full max-w-md lg:max-w-2xl space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
     
-    {/* Close Button: Styled and positioned for better UX */}
+    
     <div className="absolute top-4 right-4">
       <button 
         onClick={handleCloseClick}
@@ -109,7 +109,7 @@ const CreateSession = ({ survey_id }) => {
       </button>
     </div>
 
-    {/* Header Section */}
+    
     <div className="text-center">
       <h2 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
         Registro de Sesiónes
@@ -119,12 +119,12 @@ const CreateSession = ({ survey_id }) => {
       </p>
     </div>
 
-    {/* Form with improved spacing */}
+    
     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-      {/* Responsive Grid for Inputs */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
         
-        {/* Zona */}
+        
         <div>
           <label htmlFor="zone" className="block text-sm font-medium text-slate-700 mb-1">
             Zona
@@ -140,7 +140,7 @@ const CreateSession = ({ survey_id }) => {
           />
         </div>
 
-        {/* Numero de Sesion */}
+        
         <div>
           <label htmlFor="number_session" className="block text-sm font-medium text-slate-700 mb-1">
             Número de Sesión
@@ -157,7 +157,7 @@ const CreateSession = ({ survey_id }) => {
         </div>
 
         {/* Fecha de inicio */}
-        <div>
+        {/* <div>
           <label htmlFor="start_date" className="block text-sm font-medium text-slate-700 mb-1">
             Fecha de Inicio
           </label>
@@ -169,10 +169,10 @@ const CreateSession = ({ survey_id }) => {
             className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             onChange={handleChange}
           />
-        </div>
+        </div> */}
 
         {/* Fecha de finalizacion */}
-        <div>
+        {/* <div>
           <label htmlFor="end_date" className="block text-sm font-medium text-slate-700 mb-1">
             Fecha de Finalización
           </label>
@@ -184,7 +184,7 @@ const CreateSession = ({ survey_id }) => {
             className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             onChange={handleChange}
           />
-        </div>
+        </div> */}
 
         {/* Distancia observacional - Spanning full width */}
         <div className="sm:col-span-2">
