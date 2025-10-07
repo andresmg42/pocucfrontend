@@ -43,8 +43,21 @@ const SessionList2 = ({ survey_id }) => {
     return <div className="text-center p-10 text-white">Loading users...</div>;
   }
 
-  const handleClickStart = (surveysession_id) => {
-    navigate(`visits/${surveysession_id}`);
+  const handleClickStart = async (surveysession_id) => {
+   
+
+    try {
+      const res= api.post('surveysession/update_start_session/',{'surveysession_id':surveysession_id})
+    } catch (error) {
+      console.error('error in handleClickStart of SessionList2.jsx',error)
+      
+    }
+
+     navigate(`visits/${surveysession_id}`);
+
+
+
+
   };
 
   const handleClickDelete = async (surveysession_id) => {
