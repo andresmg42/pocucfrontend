@@ -17,6 +17,7 @@ const CreateSession = ({ survey_id }) => {
           number_session: session.number_session,
           // start_date: session.start_date,
           // end_date: session.end_date,
+          visit_number:session.visit_number,
           observational_distance: session.observational_distance,
           url: session.url,
           observer: userLogged.email,
@@ -27,6 +28,7 @@ const CreateSession = ({ survey_id }) => {
           number_session: "",
           // start_date: "",
           // end_date: "",
+          visit_number:"",
           observational_distance: "",
           url: "",
           observer: userLogged.email,
@@ -67,6 +69,7 @@ const CreateSession = ({ survey_id }) => {
           number_session: "",
           // start_date: "",
           // end_date: "",
+          visit_number:"",
           observational_distance: "",
           url: "",
           observer: userLogged.email,
@@ -152,6 +155,21 @@ const CreateSession = ({ survey_id }) => {
             className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Ej: 3"
             value={formData.number_session}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="visit_number" className="block text-sm font-medium text-slate-700 mb-1">
+            Numero de Visitas
+          </label>
+          <input
+            type="number"
+            id="visit_number"
+            required
+            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Ej: 3"
+            value={formData.visit_number}
             onChange={handleChange}
           />
         </div>
