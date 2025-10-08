@@ -7,14 +7,15 @@ import toast from "react-hot-toast";
 import usePageStore from "../../stores/use-page-store";
 import Placeholder1 from "../placeholders/Placeholder1";
 
-const VisitsList2 = ({ surveysession_id,visit_number }) => {
+const VisitsList2 = ({ surveysession_id, visit_number }) => {
   const [visits, setVisits] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
   const { userLogged } = useAuthStore();
 
-  const {setVisitAddTriggerDisabled}=usePageStore();
+  const { setVisitAddTriggerDisabled, visitAddTriggerDisabled } =
+    usePageStore();
 
   const [visitedIsDeleted, setVisitIsDeleted] = useState(false);
 
@@ -35,23 +36,25 @@ const VisitsList2 = ({ surveysession_id,visit_number }) => {
           `visit/sessionvisits?surveysession_id=${surveysession_id}`
         );
 
-        if (res.data){
-          const sortedData=res.data.sort((a,b)=>a.visit_number-b.visit_number);
+        if (res.data) {
+          const sortedData = res.data.sort(
+            (a, b) => a.visit_number - b.visit_number
+          );
           setVisits(sortedData);
-          console.log('numero de visitas: ',sortedData.length)
-          if (sortedData.length===parseInt(visit_number)){
-            console.log('entro al if the setVisitAddTriggerDisabled',sortedData.length===parseInt(visit_number))
-          setVisitAddTriggerDisabled({[surveysession_id]:true})
+          console.log("numero de visitas: ", sortedData.length);
+          if (sortedData.length === parseInt(visit_number)) {
+            console.log(
+              "entro al if the setVisitAddTriggerDisabled",
+              sortedData.length === parseInt(visit_number)
+            );
+            setVisitAddTriggerDisabled({ [surveysession_id]: true });
+          } else {
+            setVisitAddTriggerDisabled({ [surveysession_id]: false });
+          }
+
+          console.log();
         }
 
-        console.log()
-        }
-
-        
-
-        
-
-        
         console.log("respuesta en visitas fetch", res.data);
       } catch (error) {
         console.log("error in SessionList", error);
@@ -60,7 +63,7 @@ const VisitsList2 = ({ surveysession_id,visit_number }) => {
       }
     }
     getVisits();
-  }, [userLogged, visitedIsDeleted]);
+  }, [userLogged, visitedIsDeleted, visit_number]);
 
   if (loading) {
     return <div className="text-center p-10 text-white">Loading users...</div>;
@@ -68,7 +71,7 @@ const VisitsList2 = ({ surveysession_id,visit_number }) => {
 
   const handleClickStart = async (visit_id) => {
     try {
-      const res = api.post(`visit/update_start_date/`,{'visit_id':visit_id});
+      const res = api.post(`visit/update_start_date/`, { visit_id: visit_id });
 
       if (res.status === 200) {
         toast.success("visit started successfully");
@@ -87,7 +90,7 @@ const VisitsList2 = ({ surveysession_id,visit_number }) => {
 
       setVisitIsDeleted((prev) => !prev);
 
-      setVisitAddTriggerDisabled({[surveysession_id]:false})
+      setVisitAddTriggerDisabled({ [surveysession_id]: false });
 
       toast.success("Visita Eliminada Exitosamente");
     } catch (error) {
@@ -126,29 +129,26 @@ const VisitsList2 = ({ surveysession_id,visit_number }) => {
           {/* Responsive grid layout that adjusts to screen size */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {visits.map((visit) => {
-
-              var localTimeStart=null;
-              var localTimeEnd=null;
-              console.log('fecha de la visita:',visit.visit_start_date_time)
+              var localTimeStart = null;
+              var localTimeEnd = null;
+              console.log("fecha de la visita:", visit.visit_start_date_time);
               if (visit.visit_start_date_time) {
                 const dateObj = new Date(visit.visit_start_date_time);
                 localTimeStart = dateObj.toLocaleString("es-CO", {
-                  dateStyle: "full", 
-                  timeStyle: "short", 
+                  dateStyle: "full",
+                  timeStyle: "short",
                 });
               }
 
-              if (visit.visit_end_date_time){
+              if (visit.visit_end_date_time) {
                 const dateObj = new Date(visit.visit_end_date_time);
                 localTimeEnd = dateObj.toLocaleString("es-CO", {
-                  dateStyle: "full", 
-                  timeStyle: "short", 
+                  dateStyle: "full",
+                  timeStyle: "short",
                 });
-
               }
-                
-                console.log('localtime',localTimeStart)
-              
+
+              console.log("localtime", localTimeStart);
 
               return (
                 <div
@@ -220,28 +220,32 @@ const VisitsList2 = ({ surveysession_id,visit_number }) => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        <span>Fecha Inicio: {localTimeStart? localTimeStart:'No has Iniciado la visita'}</span>
+                        <span>
+                          Fecha Inicio:{" "}
+                          {localTimeStart
+                            ? localTimeStart
+                            : "No has Iniciado la visita"}
+                        </span>
                       </div>
 
                       {localTimeEnd && (
                         <div className="flex items-center gap-2">
-                        {/* Icon for Date */}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span>Fecha Finalización: {localTimeEnd}</span>
-                      </div>
+                          {/* Icon for Date */}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>Fecha Finalización: {localTimeEnd}</span>
+                        </div>
                       )}
-  
                     </div>
                   </div>
 
