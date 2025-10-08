@@ -56,9 +56,11 @@ const CreateVisit = ({ surveysession_id }) => {
         setAddTriggerVisit(!addTriggerVisit);
         toast.success("Visita Registrada exitosamente");
       }
+
       console.log("response in handle sumbmit de visita", res);
     } catch (error) {
       console.log("error in handlesubmit of CreateVisit", error);
+      toast.error('No puedes crear una visita con un numero de visita que ya existe')
     } finally {
       setLoading(false);
     }

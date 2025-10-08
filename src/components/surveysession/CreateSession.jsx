@@ -174,36 +174,6 @@ const CreateSession = ({ survey_id }) => {
           />
         </div>
 
-        {/* Fecha de inicio */}
-        {/* <div>
-          <label htmlFor="start_date" className="block text-sm font-medium text-slate-700 mb-1">
-            Fecha de Inicio
-          </label>
-          <input
-            type="date"
-            id="start_date"
-            required
-            value={formData.start_date}
-            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            onChange={handleChange}
-          />
-        </div> */}
-
-        {/* Fecha de finalizacion */}
-        {/* <div>
-          <label htmlFor="end_date" className="block text-sm font-medium text-slate-700 mb-1">
-            Fecha de Finalización
-          </label>
-          <input
-            type="date"
-            id="end_date"
-            required
-            value={formData.end_date}
-            className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            onChange={handleChange}
-          />
-        </div> */}
-
         {/* Distancia observacional - Spanning full width */}
         <div className="sm:col-span-2">
           <label htmlFor="observational_distance" className="block text-sm font-medium text-slate-700 mb-1">

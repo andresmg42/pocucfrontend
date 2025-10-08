@@ -10,8 +10,15 @@ import Placeholder1 from "../placeholders/Placeholder1";
 const SessionList2 = ({ survey_id }) => {
   const navigate = useNavigate();
 
-  const { addTrigger, setAddTrigger, session, setSession, update, setUpdate,setVisitAddTriggerDisabled } =
-    usePageStore();
+  const {
+    addTrigger,
+    setAddTrigger,
+    session,
+    setSession,
+    update,
+    setUpdate,
+    setVisitAddTriggerDisabled,
+  } = usePageStore();
 
   const [sessions, setSessions] = useState([]);
 
@@ -31,16 +38,14 @@ const SessionList2 = ({ survey_id }) => {
         console.log("esta es la respuesta en sessionlist", res);
         setSessions(res.data);
 
-        if(sessions){
-          const disableStates=sessions.reduce((acc,session)=>{
-            acc[session.id]=false;
-            return acc
-          },{});
+        if (sessions) {
+          const disableStates = sessions.reduce((acc, session) => {
+            acc[session.id] = false;
+            return acc;
+          }, {});
 
-          setVisitAddTriggerDisabled(prev=>({...prev,...disableStates}));
+          setVisitAddTriggerDisabled((prev) => ({ ...prev, ...disableStates }));
         }
-
-
       } catch (error) {
         console.log("error in SessionList", error);
       } finally {
@@ -54,32 +59,32 @@ const SessionList2 = ({ survey_id }) => {
     return <div className="text-center p-10 text-white">Loading users...</div>;
   }
 
-  const handleClickStart = async (surveysession_id,visit_number) => {
-   
-
+  const handleClickStart = async (surveysession_id, visit_number) => {
     try {
-      const res= api.post('surveysession/update_start_session/',{'surveysession_id':surveysession_id})
+      const res = api.post("surveysession/update_start_session/", {
+        surveysession_id: surveysession_id,
+      });
     } catch (error) {
-      console.error('error in handleClickStart of SessionList2.jsx',error)
-      
+      console.error("error in handleClickStart of SessionList2.jsx", error);
     }
 
-     navigate(`visits/${surveysession_id}/${visit_number}`);
-
-
-
-
+    navigate(`visits/${surveysession_id}/${visit_number}`);
   };
 
   const handleClickDelete = async (surveysession_id) => {
-    try {
-      const res = await api.delete(`surveysession/${surveysession_id}/`);
+    const confirmed = window.confirm(
+      "Esta seguro de que desea eliminar esta Sesión?"
+    );
 
-      toast.success("Secion de Encuesta Eliminada Exitosamente");
+    if (confirmed) {
+      try {
+        const res = await api.delete(`surveysession/${surveysession_id}/`);
+        toast.success("Secion de Encuesta Eliminada Exitosamente");
 
-      setSessionIsDeleted((prev) => !prev);
-    } catch (error) {
-      console.log("error deleting Encuesta", error);
+        setSessionIsDeleted((prev) => !prev);
+      } catch (error) {
+        console.log("error deleting Encuesta", error);
+      }
     }
   };
 
@@ -110,9 +115,8 @@ const SessionList2 = ({ survey_id }) => {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {sessions.map((session) => {
-
-              console.log('session_id: ',session.id)
-              console.log('session_state: ',session.state)
+              console.log("session_id: ", session.id);
+              console.log("session_state: ", session.state);
               var localTimeStart = null;
               var localTimeEnd = null;
               console.log("fecha de la visita:", session.start_date);
@@ -216,29 +220,32 @@ const SessionList2 = ({ survey_id }) => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        <span>Fecha Inicio: {localTimeStart? localTimeStart:'No has Iniciado la Sesión'}</span>
+                        <span>
+                          Fecha Inicio:{" "}
+                          {localTimeStart
+                            ? localTimeStart
+                            : "No has Iniciado la Sesión"}
+                        </span>
                       </div>
 
                       {localTimeEnd && (
                         <div className="flex items-center gap-2">
-                        {/* Icon for Date */}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span>Fecha Finalización: {localTimeEnd}</span>
-                      </div>
+                          {/* Icon for Date */}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>Fecha Finalización: {localTimeEnd}</span>
+                        </div>
                       )}
-
-
 
                       <div className="flex items-center gap-2">
                         <svg
@@ -267,7 +274,9 @@ const SessionList2 = ({ survey_id }) => {
                     <button
                       type="button"
                       aria-label="Start session"
-                      onClick={() => handleClickStart(session.id,session.visit_number)}
+                      onClick={() =>
+                        handleClickStart(session.id, session.visit_number)
+                      }
                       className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100 text-green-600 transition-colors hover:bg-green-200"
                     >
                       <svg

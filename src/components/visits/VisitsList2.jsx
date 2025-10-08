@@ -6,9 +6,12 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import usePageStore from "../../stores/use-page-store";
 import Placeholder1 from "../placeholders/Placeholder1";
+import ConfirmationModal from "../auxiliarcomponents/ConfirmationModal";
 
 const VisitsList2 = ({ surveysession_id, visit_number }) => {
   const [visits, setVisits] = useState([]);
+
+  const [openModal,setOpenModal]=useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -85,8 +88,17 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
   };
 
   const handleClickDelete = async (visit_id) => {
-    try {
+
+    const confirmed = window.confirm("Esta seguro de que desea eliminar esta visita?");
+
+    if(confirmed){
+
+      try {
+
+      
       const res = await api.delete(`visit/${visit_id}/`);
+
+      
 
       setVisitIsDeleted((prev) => !prev);
 
@@ -96,6 +108,10 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
     } catch (error) {
       console.log("error deleting visit", error);
     }
+
+    }
+    
+    
   };
 
   const handleClickEdit = async (visit) => {
@@ -119,8 +135,10 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
     );
 
   return (
+
     <>
-      {addTriggerVisit && (
+    { addTriggerVisit &&
+  (
         <div className="p-4 sm:p-6 md:p-8">
           <h2 class="text-4xl font-bold dark:text-white text-black mb-10">
             Visitas
@@ -317,8 +335,8 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
             })}
           </div>
         </div>
-      )}
-    </>
+      ) }
+  </>
   );
 };
 
