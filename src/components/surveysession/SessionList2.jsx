@@ -10,7 +10,7 @@ import Placeholder1 from "../placeholders/Placeholder1";
 const SessionList2 = ({ survey_id }) => {
   const navigate = useNavigate();
 
-  const { addTrigger, setAddTrigger, session, setSession, update, setUpdate } =
+  const { addTrigger, setAddTrigger, session, setSession, update, setUpdate,setVisitAddTriggerDisabled } =
     usePageStore();
 
   const [sessions, setSessions] = useState([]);
@@ -30,6 +30,17 @@ const SessionList2 = ({ survey_id }) => {
         );
         console.log("esta es la respuesta en sessionlist", res);
         setSessions(res.data);
+
+        if(sessions){
+          const disableStates=sessions.reduce((acc,session)=>{
+            acc[session.id]=false;
+            return acc
+          },{});
+
+          setVisitAddTriggerDisabled(prev=>({...prev,...disableStates}));
+        }
+
+
       } catch (error) {
         console.log("error in SessionList", error);
       } finally {
@@ -43,7 +54,7 @@ const SessionList2 = ({ survey_id }) => {
     return <div className="text-center p-10 text-white">Loading users...</div>;
   }
 
-  const handleClickStart = async (surveysession_id) => {
+  const handleClickStart = async (surveysession_id,visit_number) => {
    
 
     try {
@@ -53,7 +64,7 @@ const SessionList2 = ({ survey_id }) => {
       
     }
 
-     navigate(`visits/${surveysession_id}`);
+     navigate(`visits/${surveysession_id}/${visit_number}`);
 
 
 
@@ -256,7 +267,7 @@ const SessionList2 = ({ survey_id }) => {
                     <button
                       type="button"
                       aria-label="Start session"
-                      onClick={() => handleClickStart(session.id)}
+                      onClick={() => handleClickStart(session.id,session.visit_number)}
                       className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100 text-green-600 transition-colors hover:bg-green-200"
                     >
                       <svg

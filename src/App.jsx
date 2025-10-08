@@ -21,9 +21,9 @@ function App() {
           <Route index path="/" element={<Home />}></Route>
           <Route index path="login/" element={<Login />}></Route>
           <Route index path="surveysession/:survey_id" element={<SurveySession />}></Route>
-          <Route index path="surveysession/:survey_id/visits/:surveysession_id" element={<Visits />}></Route>
-          <Route index path="surveysession/:survey_id/visits/:surveysession_id/categories/:visit_id" element={<Category />}></Route>
-          <Route index path="surveysession/:survey_id/visits/:surveysession_id/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route> 
+          <Route index path="surveysession/:survey_id/visits/:surveysession_id/:visit_number" element={<Visits />}></Route>
+          <Route index path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/:categories/:visit_id" element={<Category />}></Route>
+          <Route index path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route> 
         </Routes>
       </Layout>
     </BrowserRouter>

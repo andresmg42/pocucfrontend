@@ -5,9 +5,9 @@ import CreateVisit from "../../components/visits/CreateVisit";
 import VisitsList2 from "../../components/visits/VisitsList2";
 
 const Visits = () => {
-  const { surveysession_id } = useParams();
+  const { surveysession_id,visit_number } = useParams();
 
-  const { addTriggerVisit,setAddTriggerVisit,updateVisit,setUpdateVisit } = usePageStore();
+  const { addTriggerVisit,setAddTriggerVisit,updateVisit,setUpdateVisit,visitAddTriggerDisabled } = usePageStore();
 
   const handleAddClick = (e) => {
     e.preventDefault();
@@ -16,15 +16,20 @@ const Visits = () => {
    
   };
 
+  console.log('visit add trigger state',visitAddTriggerDisabled)
+
   return (
     <div>
       {addTriggerVisit ? (
-        <VisitsList2 surveysession_id={surveysession_id} />
+        <VisitsList2 surveysession_id={surveysession_id} visit_number={visit_number} />
       ) : (
         <CreateVisit surveysession_id={surveysession_id} />
       )}
 
-      <button onClick={handleAddClick}>
+      <button 
+      
+      disabled={visitAddTriggerDisabled[surveysession_id]}
+      onClick={handleAddClick}>
         <img
           src="/surveysession/add.svg"
           alt="add"

@@ -7,12 +7,14 @@ import toast from "react-hot-toast";
 import usePageStore from "../../stores/use-page-store";
 import Placeholder1 from "../placeholders/Placeholder1";
 
-const VisitsList2 = ({ surveysession_id }) => {
+const VisitsList2 = ({ surveysession_id,visit_number }) => {
   const [visits, setVisits] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
   const { userLogged } = useAuthStore();
+
+  const {setVisitAddTriggerDisabled}=usePageStore();
 
   const [visitedIsDeleted, setVisitIsDeleted] = useState(false);
 
@@ -36,7 +38,18 @@ const VisitsList2 = ({ surveysession_id }) => {
         if (res.data){
           const sortedData=res.data.sort((a,b)=>a.visit_number-b.visit_number);
           setVisits(sortedData);
+          console.log('numero de visitas: ',sortedData.length)
+          if (sortedData.length===parseInt(visit_number)){
+            console.log('entro al if the setVisitAddTriggerDisabled',sortedData.length===parseInt(visit_number))
+          setVisitAddTriggerDisabled({[surveysession_id]:true})
         }
+
+        console.log()
+        }
+
+        
+
+        
 
         
         console.log("respuesta en visitas fetch", res.data);
@@ -73,6 +86,8 @@ const VisitsList2 = ({ surveysession_id }) => {
       const res = await api.delete(`visit/${visit_id}/`);
 
       setVisitIsDeleted((prev) => !prev);
+
+      setVisitAddTriggerDisabled({[surveysession_id]:false})
 
       toast.success("Visita Eliminada Exitosamente");
     } catch (error) {

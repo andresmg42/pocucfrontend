@@ -9,6 +9,16 @@ const usePageStore=create((set)=>({
         setAddTriggerVisit:(boolean)=>set({addTriggerVisit:boolean}),
         visitTrigger:true,
         setVisitTrigger:(boolean)=>set({visitTrigger:boolean}),
+        visitAddTriggerDisabled:{},
+        setVisitAddTriggerDisabled:(trigger_json)=>set((state)=>(
+            {
+                visitAddTriggerDisabled:{
+                ...state.visitAddTriggerDisabled,
+                ...trigger_json
+            }
+            
+            }
+        )),
         editTrigger:false,
         setEditTrigger:(boolean)=>set({editTrigger:boolean}),
         session:null,
@@ -19,6 +29,7 @@ const usePageStore=create((set)=>({
         setVisit:(visit)=>set({visit:visit}),
         updateVisit:false,
         setUpdateVisit:(boolean)=>set({updateVisit:boolean})
+        
         
     }));
 

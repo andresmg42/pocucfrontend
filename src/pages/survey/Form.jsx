@@ -3,9 +3,11 @@ import { replace, useNavigate, useParams } from "react-router";
 import api from "../../api/user.api";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import usePageStore from "../../stores/use-page-store";
 
 const Form = () => {
   const { category_id, surveysession_id, visit_id, survey_id,category_name } = useParams();
+  const {setVisitAddTriggerDisabled}=usePageStore()
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [openTextFields, setOpenTextFields] = useState({});
@@ -98,18 +100,21 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const timestamp=new Date().toISOString()
-    // console.log('timestamp:',timestamp)
+    
     try {
       console.log("answers", answers);
 
       setLoading(true);
       const res = await api.post("response/create/", answers);
-      // const res = await api.post("response/create/",answers);
+
+      // if (res.data?.session_completed){
+      //   setVisitAddTriggerDisabled(prev=>({...prev,[surveysession_id]:true}))
+      // }
+      
 
       console.log("respuesta en el form", res);
 
-      // const targetPath = `/surveysession/${survey_id}/visits/${surveysession_id}/categories/${visit_id}`;
+      
       toast.success("Survey saved successfully");
       navigate(-1);
     } catch (error) {
