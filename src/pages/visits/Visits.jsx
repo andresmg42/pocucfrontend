@@ -3,6 +3,7 @@ import usePageStore from "../../stores/use-page-store";
 import VisitsList from "../../components/visits/VisitsList";
 import CreateVisit from "../../components/visits/CreateVisit";
 import VisitsList2 from "../../components/visits/VisitsList2";
+import toast from "react-hot-toast";
 
 const Visits = () => {
   const { surveysession_id,visit_number } = useParams();
@@ -11,8 +12,15 @@ const Visits = () => {
 
   const handleAddClick = (e) => {
     e.preventDefault();
-    setAddTriggerVisit(!addTriggerVisit);
-    setUpdateVisit(false)
+
+    if (!visitAddTriggerDisabled[surveysession_id]){
+        setAddTriggerVisit(!addTriggerVisit);
+        setUpdateVisit(false)
+    }else{
+      toast.error('Ya no puedes crear mas visitas!')
+    }
+
+    
    
   };
 
@@ -28,7 +36,7 @@ const Visits = () => {
 
       <button 
       
-      disabled={visitAddTriggerDisabled[surveysession_id]}
+      // disabled={visitAddTriggerDisabled[surveysession_id]}
       onClick={handleAddClick}>
         <img
           src="/surveysession/add.svg"
