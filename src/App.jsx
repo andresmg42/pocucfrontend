@@ -12,6 +12,9 @@ import Visits from "./pages/visits/Visits.jsx";
 import Form from "./pages/survey/Form.jsx";
 import Category from "./pages/categories/Category.jsx";
 import CreateSession from "./components/surveysession/CreateSession.jsx";
+import OberverTable from "./components/reportpanel/ObserverTable.jsx";
+// src/App.js (or wherever your main component is)
+import { getTheme } from '@table-library/react-table-library/baseline';
 function App() {
   return (
     <BrowserRouter>
@@ -19,11 +22,12 @@ function App() {
       <Layout>
         <Routes>
           <Route index path="/" element={<Home />}></Route>
-          <Route index path="login/" element={<Login />}></Route>
-          <Route index path="surveysession/:survey_id" element={<SurveySession />}></Route>
-          <Route index path="surveysession/:survey_id/visits/:surveysession_id/:visit_number" element={<Visits />}></Route>
-          <Route index path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/:categories/:visit_id" element={<Category />}></Route>
-          <Route index path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route> 
+          <Route  path="login/" element={<Login />}></Route>
+          <Route  path="surveysession/:survey_id" element={<SurveySession />}></Route>
+          <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number" element={<Visits />}></Route>
+          <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/:categories/:visit_id" element={<Category />}></Route>
+          <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route> 
+          <Route  path="reportPanel/" element={<OberverTable/>}></Route>
         </Routes>
       </Layout>
     </BrowserRouter>
