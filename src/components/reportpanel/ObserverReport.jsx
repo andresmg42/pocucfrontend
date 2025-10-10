@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { CompactTable } from '@table-library/react-table-library/compact';
 import api from '../../api/user.api';
-import { useTheme } from '@table-library/react-table-library/theme'; // <-- 1. IMPORT THIS
-import { getTheme } from '@table-library/react-table-library/baseline'; // <-- 2. IMPORT THIS
+import { useTheme } from '@table-library/react-table-library/theme'; 
+import { getTheme } from '@table-library/react-table-library/baseline'; 
+import { useRowSelect } from '@table-library/react-table-library/select';
+import { useNavigate, useParams } from 'react-router';
 
-const OberverTable = () => {
 
+const ObserverReport = () => {
+  const {survey_id}=useParams();
   const [data,setData]=useState([]);
    const theme = useTheme(getTheme())
+   const navigate=useNavigate()
+
+   const tableData={ nodes: data }
 
   useEffect(()=>{
     async function get_observer_table(){
       try {
 
-        const res=await api.get('observer/get_table_observer_info')
+        const res=await api.get(`observer/get_table_observer_info?survey_id=${survey_id}`)
 
         console.log('data in table oberver:',res.data.data);
 
@@ -46,13 +52,32 @@ const OberverTable = () => {
   { label: 'Tasa de Completacion', renderCell: (item) => item.completed_rate },
   { label: 'Fecha de Registro', renderCell: (item) =>new Date(item.register_date).toLocaleDateString() },
 ];
+
+const handleRowClick=(item)=>{
+
+  navigate(`report-panel-sessions/${item.id}`)
+  
+}
+
+const select = useRowSelect(tableData, {
+    onChange: (action, state) => {
+      const clickedItem = data.find((item) => item.id === state.id);
+
+      console.log('this is the state',state.id)
+      if (clickedItem) {
+        handleRowClick(clickedItem);
+      }
+    },
+  });
+
+
   return (
   
      
     <>
       {data.length > 0 ? (
-        // 4. PASS THE THEME TO THE TABLE COMPONENT
-        <CompactTable columns={COLUMNS} data={{ nodes: data }} theme={theme} />
+        
+        <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select}/>
       ) : (
         <div className='text-black'>Cargando datos o no hay observadores...</div>
       )}
@@ -63,4 +88,4 @@ const OberverTable = () => {
   )
 }
 
-export default OberverTable
+export default ObserverReport

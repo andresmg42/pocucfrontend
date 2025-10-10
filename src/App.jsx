@@ -12,10 +12,12 @@ import Visits from "./pages/visits/Visits.jsx";
 import Form from "./pages/survey/Form.jsx";
 import Category from "./pages/categories/Category.jsx";
 import CreateSession from "./components/surveysession/CreateSession.jsx";
-import OberverTable from "./components/reportpanel/ObserverTable.jsx";
-// src/App.js (or wherever your main component is)
+import ObserverReport from "./components/reportpanel/ObserverReport.jsx";
+
 import { getTheme } from '@table-library/react-table-library/baseline';
 import SessionsReport from "./components/reportpanel/SessionsReport.jsx";
+import SurveyList from "./components/survey/SurveyList.jsx";
+import SurveyReport from "./components/reportpanel/SurveyReport.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -27,9 +29,10 @@ function App() {
           <Route  path="surveysession/:survey_id" element={<SurveySession />}></Route>
           <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number" element={<Visits />}></Route>
           <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/:categories/:visit_id" element={<Category />}></Route>
-          <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route> 
-          <Route  path="report-panel-observer/" element={<OberverTable/>}></Route>
-          <Route  path="report-panel-sessions/" element={<SessionsReport/>}></Route>
+          <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route>         
+          <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route>
+          <Route  path="report-panel-surveys/report-panel-observers/:survey_id" element={<ObserverReport/>}></Route>
+          <Route  path="report-panel-surveys/report-panel-observers/:survey_id/report-panel-sessions/:observer_id" element={<SessionsReport/>}></Route>
         </Routes>
       </Layout>
     </BrowserRouter>

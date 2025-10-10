@@ -5,24 +5,22 @@ import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline'; 
 import { useRowSelect } from '@table-library/react-table-library/select';
 import { useNavigate } from 'react-router';
-import { useParams } from 'react-router';
 
-const SessionsReport = () => {
+const SurveyReport = () => {
 
   const [data,setData]=useState([]);
    const theme = useTheme(getTheme())
    const navigate=useNavigate()
-   const {observer_id,survey_id}=useParams();
 
    const tableData={ nodes: data }
 
   useEffect(()=>{
-    async function get_table(){
+    async function get_observer_table(){
       try {
 
-        const res=await api.get(`surveysession/get_table_session_info/?observer_id=${observer_id}&survey_id=${survey_id}`)
+        const res=await api.get('survey/list')
 
-        console.log('data in table session:',res.data);
+        console.log('data in table survey:',res.data);
 
         if(res.data ){
           setData(res.data)
@@ -36,41 +34,26 @@ const SessionsReport = () => {
         
       }
 
-     get_table(); 
+     get_observer_table(); 
     }
   ,[])
   const COLUMNS = [
   { label: 'Id', renderCell: (item) => item.id },
   {
-    label: 'Numero',
-    renderCell: (item) =>item.number_session
+    label: 'Nombre',
+    renderCell: (item) =>item.name
   },
-  { label: 'Estado', renderCell: (item) => item.state },
+  { label: 'Tema', renderCell: (item) => item.topic },
   {
-    label: 'Zona',
-    renderCell: (item) => item.zone,
+    label: 'descripcion',
+    renderCell: (item) => item.descripcion,
   },
-  {
-    label: 'Distanacia Ob.',
-    renderCell: (item) => item.observational_distance,
-  },
-  {
-    label: 'Numero Visitas',
-    renderCell: (item) => item.visits_rate,
-  },
-  
-  { label: 'Fecha de Inicio', renderCell: (item) =>new Date(item.start_date).toLocaleDateString() },
-  { label: 'Fecha de Finalizacion', renderCell: (item) =>new Date(item.end_date).toLocaleDateString() },
-  {
-    label: 'Url Evidencia',
-    renderCell: (item) => item.url,
-  },
+  { label: 'Fecha de Creacion', renderCell: (item) =>new Date(item.uploaded_at).toLocaleDateString() },
 ];
 
 const handleRowClick=(item)=>{
-  alert('you click in row')
 
-  // navigate(`report-panel-observers/${item.id}`)
+  navigate(`report-panel-observers/${item.id}`)
   
 }
 
@@ -103,8 +86,4 @@ const select = useRowSelect(tableData, {
   )
 }
 
-export default SessionsReport
-
-
-
-
+export default SurveyReport
