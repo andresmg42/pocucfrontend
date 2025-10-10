@@ -15,6 +15,7 @@ import CreateSession from "./components/surveysession/CreateSession.jsx";
 import OberverTable from "./components/reportpanel/ObserverTable.jsx";
 // src/App.js (or wherever your main component is)
 import { getTheme } from '@table-library/react-table-library/baseline';
+import SessionsReport from "./components/reportpanel/SessionsReport.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -27,7 +28,8 @@ function App() {
           <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number" element={<Visits />}></Route>
           <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/:categories/:visit_id" element={<Category />}></Route>
           <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route> 
-          <Route  path="reportPanel/" element={<OberverTable/>}></Route>
+          <Route  path="report-panel-observer/" element={<OberverTable/>}></Route>
+          <Route  path="report-panel-sessions/" element={<SessionsReport/>}></Route>
         </Routes>
       </Layout>
     </BrowserRouter>

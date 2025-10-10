@@ -22,9 +22,6 @@ const OberverTable = () => {
         }
 
         
-        
-
-        
       } catch (error) {
 
         console.error('error in ObserveTable',error)
