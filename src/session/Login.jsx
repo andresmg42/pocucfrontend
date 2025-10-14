@@ -14,9 +14,11 @@ const navigate=useNavigate();
 const handleGoogleLogin=async ()=>{
   try{
     const res=await loginGooglePopUp();
-    
+    console.log('this is the user loggin',res.user)
     
     if (res.user){
+
+      
        const {displayName,email}=res.user
        const resback= await api.post('/observer/create/',{name:displayName,email:email})
        localStorage.setItem('user_id',resback.data.user.id)

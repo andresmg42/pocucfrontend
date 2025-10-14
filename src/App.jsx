@@ -19,6 +19,7 @@ import SessionsReport from "./components/reportpanel/SessionsReport.jsx";
 import SurveyList from "./components/survey/SurveyList.jsx";
 import SurveyReport from "./components/reportpanel/SurveyReport.jsx";
 import VisitReport from "./components/reportpanel/VisitReport.jsx";
+import ReportMain from "./pages/reportpanel/ReportMain.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -30,8 +31,9 @@ function App() {
           <Route  path="surveysession/:survey_id" element={<SurveySession />}></Route>
           <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number" element={<Visits />}></Route>
           <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/:categories/:visit_id" element={<Category />}></Route>
-          <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route>         
-          <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route>
+          <Route  path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/" element={<Form />}></Route> 
+          <Route  path="report-panel-surveys/" element={<ReportMain/>}></Route>        
+          {/* <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route> */}
           <Route  path="report-panel-surveys/report-panel-observers/:survey_id" element={<ObserverReport/>}></Route>
           <Route  path="report-panel-surveys/report-panel-observers/:survey_id/report-panel-sessions/:observer_id" element={<SessionsReport/>}></Route>
           <Route  path="report-panel-surveys/report-panel-observers/:survey_id/report-panel-sessions/:observer_id/report-panel-visits/:session_id" element={<VisitReport/>}></Route>
