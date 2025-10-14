@@ -42,7 +42,7 @@ const SessionsReport = () => {
   const COLUMNS = [
   { label: 'Id', renderCell: (item) => item.id },
   {
-    label: 'Numero',
+    label: 'Numero Sesión',
     renderCell: (item) =>item.number_session
   },
   { label: 'Estado', renderCell: (item) => item.state },
@@ -73,9 +73,9 @@ const SessionsReport = () => {
 ];
 
 const handleRowClick=(item)=>{
-  console.log('item')
+  
 
-  // navigate(`report-panel-observers/${item.id}`)
+  navigate(`report-panel-visits/${item.id}`)
   
 }
 

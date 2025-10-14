@@ -70,11 +70,11 @@ function NavBar() {
         </li>
         <li>
           <NavLink
-            to="/quiz"
+            to="report-panel-surveys/"
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             activeClassName="text-blue-500"
           >
-            Estadisticas
+            Reportes
           </NavLink>
         </li>
         <li>

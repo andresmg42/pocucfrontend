@@ -18,6 +18,7 @@ import { getTheme } from '@table-library/react-table-library/baseline';
 import SessionsReport from "./components/reportpanel/SessionsReport.jsx";
 import SurveyList from "./components/survey/SurveyList.jsx";
 import SurveyReport from "./components/reportpanel/SurveyReport.jsx";
+import VisitReport from "./components/reportpanel/VisitReport.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -33,6 +34,7 @@ function App() {
           <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route>
           <Route  path="report-panel-surveys/report-panel-observers/:survey_id" element={<ObserverReport/>}></Route>
           <Route  path="report-panel-surveys/report-panel-observers/:survey_id/report-panel-sessions/:observer_id" element={<SessionsReport/>}></Route>
+          <Route  path="report-panel-surveys/report-panel-observers/:survey_id/report-panel-sessions/:observer_id/report-panel-visits/:session_id" element={<VisitReport/>}></Route>
         </Routes>
       </Layout>
     </BrowserRouter>
