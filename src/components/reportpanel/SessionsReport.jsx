@@ -60,15 +60,20 @@ const SessionsReport = () => {
   },
   
   { label: 'Fecha de Inicio', renderCell: (item) =>new Date(item.start_date).toLocaleDateString() },
-  { label: 'Fecha de Finalizacion', renderCell: (item) =>new Date(item.end_date).toLocaleDateString() },
+  {
+  label: 'Fecha de Finalizacion',
+  renderCell: (item) => item.end_date ? new Date(item.end_date).toLocaleDateString() : 'N/A',
+},
   {
     label: 'Url Evidencia',
-    renderCell: (item) => item.url,
+    renderCell: (item) => <a className='text-blue-700' href={item.url} target="_blank" rel="noopener noreferrer">
+      {item.url}
+    </a>,
   },
 ];
 
 const handleRowClick=(item)=>{
-  alert('you click in row')
+  console.log('item')
 
   // navigate(`report-panel-observers/${item.id}`)
   
