@@ -48,6 +48,8 @@ const Form = () => {
         );
         setQuestions(questionsResponse.data);
 
+        console.log('questions in form',questionsResponse.data)
+
         }
 
        
@@ -151,7 +153,7 @@ const Form = () => {
               return (
                 <fieldset key={q.id}>
                   <legend class="text-lg text-black text-left font-semibold mb-2">
-                    {q.description}
+                    {`${q.code} ${q.description}`}
                   </legend>
 
                   {q.options.map((option) => (
@@ -219,8 +221,8 @@ const Form = () => {
             case "matrix_parent":
               return (
                 <fieldset key={q.id}>
-                  <legend class="text-lg text-black text-left font-semibold mb-2">
-                    {q.description}
+                  <legend class="text-lg text-black font-semibold  text-left  mb-2">
+                    {`${q.code} ${q.description}`}
                   </legend>
 
                   {q.sub_questions.map((sub_q) => {
@@ -237,7 +239,7 @@ const Form = () => {
 
                     return (
                       <fieldset key={sub_q.id} className="flex flex-wrap">
-                        <legend class="text-lg text-black text-left font-semibold mb-2">
+                        <legend class="text-lg text-black text-left font-light mb-2">
                           {sub_q.description}
                         </legend>
 
