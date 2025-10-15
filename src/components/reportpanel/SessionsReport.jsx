@@ -45,7 +45,7 @@ const SessionsReport = () => {
     label: 'Numero Sesión',
     renderCell: (item) =>item.number_session
   },
-  { label: 'Estado', renderCell: (item) => item.state },
+  { label: 'Estado', renderCell: (item) => item.state===2? 'Completada': item.state===1? 'En Proceso':'No Iniciada' },
   {
     label: 'Zona',
     renderCell: (item) => item.zone,
@@ -59,7 +59,7 @@ const SessionsReport = () => {
     renderCell: (item) => item.visits_rate,
   },
   
-  { label: 'Fecha de Inicio', renderCell: (item) =>new Date(item.start_date).toLocaleDateString() },
+  { label: 'Fecha de Inicio', renderCell: (item) => item.start_date ? new Date(item.start_date).toLocaleDateString() : 'N/A' },
   {
   label: 'Fecha de Finalizacion',
   renderCell: (item) => item.end_date ? new Date(item.end_date).toLocaleDateString() : 'N/A',

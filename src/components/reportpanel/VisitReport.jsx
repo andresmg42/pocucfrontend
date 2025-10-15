@@ -46,11 +46,11 @@ const VisitReport = () => {
   },
   {
     label: 'Estado',
-    renderCell: (item) =>item.state===2? 'Completa' : item.state===2? 'En Proceso': 'No Iniciada'
+    renderCell: (item) =>item.state===2? 'Completa' : item.state===1? 'En Proceso': 'No Iniciada'
   },
   
-  { label: 'Fecha de Inicio', renderCell: (item) =>new Date(item.visit_start_date_time).toLocaleDateString() },
-  { label: 'Fecha de Finalizacion', renderCell: (item) =>new Date(item.visit_end_date_time).toLocaleDateString() },
+  { label: 'Fecha de Inicio', renderCell: (item) =>item.visit_start_date_time? new Date(item.visit_start_date_time).toLocaleDateString() : 'N/A' },
+  { label: 'Fecha de Finalizacion', renderCell: (item) =>item.visit_end_date_time? new Date(item.visit_end_date_time).toLocaleDateString() : 'N/A' },
 ];
 
 const handleRowClick=(item)=>{
