@@ -6,13 +6,16 @@ import { CompactTable } from '@table-library/react-table-library/compact';
 import { useTheme } from '@table-library/react-table-library/theme'; 
 import { getTheme } from '@table-library/react-table-library/baseline'; 
 import { useRowSelect } from '@table-library/react-table-library/select';
-import ChartBar from './charts/ChartBar';
+import ChartBarMatrixR from './charts/ChartBarMatrixR';
+import ChartBarUniqueR from './charts/ChartBarUniqueR';
 
 const Stats = () => {
     const {survey_id}=useParams();
     const[questions,setQuestions]=useState([]);
-    const [BarChartData,setBarChartData]=useState([]);
-    const [charTrigger,setCharTrigger]=useState(false);
+    const [BarChartDataMR,setBarChartDataMR]=useState([]);
+    const [BarChartDataUR,setBarChartDataUR]=useState([]);
+    const [charTriggerMR,setCharTriggerMR]=useState(false);
+    const [charTriggerUR,setCharTriggerUR]=useState(false);
     const[tdata,setTData]=useState([]);
     const theme = useTheme(getTheme());
     const tableData={ nodes: tdata }
@@ -49,13 +52,21 @@ const Stats = () => {
         
         const question=questions.find(q=>q.id==clickedItem.id)
         console.log('question:',question.visualization_type)
-        if (question.visualization_type==='stacked_bar_100_percent'){
-            setBarChartData(question.data)
 
+        if (question.visualization_type==='stacked_bar_100_percent'){
+            setBarChartDataMR(question.data)
+            setCharTriggerMR(true)
+
+        }else{
+
+          console.log('question_bar_chart',question.data)
+
+          setBarChartDataUR(question.data)
+          setCharTriggerUR(true)
         }
 
-        console.log('BarChart Data',BarChartData)
-        setCharTrigger(true)
+        
+        
 
     }
 
@@ -90,15 +101,13 @@ const COLUMNS = [
 
   return (<>
   {
-    !charTrigger?
-    <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select} />
-    : 
-
+    charTriggerUR?
+    
     <div className='flex flex-col items-center'>
       <div className='h-[70vh] w-[140vh] bg-gray-200 rounded-lg'>
-        <ChartBar data={BarChartData}/>
+        <ChartBarUniqueR data={BarChartDataUR}/>
         <button
-        onClick={()=>setCharTrigger(false)}
+        onClick={()=>setCharTriggerUR(false)}
         className='text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'>
           Atras
         </button>
@@ -107,6 +116,24 @@ const COLUMNS = [
         </div>
 
     </div>
+    : charTriggerMR?
+
+    <div className='flex flex-col items-center'>
+      <div className='h-[70vh] w-[140vh] bg-gray-200 rounded-lg'>
+        <ChartBarMatrixR data={BarChartDataMR}/>
+        <button
+        onClick={()=>setCharTriggerMR(false)}
+        className='text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'>
+          Atras
+        </button>
+        
+        
+        </div>
+
+    </div>
+    : 
+    <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select} />
+
   }
   </>
   )  
