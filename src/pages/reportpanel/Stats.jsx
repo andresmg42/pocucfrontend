@@ -1,143 +1,129 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
-import api from '../../api/user.api'
-import { useParams } from 'react-router'
-import { CompactTable } from '@table-library/react-table-library/compact';
-import { useTheme } from '@table-library/react-table-library/theme'; 
-import { getTheme } from '@table-library/react-table-library/baseline'; 
-import { useRowSelect } from '@table-library/react-table-library/select';
-import ChartBarMatrixR from './charts/ChartBarMatrixR';
-import ChartBarUniqueR from './charts/ChartBarUniqueR';
+import React, { useEffect } from "react";
+import { useState } from "react";
+import api from "../../api/user.api";
+import { useParams } from "react-router";
+import { CompactTable } from "@table-library/react-table-library/compact";
+import { useTheme } from "@table-library/react-table-library/theme";
+import { getTheme } from "@table-library/react-table-library/baseline";
+import { useRowSelect } from "@table-library/react-table-library/select";
+import ChartBarMatrixR from "./charts/ChartBarMatrixR";
+import ChartBarUniqueR from "./charts/ChartBarUniqueR";
+import ZonaTable from "./charts/ZonaTable";
 
 const Stats = () => {
-    const {survey_id}=useParams();
-    const[questions,setQuestions]=useState([]);
-    const [BarChartDataMR,setBarChartDataMR]=useState([]);
-    const [BarChartDataUR,setBarChartDataUR]=useState([]);
-    const [charTriggerMR,setCharTriggerMR]=useState(false);
-    const [charTriggerUR,setCharTriggerUR]=useState(false);
-    const[tdata,setTData]=useState([]);
-    const theme = useTheme(getTheme());
-    const tableData={ nodes: tdata }
-    useEffect(()=>{
-        async function getStats(){
-            try {
+  const { survey_id } = useParams();
+  const [questions, setQuestions] = useState([]);
+  const [BarChartDataMR, setBarChartDataMR] = useState([]);
+  const [BarChartDataUR, setBarChartDataUR] = useState([]);
+  const [charTriggerMR, setCharTriggerMR] = useState(false);
+  const [charTriggerUR, setCharTriggerUR] = useState(false);
+  const [tdata, setTData] = useState([]);
+  const theme = useTheme(getTheme());
+  const tableData = { nodes: tdata };
+  useEffect(() => {
+    async function getStats() {
+      try {
+        const res = await api.get(
+          `pocucstats/descriptive_analisis_by_survey?survey_id=${survey_id}`
+        );
+        console.log(res.data);
+        setQuestions(res.data);
 
-            const res=await api.get(`pocucstats/descriptive_analisis_by_survey?survey_id=${survey_id}`)
-            console.log(res.data)
-            setQuestions(res.data)
+        setTData(
+          res.data.map((q) => ({
+            id: q.id,
+            question_code: q.question_code,
+            description: q.description,
+          }))
+        );
 
-            setTData(res.data.map((q)=>({
-                'id':q.id,
-                'question_code':q.question_code,
-                'description':q.description})))
-            
-
-            // console.log('questions:',data)
-            
-        } catch (error) {
-
-            console.error('error',error)
-            
-        }
-        }
-
-        getStats()
-
-    },[])
-
-    const handleRowClick=(clickedItem)=>{
-
-        // console.log(clickedItem)
-        
-        const question=questions.find(q=>q.id==clickedItem.id)
-        console.log('question:',question.visualization_type)
-
-        if (question.visualization_type==='stacked_bar_100_percent'){
-            setBarChartDataMR(question.data)
-            setCharTriggerMR(true)
-
-        }else{
-
-          console.log('question_bar_chart',question.data)
-
-          setBarChartDataUR(question.data)
-          setCharTriggerUR(true)
-        }
-
-        
-        
-
+        // console.log('questions:',data)
+      } catch (error) {
+        console.error("error", error);
+      }
     }
 
-    const select = useRowSelect(tableData, {
-        onChange: (action, state) => {
-          const clickedItem = tdata.find((item) => item.id === state.id);
-    
-          
-          if (clickedItem) {
-            handleRowClick(clickedItem);
-          }
-        },
-      });
+    getStats();
+  }, []);
 
-    
+  const handleRowClick = (clickedItem) => {
+    // console.log(clickedItem)
 
-    
-    
+    const question = questions.find((q) => q.id == clickedItem.id);
+    console.log("question:", question.visualization_type);
 
-    
+    if (question.visualization_type === "stacked_bar_100_percent") {
+      setBarChartDataMR(question.data);
+      setCharTriggerMR(true);
+    } else {
+      console.log("question_bar_chart", question.data);
 
-const COLUMNS = [
-  { label: 'id', renderCell: (item) => item.id },
-  {
-    label: 'codigo',
-    renderCell: (item) =>item.question_code
-  },
-  { label: 'descripcion', renderCell: (item) => item.description },
-  
-];
+      setBarChartDataUR(question.data);
+      setCharTriggerUR(true);
+    }
+  };
 
+  const select = useRowSelect(tableData, {
+    onChange: (action, state) => {
+      const clickedItem = tdata.find((item) => item.id === state.id);
 
-  return (<>
-  {
-    charTriggerUR?
-    
-    <div className='flex flex-col items-center'>
-      <div className='h-[70vh] w-[140vh] bg-gray-200 rounded-lg'>
-        <ChartBarUniqueR data={BarChartDataUR}/>
-        <button
-        onClick={()=>setCharTriggerUR(false)}
-        className='text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'>
-          Atras
-        </button>
-        
-        
+      if (clickedItem) {
+        handleRowClick(clickedItem);
+      }
+    },
+  });
+
+  const COLUMNS = [
+    { label: "id", renderCell: (item) => item.id },
+    {
+      label: "codigo",
+      renderCell: (item) => item.question_code,
+    },
+    { label: "descripcion", renderCell: (item) => item.description },
+  ];
+
+  return (
+    <>
+      {charTriggerUR ? (
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center">
+          <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
+            <ChartBarUniqueR data={BarChartDataUR} />
+           
+            <button
+              onClick={() => setCharTriggerUR(false)}
+              className="text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+            >
+              Atras
+            </button>
+          </div>
         </div>
-
-    </div>
-    : charTriggerMR?
-
-    <div className='flex flex-col items-center'>
-      <div className='h-[70vh] w-[140vh] bg-gray-200 rounded-lg'>
-        <ChartBarMatrixR data={BarChartDataMR}/>
-        <button
-        onClick={()=>setCharTriggerMR(false)}
-        className='text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'>
-          Atras
-        </button>
-        
-        
+        <div>
+            <ZonaTable/>
+          </div>
         </div>
+      ) : charTriggerMR ? (
+        <div className="flex flex-col items-center">
+          <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
+            <ChartBarMatrixR data={BarChartDataMR} />
+            <button
+              onClick={() => setCharTriggerMR(false)}
+              className="text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+            >
+              Atras
+            </button>
+          </div>
+        </div>
+      ) : (
+        <CompactTable
+          columns={COLUMNS}
+          data={tableData}
+          theme={theme}
+          select={select}
+        />
+      )}
+    </>
+  );
+};
 
-    </div>
-    : 
-    <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select} />
-
-  }
-  </>
-  )  
-  
-}
-
-export default Stats
+export default Stats;
