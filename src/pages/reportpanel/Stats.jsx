@@ -92,7 +92,21 @@ const COLUMNS = [
   {
     !charTrigger?
     <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select} />
-    : <ChartBar data={BarChartData}/>
+    : 
+
+    <div className='flex flex-col items-center'>
+      <div className='h-[70vh] w-[140vh] bg-gray-200 rounded-lg'>
+        <ChartBar data={BarChartData}/>
+        <button
+        onClick={()=>setCharTrigger(false)}
+        className='text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'>
+          Atras
+        </button>
+        
+        
+        </div>
+
+    </div>
   }
   </>
   )  
