@@ -9,7 +9,7 @@ const ChartBarMatrixR = ({ data }) => {
   // 1. Get the keys for the bars from the first data object.
   // We filter out 'name' because it's used for the X-axis label, not a bar.
   if (!data || data.length === 0) {
-    return <div>No data to display</div>; // Handle empty data case
+    return <div className='text-black text-lg mt-55'>No hay datos para esta zona</div>; // Handle empty data case
   }
   const barKeys = Object.keys(data[0]).filter(key => key !== 'name');
 

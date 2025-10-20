@@ -9,120 +9,113 @@ import { useRowSelect } from "@table-library/react-table-library/select";
 import ChartBarMatrixR from "./charts/ChartBarMatrixR";
 import ChartBarUniqueR from "./charts/ChartBarUniqueR";
 import ZonaTable from "./charts/ZonaTable";
+import { useNavigate } from "react-router";
 
 const Stats = () => {
-  const { survey_id } = useParams();
-  const [questions, setQuestions] = useState([]);
+  const { question_id } = useParams();
+  const [question, setQuestion] = useState(null);
   const [BarChartDataMR, setBarChartDataMR] = useState([]);
   const [BarChartDataUR, setBarChartDataUR] = useState([]);
-  const [charTriggerMR, setCharTriggerMR] = useState(false);
   const [charTriggerUR, setCharTriggerUR] = useState(false);
-  const [tdata, setTData] = useState([]);
-  const theme = useTheme(getTheme());
-  const tableData = { nodes: tdata };
+  const [idZone, setIdZone] = useState(0);
+  const [loading,setLoading]=useState(true);
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function getStats() {
+      
       try {
-        const res = await api.get(
-          `pocucstats/descriptive_analisis_by_survey?survey_id=${survey_id}`
-        );
-        console.log(res.data);
-        setQuestions(res.data);
+        if (!question_id) return;
 
-        setTData(
-          res.data.map((q) => ({
-            id: q.id,
-            question_code: q.question_code,
-            description: q.description,
-          }))
-        );
+        let res;
 
-        // console.log('questions:',data)
+        if (idZone === 0) {
+          res = await api.get(
+            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}`
+          );
+          console.log("respuesta en la zona 0", res.data);
+        } else {
+          res = await api.get(
+            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&zone_id=${idZone}`
+          );
+          console.log("respueta en la zona diferente de 0", res.data);
+        }
+
+        setQuestion(res.data);
       } catch (error) {
+        setQuestion(null);
+        setLoading(false);
         console.error("error", error);
+      }
+      finally{
+        setLoading(false)
       }
     }
 
     getStats();
-  }, []);
+  }, [idZone, question_id]);
 
-  const handleRowClick = (clickedItem) => {
-    // console.log(clickedItem)
-
-    const question = questions.find((q) => q.id == clickedItem.id);
-    console.log("question:", question.visualization_type);
+  useEffect(() => {
+    if (!question) {
+      setBarChartDataMR([]);
+      setBarChartDataUR([]);
+      setCharTriggerUR(false);
+      return;
+    }
 
     if (question.visualization_type === "stacked_bar_100_percent") {
       setBarChartDataMR(question.data);
-      setCharTriggerMR(true);
+      setCharTriggerUR(false);
     } else {
       console.log("question_bar_chart", question.data);
 
       setBarChartDataUR(question.data);
+      console.log("barchar_data_UR", BarChartDataUR);
+
       setCharTriggerUR(true);
     }
-  };
+  }, [question]);
 
-  const select = useRowSelect(tableData, {
-    onChange: (action, state) => {
-      const clickedItem = tdata.find((item) => item.id === state.id);
+  if(loading) return (
+    <div class="flex items-center justify-center p-12">
+  <div class="flex flex-col items-center gap-4">
+    <div 
+      class="h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"
+    ></div>
+    
+    <p class="text-lg font-medium text-gray-600">
+      Loading your data...
+    </p>
+  </div>
+</div>
 
-      if (clickedItem) {
-        handleRowClick(clickedItem);
-      }
-    },
-  });
+  )
 
-  const COLUMNS = [
-    { label: "id", renderCell: (item) => item.id },
-    {
-      label: "codigo",
-      renderCell: (item) => item.question_code,
-    },
-    { label: "descripcion", renderCell: (item) => item.description },
-  ];
+ 
 
   return (
-    <>
+    <div className="flex flex-col md:flex-row ">
       {charTriggerUR ? (
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center">
-          <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
-            <ChartBarUniqueR data={BarChartDataUR} />
-           
-            <button
-              onClick={() => setCharTriggerUR(false)}
-              className="text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-            >
-              Atras
-            </button>
-          </div>
-        </div>
-        <div>
-            <ZonaTable/>
-          </div>
-        </div>
-      ) : charTriggerMR ? (
-        <div className="flex flex-col items-center">
-          <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
-            <ChartBarMatrixR data={BarChartDataMR} />
-            <button
-              onClick={() => setCharTriggerMR(false)}
-              className="text-white mt-10 bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-            >
-              Atras
-            </button>
+            <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
+              <ChartBarUniqueR data={BarChartDataUR} />
+            </div>
           </div>
         </div>
       ) : (
-        <CompactTable
-          columns={COLUMNS}
-          data={tableData}
-          theme={theme}
-          select={select}
-        />
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center">
+            <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
+              <ChartBarMatrixR data={BarChartDataMR} />
+            </div>
+          </div>
+        </div>
       )}
-    </>
+      <div>
+        <ZonaTable setIdZone={setIdZone} />
+      </div>
+    </div>
   );
 };
 

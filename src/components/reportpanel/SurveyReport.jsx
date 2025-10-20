@@ -49,7 +49,7 @@ const SurveyReport = () => {
     renderCell: (item) => item.descripcion,
   },
   { label: 'Fecha de Creacion', renderCell: (item) =>new Date(item.uploaded_at).toLocaleDateString() },
-  { label: 'Estadisticas', renderCell: (item) =><button  className='text-blue-700 cursor-pointer' onClick={()=>navigate(`/stats/${item.id}`)}>{`Estadisticas ${item.name}`}</button> },
+  { label: 'Estadisticas', renderCell: (item) =><button  className='text-blue-700 cursor-pointer' onClick={()=>navigate(`/questions-panel/${item.id}`)}>{`Estadisticas ${item.name}`}</button> },
 ];
 
 const handleRowClick=(item)=>{

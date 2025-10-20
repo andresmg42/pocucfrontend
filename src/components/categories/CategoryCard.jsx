@@ -30,7 +30,11 @@ const CategoryCard = ({ category, surveysession_id, visit_id }) => {
   },[isEliminated])
 
   const handleDeleteForm= async (category_id)=>{
-    try {
+
+    const confirmed = window.confirm("Esta seguro de que desea eliminar este formulario?");
+
+    if (confirmed){
+      try {
 
       const resp=await api.delete(`response/delete_responses_by_category/?category_id=${category_id}&visit_id=${visit_id}`)
       setIsEliminated(prev=>!prev)
@@ -40,6 +44,7 @@ const CategoryCard = ({ category, surveysession_id, visit_id }) => {
 
       console.log('error in handleDeleteForm from CategoryCard.jsx',error)
       
+    }
     }
   }
 
