@@ -12,7 +12,7 @@ import ZonaTable from "./charts/ZonaTable";
 import { useNavigate } from "react-router";
 
 const Stats = () => {
-  const { question_id } = useParams();
+  const { question_id,survey_id } = useParams();
   const [question, setQuestion] = useState(null);
   const [BarChartDataMR, setBarChartDataMR] = useState([]);
   const [BarChartDataUR, setBarChartDataUR] = useState([]);
@@ -31,12 +31,12 @@ const Stats = () => {
 
         if (idZone === 0) {
           res = await api.get(
-            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}`
+            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&survey_id=${survey_id}`
           );
           console.log("respuesta en la zona 0", res.data);
         } else {
           res = await api.get(
-            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&zone_id=${idZone}`
+            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&zone_id=${idZone}&survey_id=${survey_id}`
           );
           console.log("respueta en la zona diferente de 0", res.data);
         }
