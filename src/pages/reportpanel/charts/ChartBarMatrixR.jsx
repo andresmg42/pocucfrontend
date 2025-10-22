@@ -21,7 +21,11 @@ const ChartBarMatrixR = ({ data }) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
-        <YAxis />
+        <YAxis label={{
+    value: 'Frecuencia Opciones',
+    angle: -90,
+    position: 'insideLeft',
+  }} />
         <Tooltip />
         <Legend />
         

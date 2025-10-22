@@ -15,7 +15,7 @@ function NavBar() {
   }
 
   return (
-    <div className="bg-zinc-700 text-white font-bold py-4 fixed top-0 left-0 w-full  shadow">
+    <div className="bg-zinc-700 text-white font-bold py-4 fixed top-0 left-0 w-full  shadow z-10">
     <nav className="container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
       
       <div className="h-16 flex items-center ml-5">

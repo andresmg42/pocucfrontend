@@ -10,6 +10,7 @@ import ChartBarMatrixR from "./charts/ChartBarMatrixR";
 import ChartBarUniqueR from "./charts/ChartBarUniqueR";
 import ZonaTable from "./charts/ZonaTable";
 import { useNavigate } from "react-router";
+import AggregationPanel from "./charts/AggregationPanel";
 
 const Stats = () => {
   const { question_id,survey_id } = useParams();
@@ -94,7 +95,7 @@ const Stats = () => {
  
 
   return (
-    <div className="flex flex-col md:flex-row ">
+    <div className="flex flex-col  ">
       {charTriggerUR ? (
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center">
@@ -112,9 +113,15 @@ const Stats = () => {
           </div>
         </div>
       )}
-      <div>
+
+      <div className=" flex flex-col md:flex-row items-center justify-center">
+        <div >
         <ZonaTable setIdZone={setIdZone} />
       </div>
+      <div ><AggregationPanel data={question?.aggregate_stats}/></div>
+
+      </div>
+      
     </div>
   );
 };

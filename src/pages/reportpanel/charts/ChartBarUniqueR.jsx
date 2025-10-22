@@ -44,7 +44,11 @@ const ChartBarUniqueR = ({ data }) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="description" />
-        <YAxis />
+        <YAxis label={{
+    value: 'Frecuencia Opciones',
+    angle: -90,
+    position: 'insideLeft',
+  }} />
         <Tooltip />
         <Legend />
           <Bar           
