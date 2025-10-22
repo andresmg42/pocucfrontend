@@ -61,7 +61,7 @@ const AggregationPanel = ({ data }) => {
         </th>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* You might want to format this, e.g., obj.average.toFixed(2) */}
-          {obj.average.toFixed(2)}
+          {obj.average?.toFixed(2)}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {obj.minimum}
@@ -70,11 +70,11 @@ const AggregationPanel = ({ data }) => {
           {obj.maximum}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
-          {obj.count}
+          {obj.count>0? obj.count : obj.count_text}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* FIX 4: Use optional chaining for safe access */}
-          {obj.mode?.numeric_value}
+          {obj.mode?.numeric_value? obj.mode?.numeric_value : obj.mode.text_value}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* FIX 4: Use optional chaining for safe access */}
