@@ -1,8 +1,7 @@
 import React from 'react'
 
-const Placeholder1 = ({page_name,plural_page_name,onButtonClick}) => {
+const Placeholder1 = ({page_name,plural_page_name,onButtonClick,Trigger}) => {
 
-    
   return (
     <div className="w-full max-w-md">
     <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-8 text-center shadow-sm">

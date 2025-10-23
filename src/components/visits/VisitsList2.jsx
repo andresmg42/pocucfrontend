@@ -11,8 +11,6 @@ import ConfirmationModal from "../auxiliarcomponents/ConfirmationModal";
 const VisitsList2 = ({ surveysession_id, visit_number }) => {
   const [visits, setVisits] = useState([]);
 
-  const [openModal,setOpenModal]=useState(false);
-
   const [loading, setLoading] = useState(true);
 
   const { userLogged } = useAuthStore();
@@ -40,9 +38,7 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
         );
 
         if (res.data) {
-          const sortedData = res.data.sort(
-            (a, b) => a.visit_number - b.visit_number
-          );
+          const sortedData = res.data;
           setVisits(sortedData);
           console.log("numero de visitas: ", sortedData.length);
           if (sortedData.length === parseInt(visit_number)) {
@@ -66,7 +62,7 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
       }
     }
     getVisits();
-  }, [userLogged, visitedIsDeleted, visit_number]);
+  }, [userLogged, visitedIsDeleted, visit_number, addTriggerVisit]);
 
   if (loading) {
     return <div className="text-center p-10 text-white">Loading users...</div>;
@@ -88,30 +84,23 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
   };
 
   const handleClickDelete = async (visit_id) => {
+    const confirmed = window.confirm(
+      "Esta seguro de que desea eliminar esta visita?"
+    );
 
-    const confirmed = window.confirm("Esta seguro de que desea eliminar esta visita?");
-
-    if(confirmed){
-
+    if (confirmed) {
       try {
+        const res = await api.delete(`visit/${visit_id}/`);
 
-      
-      const res = await api.delete(`visit/${visit_id}/`);
+        setVisitIsDeleted((prev) => !prev);
 
-      
+        setVisitAddTriggerDisabled({ [surveysession_id]: false });
 
-      setVisitIsDeleted((prev) => !prev);
-
-      setVisitAddTriggerDisabled({ [surveysession_id]: false });
-
-      toast.success("Visita Eliminada Exitosamente");
-    } catch (error) {
-      console.log("error deleting visit", error);
+        toast.success("Visita Eliminada Exitosamente");
+      } catch (error) {
+        console.log("error deleting visit", error);
+      }
     }
-
-    }
-    
-    
   };
 
   const handleClickEdit = async (visit) => {
@@ -120,25 +109,31 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
     setUpdateVisit(true);
   };
 
+  const handleClickPlaceholder = async () => {
+    try {
+      const res = await api.post("visit/", { surveysession: surveysession_id });
+      console.log("rep from placeholder visitList2", res.data);
+      setAddTriggerVisit(!addTriggerVisit);
+    } catch (error) {
+      toast.success("Visita Creada Exitosamente");
+      console.error("error in handleClickPlaceholder", error);
+    }
+  };
+
   if (visits.length === 0)
     return (
       <div className="flex items-center justify-center">
         <Placeholder1
           page_name={"Visita"}
           plural_page_name={"Visitas"}
-          onButtonClick={() => {
-            setAddTriggerVisit(!addTriggerVisit);
-            setUpdateVisit(false);
-          }}
+          onButtonClick={handleClickPlaceholder}
         />
       </div>
     );
 
   return (
-
     <>
-    { addTriggerVisit &&
-  (
+      
         <div className="p-4 sm:p-6 md:p-8">
           <h2 class="text-4xl font-bold dark:text-white text-black mb-10">
             Visitas
@@ -288,28 +283,6 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
                         />
                       </svg>
                     </button>
-
-                    <button
-                      type="button"
-                      aria-label="Edit visit"
-                      onClick={() => handleClickEdit(visit)}
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-600 transition-colors hover:bg-blue-200"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                        <path
-                          fillRule="evenodd"
-                          d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-
                     <button
                       type="button"
                       aria-label="Delete visit"
@@ -335,8 +308,8 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
             })}
           </div>
         </div>
-      ) }
-  </>
+      
+    </>
   );
 };
 
