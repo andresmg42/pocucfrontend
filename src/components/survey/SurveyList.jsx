@@ -1,36 +1,36 @@
-import { useEffect,useState } from "react"
-import SurveyCard from "./SurveyCard"
-import api from "../../api/user.api"
+import { useEffect, useState } from "react";
+import SurveyCard from "./SurveyCard";
+import api from "../../api/user.api";
 
 const SurveyList = () => {
-    const [surveys,setSurveys]=useState([])
+  const [surveys, setSurveys] = useState([]);
 
-  useEffect(()=>{
-
-    async function getSurveys(){
+  useEffect(() => {
+    async function getSurveys() {
       try {
-      const surveys=await api.get('survey/list/')
-      console.log(surveys)
-      setSurveys(surveys.data)
-      
-    } catch (error) {
-      console.log(error)
-      
+        const surveys = await api.get("survey/list/");
+        console.log(surveys);
+        setSurveys(surveys.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    }
-
-    getSurveys()
-    
-  },[])
+    getSurveys();
+  }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {surveys.map(survey=>(
-            <SurveyCard key={survey.id} survey={survey}/>
-        ))}
+    <div className="md:flex min-h-screen flex-row-reverse bg-[url('home/home.png')] bg-fixed bg-no-repeat  bg-contain">
+      <div className="w-full md:w-1/2   flex justify-end">
+        <div className="grid grid-cols-1 m-10 md:grid-cols-2 gap-3 pt-20">
+          {surveys.map((survey) => (
+            <SurveyCard key={survey.id} survey={survey} />
+          ))}
+        </div>
+      </div>
+      <div className="w-full md:w-1/2  p-8 flex justify-start items-center"></div>
     </div>
-  )
-}
+  );
+};
 
-export default SurveyList
+export default SurveyList;
