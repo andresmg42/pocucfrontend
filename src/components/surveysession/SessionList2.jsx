@@ -38,7 +38,7 @@ const SessionList2 = ({ survey_id }) => {
         console.log("esta es la respuesta en sessionlist", res);
         setSessions(res.data);
 
-        if (sessions) {
+        if (res.data) {
           const disableStates = sessions.reduce((acc, session) => {
             acc[session.id] = false;
             return acc;
@@ -96,7 +96,7 @@ const SessionList2 = ({ survey_id }) => {
 
   if (sessions.length === 0)
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center md:w-full h-screen ">
         <Placeholder1
           page_name={"Sesion"}
           plural_page_name={"Sesiones"}

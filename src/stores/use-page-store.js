@@ -28,7 +28,9 @@ const usePageStore=create((set)=>({
         visit:null,
         setVisit:(visit)=>set({visit:visit}),
         updateVisit:false,
-        setUpdateVisit:(boolean)=>set({updateVisit:boolean})
+        setUpdateVisit:(boolean)=>set({updateVisit:boolean}),
+        addSessionTrigger:false,
+        setAddSessionTrigger:(boolean)=>set({addSessionTrigger:boolean})
         
         
     }));
