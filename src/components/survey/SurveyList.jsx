@@ -20,7 +20,7 @@ const SurveyList = () => {
   }, []);
 
   return (
-    <div className="md:flex min-h-screen flex-row-reverse bg-[url('home/home.png')] md:bg-fixed md:bg-no-repeat  md:bg-contain ">
+    <div className="md:flex min-h-screen flex-row-reverse bg-[url('home/home.png')] bg-cover bg-center ">
       <div className="w-full md:w-1/2   flex justify-end">
         <div className="grid grid-cols-1 m-10 md:grid-cols-2 gap-3 pt-20">
           {surveys.map((survey) => (

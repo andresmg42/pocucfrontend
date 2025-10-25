@@ -16,7 +16,7 @@ const SurveySession = () => {
     
   };
   return (
-    <div className="bg-[url('public/registro-sesiones/sesion.png')] md:bg-fixed md:bg-contain md:bg-no-repeat">
+    <div className="bg-[url('public/registro-sesiones/sesion.png')] bg-cover bg-center">
       {addTrigger ? (
         <SessionList2 survey_id={survey_id} />
       ) : (

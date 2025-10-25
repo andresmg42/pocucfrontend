@@ -8,7 +8,11 @@ import { auth } from "../../firebase.config";
 const useAuthStore = create((set) => {
   const observeAuthState = () => {
     onAuthStateChanged(auth, (user) => {
-      user ? set({ userLogged: user }) : set({ userLogged: null });
+      if(user){
+        set({userLogged:user,isLoading:false});
+      }else{
+        set({userLogged:null,isLoading:false})
+      }
     });
   };
 
@@ -16,6 +20,7 @@ const useAuthStore = create((set) => {
 
   return {
     userLogged: null,
+    isLoading:true,
 
     loginGooglePopUp: async () => {
       const provider = new GoogleAuthProvider();

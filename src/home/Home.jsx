@@ -7,14 +7,19 @@ import { useNavigate } from "react-router";
 
 function Home() {
   const navigate = useNavigate();
-  const { userLogged } = useAuthStore();
+  const { userLogged,isLoading } = useAuthStore();
 
  useEffect(() => {
+
+
+  if (isLoading) return;
+
+
      
-    if (userLogged==null) {
+    if (!userLogged) {
       navigate("login/");
     }
-  }, []);
+  }, [userLogged,isLoading,navigate]);
 
   return (
     <div className="">
