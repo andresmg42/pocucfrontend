@@ -4,13 +4,31 @@
 
 
 
-body {
-  background-color:#F8FAFC; /* Un gris oscuro elegante */
-    color: white; /* Opcional: cambia el color del texto */
-    margin: 0; /* Elimina márgenes predeterminados */
-    font-family: 'Arial', sans-serif; /* Ajusta la tipografía */
-    height: 100%;
+/* body {
+  background-color:#F8FAFC; 
+    color: #333; 
+    margin: 0; 
+    font-family: 'Arial', sans-serif; 
+    min-height: 80vh;
     padding:0;
-    /* padding-top: 72px; */
+    
+} */
 
+/* body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; 
+  padding-top: 4rem;
+  box-sizing: border-box; 
+} */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* This is the key: makes padding count *inside* an element's height */
+* {
+  box-sizing: border-box;
 }

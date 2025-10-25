@@ -22,9 +22,9 @@ function Home() {
   }, [userLogged,isLoading,navigate]);
 
   return (
-    <div className="">
+    
       <SurveyList />
-    </div>
+    
   );
 }
 

@@ -96,24 +96,27 @@ const SessionList2 = ({ survey_id }) => {
 
   if (sessions.length === 0)
     return (
-      <div className="flex items-center justify-center md:w-full h-screen ">
+
+      <div className="flex flex-1 items-center justify-center">
         <Placeholder1
           page_name={"Sesion"}
           plural_page_name={"Sesiones"}
           onButtonClick={() => setAddTrigger(!addTrigger)}
-        />
-      </div>
+        /></div>
+     
+        
+      
     );
 
   return (
     <>
       {addTrigger && (
-        <div className="p-4 sm:p-6 md:p-8">
-          <h2 class="text-4xl font-bold dark:text-white text-black mb-10">
+        <div className=" sm:p-6  flex   flex-col items-center">
+          <h2 class="text-4xl  font-bold  text-black ">
             Sesiónes
           </h2>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10 ">
             {sessions.map((session) => {
               console.log("session_id: ", session.id);
               console.log("session_state: ", session.state);

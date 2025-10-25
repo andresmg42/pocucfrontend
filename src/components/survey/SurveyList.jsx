@@ -20,15 +20,16 @@ const SurveyList = () => {
   }, []);
 
   return (
-    <div className="md:flex min-h-screen flex-row-reverse bg-[url('home/home.png')] bg-cover bg-center ">
-      <div className="w-full md:w-1/2   flex justify-end">
-        <div className="grid grid-cols-1 m-10 md:grid-cols-2 gap-3 pt-20">
+    <div className="flex-1 flex bg-[url('/home/home.png')] bg-no-repeat bg-cover bg-center">
+      <div className="bt-green-700 md:w-1/2"></div>
+
+      <div className="md:w-1/2">
+        <div className="grid grid-cols-1 m-10 md:grid-cols-2 gap-3 pt-10">
           {surveys.map((survey) => (
             <SurveyCard key={survey.id} survey={survey} />
           ))}
         </div>
       </div>
-      <div className="w-full md:w-1/2  p-8 flex justify-start items-center"></div>
     </div>
   );
 };

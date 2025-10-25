@@ -16,18 +16,18 @@ const SurveySession = () => {
     
   };
   return (
-    <div className="bg-[url('public/registro-sesiones/sesion.png')] bg-cover bg-center">
+    <div className="flex flex-1 bg-[url('/registro-sesiones/sesion.png')] bg-cover md:bg-contain bg-no-repeat">
       {addTrigger ? (
         <SessionList2 survey_id={survey_id} />
       ) : (
         <CreateSession survey_id={survey_id} />
       )}
 
-      <button onClick={handleAddClick}>
+      <button  onClick={handleAddClick}>
         <img
           src="/surveysession/add.svg"
           alt="add"
-          className="fixed m-8 w-20 h-20 bottom-0 right-0"
+          className="fixed m-8 h-10 w-10 md:w-20 md:h-20 top-10 right-0"
         ></img>
       </button>
     </div>

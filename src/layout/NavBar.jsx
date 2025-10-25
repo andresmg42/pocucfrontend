@@ -15,13 +15,13 @@ function NavBar() {
   }
 
   return (
-    <div className="bg-zinc-700 text-white font-bold py-4 fixed top-0 left-0 w-full  shadow z-10">
-    <nav className="container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
+    
+    <nav className="bg-white fixed top-0 left-0 right-0 w-full flex justify-between items-center h-16 px-5 text-black font-bold shadow-lg z-50">
       
-      <div className="h-16 flex items-center ml-5">
+      <div className=" flex items-center ml-10">
         <NavLink to="/">
         
-        <img src="/logo/logoUV_Oficial_Rojo.svg" alt="logo" className='w-full h-12'/>
+        <img src="/logo/logounisaludable.png" alt="logo" className='w-full h-15'/>
 
        
         
@@ -33,7 +33,7 @@ function NavBar() {
       <div className="block md:hidden">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)} 
-          className="text-white focus:outline-none"
+          className="text-black focus:outline-none"
         >
           <svg
             className="w-6 h-6"
@@ -56,7 +56,7 @@ function NavBar() {
       <ul
         className={`${
           isMenuOpen ? "block" : "hidden"
-        } md:flex md:space-x-6 absolute md:relative bg-black/50 md:bg-transparent w-full md:w-auto left-0 md:left-auto top-16 md:top-0 p-4 md:p-0 z-10`}
+        } md:flex md:space-x-6 absolute md:relative bg-white/70 md:bg-transparent w-full md:w-auto left-0 md:left-auto top-16 md:top-0 p-4 md:p-0 z-10`}
       >
         <li>
           <NavLink
@@ -110,7 +110,7 @@ function NavBar() {
        
       </ul>
     </nav>
-  </div>
+ 
   )
 }
 
