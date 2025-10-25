@@ -86,7 +86,7 @@ const CreateSession = ({ survey_id }) => {
   };
 
   return (
-    <div className=" flex mx-auto mt-5 items-center justify-center z-50">
+    <div className=" flex mx-auto m-5 items-center justify-center z-10">
       <div className="relative w-full max-w-md lg:max-w-2xl space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
         <div className="absolute top-4 right-4">
           <button

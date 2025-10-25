@@ -65,6 +65,7 @@ const CategoryCard = ({ category, surveysession_id, visit_id }) => {
     border
     border-transparent
     hover:border-indigo-500
+    
   "
 >
   {/* Image Section with a Placeholder Fallback */}
