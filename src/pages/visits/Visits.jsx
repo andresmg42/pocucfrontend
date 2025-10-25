@@ -33,7 +33,7 @@ const Visits = () => {
   console.log("visit add trigger state", visitAddTriggerDisabled);
 
   return (
-    <div>
+    <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat">
       <VisitsList2
         surveysession_id={surveysession_id}
         visit_number={visit_number}
@@ -46,7 +46,7 @@ const Visits = () => {
         <img
           src="/surveysession/add.svg"
           alt="add"
-          className="fixed m-8 w-20 h-20 bottom-0 right-0"
+          className="fixed m-8 h-10 w-10 md:w-20 md:h-20 top-10 right-0"
         ></img>
       </button>
     </div>

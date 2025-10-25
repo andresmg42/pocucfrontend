@@ -42,7 +42,7 @@ const handleGoogleLogin=async ()=>{
   
   console.log("Home print");
   return (
-    <div className="flex items-center justify-center bg-[url('/inicio-sesion/login.png')] w-full h-screen bg-cover bg-center">
+    <div className="flex items-center justify-center bg-[url('/inicio-sesion/login.png')] w-full fix-1 bg-cover bg-center bg-no-repeat">
   {/* The container remains transparent, only the content inside is visible */}
   <div className="w-[400px] p-8">
     

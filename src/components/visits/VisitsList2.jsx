@@ -122,7 +122,7 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
 
   if (visits.length === 0)
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <Placeholder1
           page_name={"Visita"}
           plural_page_name={"Visitas"}
@@ -134,13 +134,13 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
   return (
     <>
       
-        <div className="p-4 sm:p-6 md:p-8">
-          <h2 class="text-4xl font-bold dark:text-white text-black mb-10">
+        <div className="sm:p-6 flex-1  flex flex-col items-center">
+          <h2 class="text-4xl font-bold  text-black">
             Visitas
           </h2>
 
           {/* Responsive grid layout that adjusts to screen size */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">
             {visits.map((visit) => {
               var localTimeStart = null;
               var localTimeEnd = null;
