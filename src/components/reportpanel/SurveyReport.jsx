@@ -46,7 +46,7 @@ const SurveyReport = () => {
   { label: 'Tema', renderCell: (item) => item.topic },
   {
     label: 'descripcion',
-    renderCell: (item) => item.descripcion,
+    renderCell: (item) => item.description,
   },
   { label: 'Fecha de Creacion', renderCell: (item) =>new Date(item.uploaded_at).toLocaleDateString() },
   { label: 'Estadisticas', renderCell: (item) =><button  className='text-blue-700 cursor-pointer' onClick={()=>navigate(`/questions-panel/${item.id}`)}>{`Estadisticas ${item.name}`}</button> },
@@ -73,14 +73,16 @@ const select = useRowSelect(tableData, {
   return (
   
      
-    <>
+    <div className=''>
       {data.length > 0 ? (
         
-        <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select}/>
+       
+          <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select}/>
+        
       ) : (
         <div className='text-black'>Cargando datos o no hay observadores...</div>
       )}
-    </>
+    </div>
    
    
     

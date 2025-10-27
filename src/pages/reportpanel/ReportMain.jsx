@@ -56,7 +56,7 @@ const ReportMain = () => {
 
   
   return (
-    <div>
+    <div className="flex-1 bg-[url('/home/home.png')] bg-cover bg-center bg-no-repeat pl-5 pr-5 pt-5">
       {!isAdmin? (
         <div className="flex items-center justify-center w-full h-full p-4 bg-slate-50 rounded-lg">
           <div className="w-full max-w-lg p-8 text-center bg-white border-2 border-dashed border-gray-300 rounded-xl shadow-sm">

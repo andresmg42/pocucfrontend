@@ -74,14 +74,14 @@ const handleRowClick=(item)=>{
   return (
   
      
-    <>
+    <div className='bg-[url("/visitas/visitas.png")] bg-cover bg-center bg-no-repeat flex-1 p-5'>
       {data.length > 0 ? (
         
         <CompactTable columns={COLUMNS} data={tableData} theme={theme} />
       ) : (
         <div className='text-black'>Cargando datos o no hay observadores...</div>
       )}
-    </>
+    </div>
    
    
     

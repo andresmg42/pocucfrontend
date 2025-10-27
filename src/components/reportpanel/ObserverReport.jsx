@@ -74,14 +74,14 @@ const select = useRowSelect(tableData, {
   return (
   
      
-    <>
+   <div className="flex-1 p-5 bg-[url('/inicio-sesion/login.png')] bg-cover bg-center bg-no-repeat">
       {data.length > 0 ? (
         
         <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select}/>
       ) : (
         <div className='text-black'>Cargando datos o no hay observadores...</div>
       )}
-    </>
+    </div>
    
    
     
