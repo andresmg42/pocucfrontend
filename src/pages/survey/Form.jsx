@@ -132,7 +132,7 @@ const Form = () => {
   )
 
   return (
-    <div className="flex  items-center justify-center">
+    <div className="flex flex-1 p-5  bg-[url('/formulario/formulario.png')] bg-cover bg-center bg-no-repeat  items-center justify-center">
       <form
         onSubmit={handleSubmit}
         class="w-full max-w-2xl bg-white shadow-lg rounded-2xl p-6 space-y-8"
@@ -159,7 +159,7 @@ const Form = () => {
                   {q.options.map((option) => (
                     <label
                       key={option.id}
-                      class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50"
+                      class="flex items-center gap-3 p-3  rounded-xl cursor-pointer hover:bg-gray-50"
                     >
                       <input
                         type="radio"
@@ -182,7 +182,7 @@ const Form = () => {
                     </label>
                   ))}
                   <div>
-                    <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
+                    <label class="flex items-center gap-3 p-3  rounded-xl cursor-pointer hover:bg-gray-50">
                       <input
                         type="radio"
                         id={`${q.id}-other`}
@@ -246,7 +246,7 @@ const Form = () => {
                         {q.options.map((option) => (
                           <label
                             key={option.id}
-                            class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50"
+                            class="flex items-center gap-3 p-3  rounded-xl cursor-pointer hover:bg-gray-50"
                           >
                             <input
                               type="radio"
@@ -275,7 +275,7 @@ const Form = () => {
                           </label>
                         ))}
                         <div>
-                          <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
+                          <label class="flex items-center gap-3 p-3  rounded-xl cursor-pointer hover:bg-gray-50">
                             <input
                               type="radio"
                               id={`${sub_q.id}-other`}
@@ -320,13 +320,23 @@ const Form = () => {
               break;
           }
         })}
-        <button
+
+        
+        <div className="w-full  flex items-center justify-center">
+          <button
+      
           type="submit"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 "
         >
           Enviar
         </button>
+        </div>
+        
+        
       </form>
+      
+      
+      
     </div>
   );
 };
