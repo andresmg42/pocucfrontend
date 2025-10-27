@@ -65,11 +65,15 @@ const QuestionPanel = () => {
   ];
 
   return (
-        <CompactTable
+    <div className="flex-1 bg-[url('/home/home.png')] bg-cover bg-center bg-no-repeat p-5">
+      <CompactTable
           columns={COLUMNS}
           data={tableData}
           theme={theme}
-          select={select}/>      
+          select={select}/>
+
+    </div>
+              
   );
 };
 

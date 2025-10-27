@@ -95,11 +95,11 @@ const Stats = () => {
  
 
   return (
-    <div className="flex flex-col  ">
+    <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat p-10 flex-col  ">
       {charTriggerUR ? (
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center">
-            <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
+            <div className="h-[50vh] w-[140vh] bg-gray-200 rounded-lg">
               <ChartBarUniqueR data={BarChartDataUR} />
             </div>
           </div>
@@ -107,7 +107,7 @@ const Stats = () => {
       ) : (
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center">
-            <div className="h-[70vh] w-[140vh] bg-gray-200 rounded-lg">
+            <div className="h-[50vh] w-[140vh] bg-gray-200 rounded-lg">
               <ChartBarMatrixR data={BarChartDataMR} />
             </div>
           </div>
