@@ -132,8 +132,9 @@ const Form = () => {
   )
 
   return (
-   <div className=" flex-1 h-screen  flex items-center p-5 justify-center bg-[url('/formulario/formulario.png')] bg-cover bg-center bg-no-repeat">
-      {/* This style tag handles hiding the scrollbar.
+   <div className=" flex-1 h-screen  flex items-center  justify-center bg-[url('/formulario/formulario.png')] bg-cover bg-center bg-no-repeat">
+      <div className="h-full w-full p-5 overflow-y-auto form-scrollbar">
+        {/* This style tag handles hiding the scrollbar.
         It's placed here for a single-file solution.
       */}
       <style>{`
@@ -153,7 +154,7 @@ const Form = () => {
       */}
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-6 md:p-10 max-h-[90vh] overflow-y-auto form-scrollbar border border-gray-100"
+        className="w-full mx-auto max-w-3xl bg-white shadow-2xl rounded-2xl p-6 md:p-10   border border-gray-100 h-fit"
       >
 
          <div className="text-center mb-4 md:mb-8">
@@ -397,6 +398,8 @@ const Form = () => {
           </button>
         </div>
       </form>
+
+      </div>
     </div>
   );
 };
