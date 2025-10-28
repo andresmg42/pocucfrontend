@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import SurveyCard from "./SurveyCard";
 import api from "../../api/user.api";
+import SurveyCardPlaceholder from "./SurveyCardPlaceholder";
 
 const SurveyList = () => {
   const [surveys, setSurveys] = useState([]);
+  const [loading,setLoading]=useState(true);
 
   useEffect(() => {
     async function getSurveys() {
@@ -19,16 +21,32 @@ const SurveyList = () => {
     getSurveys();
   }, []);
 
+ 
+
   return (
-    <div className="flex-1 flex ">
-      <div className="bt-green-700 md:w-1/2 bg-[url('/home/home.png')] bg-no-repeat bg-cover "></div>
+    <div className="flex-1 flex flex-col md:flex-row bg-[url('/home/home.png')] bg-no-repeat bg-cover">
+      <div className="bt-green-700 md:w-1/2 "></div>
 
       <div className="md:w-1/2">
-        <div className="grid grid-cols-1 mt-5 mr-5 mb-5 md:grid-cols-2 gap-3 ">
+      {!loading?
+
+      <div className="grid grid-cols-1 m-5 md:grid-cols-2 gap-3 ">
           {surveys.map((survey) => (
             <SurveyCard key={survey.id} survey={survey} />
           ))}
         </div>
+        :
+        <div className="grid grid-cols-1 m-5   md:grid-cols-2 gap-3 ">
+          <SurveyCardPlaceholder/>
+          <SurveyCardPlaceholder/>
+          <SurveyCardPlaceholder/>
+          <SurveyCardPlaceholder/>
+
+        </div>
+        
+      
+    }
+        
       </div>
     </div>
   );
