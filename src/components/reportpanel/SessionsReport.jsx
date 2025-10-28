@@ -6,10 +6,12 @@ import { getTheme } from '@table-library/react-table-library/baseline';
 import { useRowSelect } from '@table-library/react-table-library/select';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router';
+import Spinner from './Spinner';
 
 const SessionsReport = () => {
 
-  const [data,setData]=useState([]);
+   const [loading,setLoading]=useState(true);
+   const [data,setData]=useState([]);
    const theme = useTheme(getTheme())
    const navigate=useNavigate()
    const {observer_id,survey_id}=useParams();
@@ -32,6 +34,9 @@ const SessionsReport = () => {
       } catch (error) {
 
         console.error('error in ObserveTable',error)
+        setLoading(false)
+        }finally{
+          setLoading(false)
         }
         
       }
@@ -89,6 +94,18 @@ const select = useRowSelect(tableData, {
       }
     },
   });
+
+  if(loading){
+    return (
+      <div className='flex flex-col items-center justify-center flex-1 h-[60vh] bg-[url("/registro-sesiones/sesion2.png")] bg-cover bg-center bg-no-repeat'>
+        <Spinner/>
+        
+      <span className="text-lg text-slate-600">
+        Loading data...
+      </span>
+      </div>
+    );
+  }
 
 
   return (

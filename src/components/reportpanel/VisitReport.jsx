@@ -5,9 +5,11 @@ import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline'; 
 import { useRowSelect } from '@table-library/react-table-library/select';
 import { useNavigate, useParams } from 'react-router';
+import Spinner from './Spinner';
 
 const VisitReport = () => {
 
+  const [loading,setLoading]=useState(true);
   const [data,setData]=useState([]);
    const theme = useTheme(getTheme())
    const navigate=useNavigate()
@@ -31,6 +33,9 @@ const VisitReport = () => {
       } catch (error) {
 
         console.error('error in ObserveTable',error)
+        setLoading(false);
+        }finally{
+          setLoading(false);
         }
         
       }
@@ -59,16 +64,17 @@ const handleRowClick=(item)=>{
   
 }
 
-// const select = useRowSelect(tableData, {
-//     onChange: (action, state) => {
-//       const clickedItem = data.find((item) => item.id === state.id);
-
-//       console.log('this is the state',state.id)
-//       if (clickedItem) {
-//         handleRowClick(clickedItem);
-//       }
-//     },
-//   });
+if(loading){
+    return (
+      <div className='flex flex-col items-center justify-center flex-1 h-[60vh] bg-[url("/registro-sesiones/sesion2.png")] bg-cover bg-center bg-no-repeat'>
+        <Spinner/>
+        
+      <span className="text-lg text-slate-600">
+        Loading data...
+      </span>
+      </div>
+    );
+  }
 
 
   return (
