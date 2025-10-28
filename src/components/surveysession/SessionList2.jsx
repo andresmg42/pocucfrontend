@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import CreateSession from "./CreateSession";
 import usePageStore from "../../stores/use-page-store";
 import Placeholder1 from "../placeholders/Placeholder1";
+import SurveySessionPlaceholderCard from "./SurveySessionPlaceholderCard";
 
 const SessionList2 = ({ survey_id }) => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const SessionList2 = ({ survey_id }) => {
         }
       } catch (error) {
         console.log("error in SessionList", error);
+        setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -56,7 +58,18 @@ const SessionList2 = ({ survey_id }) => {
   }, [userLogged, sessionIsDeleted]);
 
   if (loading) {
-    return <div className="text-center p-10 text-white">Loading users...</div>;
+    return (
+      <div className=" sm:p-6  flex flex-1  flex-col  items-center">
+        <h2 class="text-4xl  font-bold  text-black ">Sesiónes</h2>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-5 ">
+          <SurveySessionPlaceholderCard />
+          <SurveySessionPlaceholderCard />
+          <SurveySessionPlaceholderCard />
+          <SurveySessionPlaceholderCard />
+        </div>
+      </div>
+    );
   }
 
   const handleClickStart = async (surveysession_id, visit_number) => {
@@ -96,25 +109,20 @@ const SessionList2 = ({ survey_id }) => {
 
   if (sessions.length === 0)
     return (
-
       <div className="flex flex-1 items-center justify-center">
         <Placeholder1
           page_name={"Sesion"}
           plural_page_name={"Sesiones"}
           onButtonClick={() => setAddTrigger(!addTrigger)}
-        /></div>
-     
-        
-      
+        />
+      </div>
     );
 
   return (
     <>
       {addTrigger && (
         <div className=" sm:p-6  flex   flex-col items-center">
-          <h2 class="text-4xl  font-bold  text-black ">
-            Sesiónes
-          </h2>
+          <h2 class="text-4xl  font-bold  text-black ">Sesiónes</h2>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10 ">
             {sessions.map((session) => {
