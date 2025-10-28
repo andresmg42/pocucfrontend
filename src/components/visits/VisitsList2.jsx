@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import usePageStore from "../../stores/use-page-store";
 import Placeholder1 from "../placeholders/Placeholder1";
 import ConfirmationModal from "../auxiliarcomponents/ConfirmationModal";
+import VisitsPlaceholderCard from "./VisitsPlaceholderCard";
 
 const VisitsList2 = ({ surveysession_id, visit_number }) => {
   const [visits, setVisits] = useState([]);
@@ -57,6 +58,7 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
         console.log("respuesta en visitas fetch", res.data);
       } catch (error) {
         console.log("error in SessionList", error);
+        setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -65,7 +67,19 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
   }, [userLogged, visitedIsDeleted, visit_number, addTriggerVisit]);
 
   if (loading) {
-    return <div className="text-center p-10 text-white">Loading users...</div>;
+    return (
+      <div className="sm:p-6 flex-1  flex flex-col items-center">
+        <h2 class="text-4xl font-bold  text-black">Visitas</h2>
+
+       
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">
+          <VisitsPlaceholderCard />
+          <VisitsPlaceholderCard />
+          <VisitsPlaceholderCard />
+          <VisitsPlaceholderCard />
+        </div>
+      </div>
+    );
   }
 
   const handleClickStart = async (visit_id) => {
@@ -133,40 +147,37 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
 
   return (
     <>
-      
-        <div className="sm:p-6 flex-1  flex flex-col items-center">
-          <h2 class="text-4xl font-bold  text-black">
-            Visitas
-          </h2>
+      <div className="sm:p-6 flex-1  flex flex-col items-center">
+        <h2 class="text-4xl font-bold  text-black">Visitas</h2>
 
-          {/* Responsive grid layout that adjusts to screen size */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">
-            {visits.map((visit) => {
-              var localTimeStart = null;
-              var localTimeEnd = null;
-              console.log("fecha de la visita:", visit.visit_start_date_time);
-              if (visit.visit_start_date_time) {
-                const dateObj = new Date(visit.visit_start_date_time);
-                localTimeStart = dateObj.toLocaleString("es-CO", {
-                  dateStyle: "full",
-                  timeStyle: "short",
-                });
-              }
+        {/* Responsive grid layout that adjusts to screen size */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">
+          {visits.map((visit) => {
+            var localTimeStart = null;
+            var localTimeEnd = null;
+            console.log("fecha de la visita:", visit.visit_start_date_time);
+            if (visit.visit_start_date_time) {
+              const dateObj = new Date(visit.visit_start_date_time);
+              localTimeStart = dateObj.toLocaleString("es-CO", {
+                dateStyle: "full",
+                timeStyle: "short",
+              });
+            }
 
-              if (visit.visit_end_date_time) {
-                const dateObj = new Date(visit.visit_end_date_time);
-                localTimeEnd = dateObj.toLocaleString("es-CO", {
-                  dateStyle: "full",
-                  timeStyle: "short",
-                });
-              }
+            if (visit.visit_end_date_time) {
+              const dateObj = new Date(visit.visit_end_date_time);
+              localTimeEnd = dateObj.toLocaleString("es-CO", {
+                dateStyle: "full",
+                timeStyle: "short",
+              });
+            }
 
-              console.log("localtime", localTimeStart);
+            console.log("localtime", localTimeStart);
 
-              return (
-                <div
-                  key={visit.id}
-                  className="
+            return (
+              <div
+                key={visit.id}
+                className="
           flex 
           flex-col 
           space-y-4 
@@ -183,16 +194,16 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
           border-transparent
           hover:border-indigo-500
         "
-                >
-                  {/* Card Header & Main Content */}
-                  <div className="flex-grow">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-lg font-bold tracking-tight text-slate-800 uppercase">
-                        Visita: {visit.visit_number}
-                      </h2>
-                      {/* Status Badge */}
-                      <span
-                        className={`
+              >
+                {/* Card Header & Main Content */}
+                <div className="flex-grow">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-bold tracking-tight text-slate-800 uppercase">
+                      Visita: {visit.visit_number}
+                    </h2>
+                    {/* Status Badge */}
+                    <span
+                      className={`
                 inline-flex 
                 items-center 
                 rounded-full 
@@ -208,17 +219,40 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
                     : "bg-red-100 text-yellow-800"
                 }
               `}
+                    >
+                      {visit.state === 2
+                        ? "Completa"
+                        : visit.state == 1
+                        ? "En Proceso"
+                        : "Sin Iniciar"}
+                    </span>
+                  </div>
+
+                  {/* Meta Information */}
+                  <div className="mt-3 space-y-2 text-sm text-slate-500">
+                    <div className="flex items-center gap-2">
+                      {/* Icon for Date */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
                       >
-                        {visit.state === 2
-                          ? "Completa"
-                          : visit.state == 1
-                          ? "En Proceso"
-                          : "Sin Iniciar"}
+                        <path
+                          fillRule="evenodd"
+                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        Fecha Inicio:{" "}
+                        {localTimeStart
+                          ? localTimeStart
+                          : "No has Iniciado la visita"}
                       </span>
                     </div>
 
-                    {/* Meta Information */}
-                    <div className="mt-3 space-y-2 text-sm text-slate-500">
+                    {localTimeEnd && (
                       <div className="flex items-center gap-2">
                         {/* Icon for Date */}
                         <svg
@@ -233,82 +267,58 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        <span>
-                          Fecha Inicio:{" "}
-                          {localTimeStart
-                            ? localTimeStart
-                            : "No has Iniciado la visita"}
-                        </span>
+                        <span>Fecha Finalización: {localTimeEnd}</span>
                       </div>
-
-                      {localTimeEnd && (
-                        <div className="flex items-center gap-2">
-                          {/* Icon for Date */}
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <span>Fecha Finalización: {localTimeEnd}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Action Buttons pushed to the bottom */}
-                  <div className="mt-auto flex items-center justify-end gap-3 pt-4">
-                    <button
-                      type="button"
-                      aria-label="Start visit"
-                      onClick={() => handleClickStart(visit.id)}
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100 text-green-600 transition-colors hover:bg-green-200"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="Delete visit"
-                      onClick={() => handleClickDelete(visit.id)}
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-red-600 transition-colors hover:bg-red-200"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                    )}
                   </div>
                 </div>
-              );
-            })}
-          </div>
+
+                {/* Action Buttons pushed to the bottom */}
+                <div className="mt-auto flex items-center justify-end gap-3 pt-4">
+                  <button
+                    type="button"
+                    aria-label="Start visit"
+                    onClick={() => handleClickStart(visit.id)}
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100 text-green-600 transition-colors hover:bg-green-200"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Delete visit"
+                    onClick={() => handleClickDelete(visit.id)}
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-red-600 transition-colors hover:bg-red-200"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      
+      </div>
     </>
   );
 };
