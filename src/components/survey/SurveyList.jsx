@@ -15,6 +15,10 @@ const SurveyList = () => {
         setSurveys(surveys.data);
       } catch (error) {
         console.log(error);
+        setLoading(false);
+      }
+      finally{
+        setLoading(false);
       }
     }
 
