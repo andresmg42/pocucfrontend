@@ -21,7 +21,10 @@ const Category = () => {
 
             } catch (error) {
                 console.log('error in getCategories',error)
+                setLoading(false)
                 
+            }finally{
+              setLoading(false)
             }
         }
     getCategories()
