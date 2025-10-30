@@ -1,0 +1,27 @@
+<!-- "Close" button SVG (48x48 default) -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="48" height="48" viewBox="0 0 48 48"
+     role="button" tabindex="0" aria-label="Close window"
+     style="cursor:pointer; user-select:none;">
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- dark circle background -->
+  <circle cx="24" cy="24" r="20" fill="#444" filter="url(#shadow)"/>
+
+  <!-- white X -->
+  <g stroke="#fff" stroke-width="4" stroke-linecap="round">
+    <line x1="16" y1="16" x2="32" y2="32"/>
+    <line x1="32" y1="16" x2="16" y2="32"/>
+  </g>
+
+  <style>
+    svg:focus { outline: none; }
+    svg:focus circle { stroke: #fff3; stroke-width: 3; }
+    svg:hover circle { fill: #555; }
+    svg:active circle { fill: #222; }
+  </style>
+</svg>
