@@ -7,19 +7,24 @@ import { useNavigate } from "react-router";
 
 function Home() {
   const navigate = useNavigate();
-  const { userLogged } = useAuthStore();
+  const { userLogged,isLoading } = useAuthStore();
 
  useEffect(() => {
-     console.log('entro a useEffect')
-    if (userLogged==null) {
+
+
+  if (isLoading) return;
+
+
+     
+    if (!userLogged) {
       navigate("login/");
     }
-  }, []);
+  }, [userLogged,isLoading,navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    
       <SurveyList />
-    </div>
+    
   );
 }
 

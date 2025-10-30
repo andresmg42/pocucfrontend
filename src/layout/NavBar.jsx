@@ -15,13 +15,13 @@ function NavBar() {
   }
 
   return (
-    <div className=" text-white font-bold py-4 fixed top-0 left-0 w-full z-50 shadow">
-    <nav className="container mx-auto flex justify-between items-center h-10 pr-5 pl-5">
-      {/* Logo o nombre de la marca */}
-      <div className="h-16 flex items-center ml-5">
+    
+    <nav className="bg-white fixed top-0 left-0 right-0 w-full flex justify-between items-center h-16 px-5 text-black font-bold shadow-lg z-50">
+      
+      <div className=" flex items-center ml-10">
         <NavLink to="/">
         
-        <img src="/logo/logoUV_Oficial_Rojo.svg" alt="logo" className='w-full h-12'/>
+        <img src="/logo/logounisaludable.png" alt="logo" className='w-full h-15'/>
 
        
         
@@ -29,11 +29,11 @@ function NavBar() {
         </NavLink>
       </div>
 
-      {/* Ícono de hamburguesa para móviles */}
+      
       <div className="block md:hidden">
         <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)} // Alternar la visibilidad del menú
-          className="text-white focus:outline-none"
+          onClick={() => setIsMenuOpen(!isMenuOpen)} 
+          className="text-black focus:outline-none"
         >
           <svg
             className="w-6 h-6"
@@ -52,11 +52,11 @@ function NavBar() {
         </button>
       </div>
 
-      {/* Menú de navegación */}
+      
       <ul
         className={`${
           isMenuOpen ? "block" : "hidden"
-        } md:flex md:space-x-6 absolute md:relative bg-black/50 md:bg-transparent w-full md:w-auto left-0 md:left-auto top-16 md:top-0 p-4 md:p-0 z-10`}
+        } md:flex md:space-x-6 absolute md:relative bg-white/70 md:bg-transparent w-full md:w-auto left-0 md:left-auto top-16 md:top-0 p-4 md:p-0 z-10`}
       >
         <li>
           <NavLink
@@ -70,11 +70,11 @@ function NavBar() {
         </li>
         <li>
           <NavLink
-            to="/quiz"
+            to="report-panel-surveys/"
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             activeClassName="text-blue-500"
           >
-            Estadisticas
+            Reportes
           </NavLink>
         </li>
         <li>
@@ -93,7 +93,7 @@ function NavBar() {
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             activeClassName="text-blue-500"
           >
-            Sign In
+            Iniciar Sesión
           </NavLink>
         </li>
         }
@@ -103,14 +103,14 @@ function NavBar() {
               onClick={handleLogout}
               className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             >
-              Log Out
+              Cerrar Sesión
             </button>
           </li>
         )}
        
       </ul>
     </nav>
-  </div>
+ 
   )
 }
 
