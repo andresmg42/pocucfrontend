@@ -6,11 +6,11 @@ import { CompactTable } from "@table-library/react-table-library/compact";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { useRowSelect } from "@table-library/react-table-library/select";
-import ChartBarMatrixR from "./charts/ChartBarMatrixR";
-import ChartBarUniqueR from "./charts/ChartBarUniqueR";
-import ZonaTable from "./charts/ZonaTable";
+import ChartBarMatrixR from "../../components/reportpanel/charts/ChartBarMatrixR";
+import ChartBarUniqueR from "../../components/reportpanel/charts/ChartBarUniqueR";
+import ZonaTable from "../../components/reportpanel/charts/ZonaTable";
 import { useNavigate } from "react-router";
-import AggregationPanel from "./charts/AggregationPanel";
+import AggregationPanel from "../../components/reportpanel/charts/AggregationPanel";
 
 const Stats = () => {
   const { question_id,survey_id } = useParams();
