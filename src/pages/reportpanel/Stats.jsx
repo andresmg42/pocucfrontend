@@ -6,11 +6,12 @@ import { CompactTable } from "@table-library/react-table-library/compact";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { useRowSelect } from "@table-library/react-table-library/select";
-import ChartBarMatrixR from "./charts/ChartBarMatrixR";
-import ChartBarUniqueR from "./charts/ChartBarUniqueR";
-import ZonaTable from "./charts/ZonaTable";
+import ChartBarMatrixR from "../../components/reportpanel/charts/ChartBarMatrixR";
+import ChartBarUniqueR from "../../components/reportpanel/charts/ChartBarUniqueR";
+import ZonaTable from "../../components/reportpanel/charts/ZonaTable";
 import { useNavigate } from "react-router";
-import AggregationPanel from "./charts/AggregationPanel";
+import AggregationPanel from "../../components/reportpanel/charts/AggregationPanel";
+import NoDataPlaceholder from "./NoDataPlaceholder";
 
 const Stats = () => {
   const { question_id,survey_id } = useParams();
@@ -91,6 +92,15 @@ const Stats = () => {
 </div>
 
   )
+
+if(!question.aggregate_stats.mode){
+  console.log('aggregate data into if')
+  return (
+    <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat items-center justify-center">
+      <NoDataPlaceholder/>
+    </div>
+  )
+}
 
  
 
