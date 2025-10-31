@@ -30,7 +30,10 @@ const AggregationPanel = ({ data }) => {
               Maximo
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Numero Respuestas
+              Numero Respuestas Numericas
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Numero Respuestas Textuales
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Moda
@@ -70,7 +73,10 @@ const AggregationPanel = ({ data }) => {
           {obj.maximum}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
-          {obj.count>0? obj.count : obj.count_text}
+          { obj.count}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
+          {  obj.count_text}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* FIX 4: Use optional chaining for safe access */}
