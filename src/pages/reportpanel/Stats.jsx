@@ -11,6 +11,7 @@ import ChartBarUniqueR from "../../components/reportpanel/charts/ChartBarUniqueR
 import ZonaTable from "../../components/reportpanel/charts/ZonaTable";
 import { useNavigate } from "react-router";
 import AggregationPanel from "../../components/reportpanel/charts/AggregationPanel";
+import NoDataPlaceholder from "./NoDataPlaceholder";
 
 const Stats = () => {
   const { question_id,survey_id } = useParams();
@@ -91,6 +92,15 @@ const Stats = () => {
 </div>
 
   )
+
+if(!question.aggregate_stats.mode){
+  console.log('aggregate data into if')
+  return (
+    <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat items-center justify-center">
+      <NoDataPlaceholder/>
+    </div>
+  )
+}
 
  
 
