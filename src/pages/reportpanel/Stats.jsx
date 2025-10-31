@@ -46,7 +46,8 @@ const Stats = () => {
         }
 
         setQuestion(res.data);
-        setNoData(res.data.aggregate_stats[0].mode)
+        const hasData=res.data.aggregate_stats.some((item)=>item.mode)
+        setNoData(!hasData)
         
       } catch (error) {
         setQuestion(null);
@@ -97,7 +98,7 @@ const Stats = () => {
 
   )
 
-if(!noData){
+if(noData){
   console.log('aggregate data into if')
   return (
     <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat items-center justify-center">
