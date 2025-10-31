@@ -23,6 +23,8 @@ const Stats = () => {
   const [loading,setLoading]=useState(true);
   const navigate = useNavigate();
 
+  const [noData,setNoData]=useState(true);
+
   useEffect(() => {
     async function getStats() {
       
@@ -44,6 +46,8 @@ const Stats = () => {
         }
 
         setQuestion(res.data);
+        setNoData(res.data.aggregate_stats[0].mode)
+        
       } catch (error) {
         setQuestion(null);
         setLoading(false);
@@ -93,7 +97,7 @@ const Stats = () => {
 
   )
 
-if(!question.aggregate_stats.mode){
+if(!noData){
   console.log('aggregate data into if')
   return (
     <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat items-center justify-center">
