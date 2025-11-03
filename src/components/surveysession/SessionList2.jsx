@@ -60,7 +60,7 @@ const SessionList2 = ({ survey_id }) => {
   if (loading) {
     return (
       <div className=" sm:p-6  flex flex-1  flex-col  items-center">
-        <h2 class="text-4xl  font-bold  text-black ">Sesiónes</h2>
+        <h2 class="text-4xl  font-bold  text-black ">Sesiones</h2>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-5 ">
           <SurveySessionPlaceholderCard />
@@ -111,7 +111,7 @@ const SessionList2 = ({ survey_id }) => {
     return (
       <div className="flex flex-1 items-center justify-center">
         <Placeholder1
-          page_name={"Sesion"}
+          page_name={"Sesión"}
           plural_page_name={"Sesiones"}
           onButtonClick={() => setAddTrigger(!addTrigger)}
         />
