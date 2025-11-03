@@ -25,7 +25,7 @@ const Placeholder1 = ({page_name,plural_page_name,onButtonClick,Trigger}) => {
 
         
         <p className="mt-2 text-gray-500 max-w-sm mx-auto">
-            {`Parece que no hay ${plural_page_name} aqui todavia. Empieza creando una.`}
+            {`Parece que no hay ${plural_page_name} aquí todavía. Empieza creando una.`}
         </p>
 
         

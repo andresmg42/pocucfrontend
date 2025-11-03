@@ -80,7 +80,7 @@ const AggregationPanel = ({ data }) => {
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* FIX 4: Use optional chaining for safe access */}
-          {obj.mode?.numeric_value? obj.mode?.numeric_value : obj.mode.text_value}
+          {obj.mode?.numeric_value ?? obj.mode.text_value}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* FIX 4: Use optional chaining for safe access */}
