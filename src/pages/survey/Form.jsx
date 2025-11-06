@@ -95,35 +95,34 @@ const Form = () => {
     try {
       // questions_required= questions.filter((q)=>q.is_required)
       // response_completed = questions_required.reduce((bool,q) => bool && q.id in answers,true)
-      const problemQuestions=questions.filter((q)=>q.is_required && !(q.id in answers));
-      if (problemQuestions.length===0){
+      const problemQuestions = questions.filter(
+        (q) =>
+          q.is_required &&
+          q.question_type != "matrix_parent" &&
+          !(q.id in answers)
+      );
+      if (problemQuestions.length === 0) {
+        console.log("answers", answers);
 
-      console.log("answers", answers);
+        setLoading(true);
+        const res = await api.post("response/create/", answers);
 
-      setLoading(true);
-      const res = await api.post("response/create/", answers);
+        console.log("respuesta en el form", res);
 
-      console.log("respuesta en el form", res);
+        toast.success("Survey saved successfully");
+        navigate(-1);
+      } else {
+        toast.error("Debes Completar todas las respuestas obligatorias");
 
-      toast.success("Survey saved successfully");
-      navigate(-1);
+        const firstProblem = problemQuestions[0];
 
-      }else{
+        const element = document.getElementById(firstProblem.id);
 
-        toast.error('Debes Completar todas las respuestas obligatorias')
-
-        const firstProblem=problemQuestions[0];
-
-        const element=document.getElementById(firstProblem.id);
-
-        if(element){
-          element.scrollIntoView({behavior:'smooth',block:'center'});
-          element.classList.add('question-error-highlight');
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+          element.classList.add("question-error-highlight");
         }
-
       }
-       
-      
     } catch (error) {
       console.log("error in handlesumbmit form", error);
       setLoading(false);
@@ -197,7 +196,6 @@ const Form = () => {
             switch (q.question_type) {
               case "unique_response":
                 return (
-                  
                   <fieldset
                     key={q.id}
                     className="pb-8 mb-8 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0 space-y-3"
