@@ -46,7 +46,7 @@ const Visits = () => {
         <img
           src="/surveysession/add.svg"
           alt="add"
-          className="fixed m-8 h-10 w-10 md:w-20 md:h-20 top-10 right-0"
+          className="fixed m-8 h-15 w-15 md:w-20 md:h-20 top-10 right-0"
         ></img>
       </button>
     </div>
