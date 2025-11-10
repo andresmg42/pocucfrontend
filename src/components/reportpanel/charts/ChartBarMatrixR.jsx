@@ -6,12 +6,22 @@ const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString
 
 const ChartBarMatrixR = ({ data }) => {
 
+  console.log('data in chartBarMatrix: ',data)
+
   // 1. Get the keys for the bars from the first data object.
   // We filter out 'name' because it's used for the X-axis label, not a bar.
   if (!data || data.length === 0) {
     return <div className='text-black text-lg mt-55'>No hay datos para esta zona</div>; // Handle empty data case
   }
-  const barKeys = Object.keys(data[0]).filter(key => key !== 'name');
+  // const barKeys = Object.keys(data[0]).filter(key => key !== 'name');
+
+  const barKeys = [...new Set(
+  data.flatMap(item => 
+    Object.keys(item).filter(key => key !== 'name')
+  )
+)];
+
+  console.log('Bar Keys',barKeys)
 
   return (
     <ResponsiveContainer width="100%" height={400}>
