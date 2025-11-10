@@ -34,7 +34,8 @@ const ChartBarMatrixR = ({ data }) => {
           <Bar 
             key={key} 
             dataKey={key} 
-            fill={getRandomColor()} 
+            fill={getRandomColor()}
+            maxBarSize={60} 
           />
         ))}
       </BarChart>

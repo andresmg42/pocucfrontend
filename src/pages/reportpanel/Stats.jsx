@@ -10,7 +10,7 @@ import ChartBarMatrixR from "../../components/reportpanel/charts/ChartBarMatrixR
 import ChartBarUniqueR from "../../components/reportpanel/charts/ChartBarUniqueR";
 import ZonaTable from "../../components/reportpanel/charts/ZonaTable";
 import { useNavigate } from "react-router";
-import AggregationPanel from "../../components/reportpanel/charts/AggregationPanel";
+import AggregationPanelNumeric from "../../components/reportpanel/charts/AggregationPanelNumeric";
 import NoDataPlaceholder from "./NoDataPlaceholder";
 
 const Stats = () => {
@@ -46,7 +46,7 @@ const Stats = () => {
         }
 
         setQuestion(res.data);
-        const hasData=res.data.aggregate_stats.some((item)=>item.mode)
+        const hasData=res.data.aggregate_stats.some((item)=>item.mode_numeric || item.mode_text) 
         setNoData(!hasData)
         
       } catch (error) {
@@ -71,12 +71,12 @@ const Stats = () => {
     }
 
     if (question.visualization_type === "stacked_bar_100_percent") {
-      setBarChartDataMR(question.data);
+      setBarChartDataMR(question.data_numeric);
       setCharTriggerUR(false);
     } else {
-      console.log("question_bar_chart", question.data);
+      console.log("question_bar_chart", question.data_numeric);
 
-      setBarChartDataUR(question.data);
+      setBarChartDataUR(question.data_numeric);
       console.log("barchar_data_UR", BarChartDataUR);
 
       setCharTriggerUR(true);
@@ -133,7 +133,7 @@ if(noData){
         <div >
         <ZonaTable setIdZone={setIdZone} />
       </div>
-      <div ><AggregationPanel data={question?.aggregate_stats}/></div>
+      <div ><AggregationPanelNumeric data={question?.aggregate_stats}/></div>
 
       </div>
       
