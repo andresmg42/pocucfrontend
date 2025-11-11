@@ -35,11 +35,11 @@ const Category = () => {
 
   return (
 
-    <div className="flex-1 flex ">
+    <div className="flex-1 flex flex-col md:flex-row ">
       
 
       <div className="md:w-1/2">
-      {!loading?
+      {!true?
         <div className="grid grid-cols-1 m-10 md:grid-cols-2 gap-3 ">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} visit_id={visit_id} surveysession_id={surveysession_id}/>
