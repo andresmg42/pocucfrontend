@@ -39,7 +39,7 @@ const Category = () => {
       
 
       <div className="md:w-1/2">
-      {!true?
+      {!loading?
         <div className="grid grid-cols-1 m-10 md:grid-cols-2 gap-3 ">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} visit_id={visit_id} surveysession_id={surveysession_id}/>
