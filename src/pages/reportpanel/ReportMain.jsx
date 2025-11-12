@@ -81,7 +81,8 @@ const ReportMain = () => {
 
             <p className="mt-2 text-gray-600">
               Usted no tiene los permisos necesarios para ver este contenido.
-              Porfavor contacte a soporte tecnico si cree que hay algun error.
+              Por Favor contacte a soporte técnico si cree que hay algún error.
+
             </p>
 
             <div className="px-4 py-3 mt-6 text-sm text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-lg">
