@@ -51,13 +51,13 @@ function NavBar() {
     <nav className="bg-white fixed top-0 left-0 right-0 w-full flex justify-between items-center h-16 px-5 text-black font-bold shadow-lg z-50">
       
       <div className=" flex items-center ml-10">
-        <NavLink to="/">
+        <NavLink 
+        onClick={closeMenu}
+        to="/">
         
         <img src="/logo/logounisaludable.png" alt="logo" className='w-full h-15'/>
+        
 
-       
-        
-        
         </NavLink>
       </div>
 
@@ -98,6 +98,7 @@ function NavBar() {
             exact
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             activeClassName="text-blue-500"
+            onClick={closeMenu}
           >
             Encuestas
           </NavLink>
@@ -107,6 +108,7 @@ function NavBar() {
             to="report-panel-surveys/"
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             activeClassName="text-blue-500"
+            onClick={closeMenu}
           >
             Reportes
           </NavLink>
@@ -116,6 +118,7 @@ function NavBar() {
             to="/about"
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0 "
             activeClassName="text-blue-500"
+            onClick={closeMenu}
           >
             Sobre nosotros
           </NavLink>
@@ -126,6 +129,7 @@ function NavBar() {
             to="/login"
             className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
             activeClassName="text-blue-500"
+            onClick={closeMenu}
           >
             Iniciar Sesión
           </NavLink>
@@ -136,6 +140,7 @@ function NavBar() {
             <button
               onClick={handleLogout}
               className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
+              
             >
               Cerrar Sesión
             </button>

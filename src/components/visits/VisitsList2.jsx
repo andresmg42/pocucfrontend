@@ -69,9 +69,8 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
   if (loading) {
     return (
       <div className="sm:p-6 flex-1  flex flex-col items-center">
-        <h2 class="text-4xl font-bold  text-black">Visitas</h2>
+        <h2 class="text-4xl font-bold   text-black">Visitas</h2>
 
-       
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">
           <VisitsPlaceholderCard />
           <VisitsPlaceholderCard />
@@ -148,7 +147,13 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
   return (
     <>
       <div className="sm:p-6 flex-1  flex flex-col items-center">
-        <h2 class="text-4xl font-bold  text-black">Visitas</h2>
+
+        <div className=" w-full  flex items-center justify-center p-2">
+
+          <h2 class="md:text-4xl text-2xl font-bold text-black">Visitas</h2>
+
+        </div>
+        
 
         {/* Responsive grid layout that adjusts to screen size */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">

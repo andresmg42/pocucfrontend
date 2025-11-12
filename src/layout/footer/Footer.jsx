@@ -4,7 +4,7 @@ import { SiYoutube, SiFacebook, SiInstagram } from "react-icons/si";
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-black  bottom-0 left-0 rigth-0 w-full">
+    <footer className=" text-black  bottom-0 left-0 right-0 w-full">
         <div className="flex justify-end pr-8 pt-2 text-sm">
         <NavLink to="/politica-de-privacidad" className="hover:underline">
           Política de privacidad
@@ -12,7 +12,7 @@ const Footer = () => {
       </div>
 
       {/* Main content container for alignment */}
-      <div className="container mx-auto px-5 py-4 flex flex-col md:flex-row justify-between items-start md:items-end">
+      <div className="container mx-auto px-5 py-4  flex  flex-col md:flex-row justify-between items-start md:items-end">
         {/* Left Section: Contact Information */}
         <div className="flex flex-col mb-4 md:mb-0 text-sm">
           <h3 className="font-bold text-lg mb-2">Vicerrectoría de Bienestar Universitario</h3>
@@ -21,7 +21,7 @@ const Footer = () => {
           <p className="font-semibold text-base mb-2">Prioridades: Salud Ambiental y Salud Social</p>
           <p className="flex items-center mt-1">
             <span className="mr-2">📧</span>
-            <a href="mailto:dintev@univalle.edu.co" className="hover:underline">programa.universidadsaludable@correounivalle.edu.co</a>
+            <a href="mailto:dintev@univalle.edu.co" className="hover:underline break-all">programa.universidadsaludable@correounivalle.edu.co</a>
           </p>
           <p className="flex items-center mt-1">
             <span className="mr-2">📍</span>
