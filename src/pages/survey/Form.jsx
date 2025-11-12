@@ -196,7 +196,7 @@ const Form = () => {
                     key={q.id}
                     className="pb-8 mb-8 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0 space-y-3"
                   >
-                    {/* Styled question text */}
+                    
 
                     <div className="flex gap-3">
                       {q.is_required && (
@@ -211,7 +211,8 @@ const Form = () => {
                     </div>
 
                     {/* Options map */}
-                    {q.options.map((option) => (
+                    <div className="flex flex-wrap gap-2 md:gap-4 pl-0 md:pl-4" >
+                      {q.options.map((option) => (
                       <label
                         key={option.id}
                         className="flex items-center gap-3 p-3.5 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-blue-50 border border-transparent hover:border-blue-200"
@@ -242,6 +243,7 @@ const Form = () => {
                         </span>
                       </label>
                     ))}
+                    
 
                     {/* "Other" Option */}
                     <div>
@@ -260,8 +262,9 @@ const Form = () => {
                       </label>
 
                       {/* Indented "Other" text field */}
-                      <div className="pl-10 mt-2">
+                     
                         {isOtherOpen && (
+                           <div className="pl-10 mt-2 ">
                           <input
                             type="text"
                             id={q.id}
@@ -279,8 +282,10 @@ const Form = () => {
                             // Styled text input
                             className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
                           />
+                          </div>
                         )}
-                      </div>
+                      
+                    </div>
                     </div>
                   </fieldset>
                 );
@@ -379,8 +384,9 @@ const Form = () => {
                                 </span>
                               </label>
 
-                              <div className="pl-10 mt-2">
+                              
                                 {isOtherOpen && (
+                                  <div className="pl-10 mt-2">
                                   <input
                                     type="text"
                                     id={sub_q.id}
@@ -400,8 +406,9 @@ const Form = () => {
                                     autoFocus
                                     className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
                                   />
+                                  </div>
                                 )}
-                              </div>
+                              
                             </div>
                           </div>
                         </fieldset>
