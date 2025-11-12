@@ -6,11 +6,13 @@ function Layout({children}) {
   return (
     <div className='layout min-h-screen flex flex-col '>
         <NavBar/>
-        <main className='layout-content flex-1 flex  pt-16'>
+        <main className='layout-content flex-1 flex w-full pt-16'>
             {children}
         </main>
         <Footer/>
+       
     </div>
+     
   )
 }
 

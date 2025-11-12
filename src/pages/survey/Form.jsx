@@ -135,7 +135,7 @@ const Form = () => {
     return <div>Questions of Category {category_name} COMPLETED</div>;
 
   return (
-    <div className=" flex-1 h-screen  flex items-center  justify-center bg-[url('/formulario/formulario.png')] bg-cover bg-center bg-no-repeat">
+    <div className=" flex-1 h-screen   flex items-center  justify-center bg-[url('/formulario/formulario.png')] bg-cover bg-center bg-no-repeat">
       <div className="h-full w-full p-5 overflow-y-auto form-scrollbar">
         <style>{`
         .form-scrollbar::-webkit-scrollbar {
@@ -147,11 +147,7 @@ const Form = () => {
         }
       `}</style>
 
-        {/* This is the main form.
-        - max-h-[90vh] and overflow-y-auto make the form itself scrollable.
-        - `form-scrollbar` class hides the scrollbar.
-        - Added padding, shadow, and rounded corners for a professional look.
-      */}
+        
         <form
           onSubmit={handleSubmit}
           className="w-full mx-auto max-w-3xl bg-white shadow-2xl rounded-2xl p-6 md:p-10   border border-gray-100 h-fit"
