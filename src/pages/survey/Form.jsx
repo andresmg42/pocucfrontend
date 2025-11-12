@@ -201,9 +201,18 @@ const Form = () => {
                     className="pb-8 mb-8 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0 space-y-3"
                   >
                     {/* Styled question text */}
-                    <legend className="text-xl font-semibold text-gray-800 mb-4">
-                      {`${q.code} ${q.description}`}
-                    </legend>
+
+                    <div className="flex gap-3">
+                      {q.is_required && (
+                        <legend className="text-red-700 font-bold text-lg">
+                          *
+                        </legend>
+                      )}
+
+                      <legend className="text-xl font-semibold text-gray-800 mb-4">
+                        {`${q.code} ${q.description}`}
+                      </legend>
+                    </div>
 
                     {/* Options map */}
                     {q.options.map((option) => (
@@ -251,7 +260,7 @@ const Form = () => {
                           onChange={() => handleRadioChange(q.id, "other", "")}
                           className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
                         />
-                        <span className="font-medium text-gray-700">Otra</span>
+                        <span className="font-medium text-gray-700">mas</span>
                       </label>
 
                       {/* Indented "Other" text field */}
@@ -286,9 +295,16 @@ const Form = () => {
                     key={q.id}
                     className="pb-8 mb-8 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0"
                   >
-                    <legend className="text-xl font-semibold text-gray-800 mb-4">
-                      {`${q.code} ${q.description}`}
-                    </legend>
+                    <div className="flex gap-3">
+                      {q.is_required && (
+                        <legend className="text-red-700 font-bold text-lg">
+                          *
+                        </legend>
+                      )}
+                      <legend className="text-xl font-semibold text-gray-800 mb-4">
+                        {`${q.code} ${q.description}`}
+                      </legend>
+                    </div>
 
                     {/* Sub-questions map */}
                     {q.sub_questions.map((sub_q) => {
@@ -363,7 +379,7 @@ const Form = () => {
                                   className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
                                 />
                                 <span className="font-medium text-gray-700">
-                                  Otra
+                                  mas
                                 </span>
                               </label>
 

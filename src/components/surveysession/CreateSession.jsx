@@ -14,7 +14,7 @@ const CreateSession = ({ survey_id }) => {
     session && update
       ? {
           zone: session.zone,
-          number_session: session.number_session,
+          // number_session: session.number_session,
           // start_date: session.start_date,
           // end_date: session.end_date,
           visit_number: session.visit_number,
@@ -25,7 +25,7 @@ const CreateSession = ({ survey_id }) => {
         }
       : {
           zone: "",
-          number_session: "",
+          // number_session: "",
           // start_date: "",
           // end_date: "",
           visit_number: "",
@@ -61,7 +61,7 @@ const CreateSession = ({ survey_id }) => {
         setUpdate(false);
         setFormData({
           zone: "",
-          number_session: "",
+          // number_session: "",
           // start_date: "",
           // end_date: "",
           visit_number: "",
@@ -137,24 +137,6 @@ const CreateSession = ({ survey_id }) => {
                 className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Ej: 14"
                 value={formData.zone}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="number_session"
-                className="block text-sm font-medium text-slate-700 mb-1"
-              >
-                Número de Sesión
-              </label>
-              <input
-                type="number"
-                id="number_session"
-                required
-                className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Ej: 3"
-                value={formData.number_session}
                 onChange={handleChange}
               />
             </div>

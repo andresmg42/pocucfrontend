@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 
-const AggregationPanel = ({ data }) => {
+const AggregationPanelNumeric = ({ data }) => {
   const name_stats = ["average", "minimum", "maximum", "count", "mode"];
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const AggregationPanel = ({ data }) => {
   return (
     <div className="rounded-lg shadow-md overflow-hidden border border-gray-200 bg-white">
       <div className="px-6 py-4">
-      <h1 className="text-2xl font-bold text-gray-800">Estadisticas Descriptivas</h1>
+      <h1 className="text-2xl font-bold text-gray-800">Estadisticas Descriptivas Numericas</h1>
     </div>
       <table className="w-full">
         {/* HEADER: Light gray background, smaller uppercase text */}
@@ -30,18 +30,16 @@ const AggregationPanel = ({ data }) => {
               Maximo
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Numero Respuestas Numericas
+              Numero Respuestas 
             </th>
+            
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Numero Respuestas Textuales
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Moda
+              Moda 
             </th>
              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Frecuencia Moda
+              Frecuencia Moda 
             </th>
-
+        
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -76,16 +74,15 @@ const AggregationPanel = ({ data }) => {
           { obj.count}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
-          {  obj.count_text}
+          {/* FIX 4: Use optional chaining for safe access */}
+          {obj.mode_numeric?.description}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* FIX 4: Use optional chaining for safe access */}
-          {obj.mode?.numeric_value ?? obj.mode.text_value}
+          {obj.mode_numeric?.count}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
-          {/* FIX 4: Use optional chaining for safe access */}
-          {obj.mode?.count}
-        </td>
+        
+        
       </tr>
     ))}
 </tbody>
@@ -94,4 +91,4 @@ const AggregationPanel = ({ data }) => {
   );
 };
 
-export default AggregationPanel;
+export default AggregationPanelNumeric;

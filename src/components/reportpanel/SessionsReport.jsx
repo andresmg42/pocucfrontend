@@ -53,7 +53,7 @@ const SessionsReport = () => {
   { label: 'Estado', renderCell: (item) => item.state===2? 'Completada': item.state===1? 'En Proceso':'No Iniciada' },
   {
     label: 'Zona',
-    renderCell: (item) => item.zone,
+    renderCell: (item) => item.zone_name,
   },
   {
     label: 'Distanacia Ob.',

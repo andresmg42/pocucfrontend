@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useState } from 'react';
 import { NavLink } from 'react-router';
 import useAuthStore from '../stores/use-auth-store';
@@ -7,12 +7,44 @@ import { useNavigate } from 'react-router';
 function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
     const {userLogged,logout} = useAuthStore();
+    const menuRef=useRef(null)
     const navigate=useNavigate();
+    const buttonRef=useRef(null);
 
   const handleLogout = ()=>{
     logout()
     navigate('/login')
   }
+
+  useEffect(()=>{
+    function handleClickOutside(event){
+
+      // 1. Check if the click occurred on the menu itself.
+        const clickedOnMenu = menuRef.current && menuRef.current.contains(event.target);
+        
+        // 2. Check if the click occurred on the toggle button.
+        const clickedOnButton = buttonRef.current && buttonRef.current.contains(event.target);
+
+        if (isMenuOpen && !clickedOnMenu && !clickedOnButton) {
+            setIsMenuOpen(false);
+        }
+
+    }
+
+    document.addEventListener("mousedown",handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return()=>{
+      document.removeEventListener("touchstart",handleClickOutside);
+      document.removeEventListener("mousedown",handleClickOutside)
+    }
+  },[isMenuOpen])
+
+  const closeMenu = () => {
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  };
 
   return (
     
@@ -32,6 +64,7 @@ function NavBar() {
       
       <div className="block md:hidden">
         <button
+          ref={buttonRef}
           onClick={() => setIsMenuOpen(!isMenuOpen)} 
           className="text-black focus:outline-none"
         >
@@ -54,6 +87,7 @@ function NavBar() {
 
       
       <ul
+      ref={menuRef}
         className={`${
           isMenuOpen ? "block" : "hidden"
         } md:flex md:space-x-6 absolute md:relative bg-white/70 md:bg-transparent w-full md:w-auto left-0 md:left-auto top-16 md:top-0 p-4 md:p-0 z-10`}
