@@ -61,7 +61,7 @@ const ChartBarUniqueR = ({ data }) => {
         />
         <Tooltip />
         {/* <Legend /> */}
-        <Bar dataKey={"response_count"}>
+        <Bar dataKey={"count"} maxBarSize={60}>
           {data.map((item, index) => (
             <Cell key={`cell-${index}`} fill={colors[index]} />
           ))}

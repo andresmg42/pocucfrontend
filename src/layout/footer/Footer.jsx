@@ -15,24 +15,17 @@ const Footer = () => {
       <div className="container mx-auto px-5 py-4 flex flex-col md:flex-row justify-between items-start md:items-end">
         {/* Left Section: Contact Information */}
         <div className="flex flex-col mb-4 md:mb-0 text-sm">
-          <h3 className="font-bold text-lg mb-2">Vicerrectoría Académica</h3>
-          <p className="font-semibold text-base mb-2">Dirección de Nuevas Tecnologías y Educación Virtual - DINTEV</p>
-
+          <h3 className="font-bold text-lg mb-2">Vicerrectoría de Bienestar Universitario</h3>
+          <p className="font-semibold text-base mb-2">Política Institucional Universidad Saludable</p>
+          <p className="font-semibold text-base mb-2">Linea de Conocimiento saberes y prácticas en promoción de la salud </p>
+          <p className="font-semibold text-base mb-2">Prioridades: Salud Ambiental y Salud Social</p>
           <p className="flex items-center mt-1">
             <span className="mr-2">📧</span>
-            <a href="mailto:dintev@univalle.edu.co" className="hover:underline">dintev@univalle.edu.co</a>
-          </p>
-          <p className="flex items-center mt-1">
-            <span className="mr-2">📞</span>
-            + (602) 3212100 extensiones: 2640 – 2683
-          </p>
-          <p className="flex items-center mt-1">
-            <span className="mr-2">✉️</span>
-            <a href="mailto:campusvirtual@correounivalle.edu.co" className="hover:underline">campusvirtual@correounivalle.edu.co</a>
+            <a href="mailto:dintev@univalle.edu.co" className="hover:underline">programa.universidadsaludable@correounivalle.edu.co</a>
           </p>
           <p className="flex items-center mt-1">
             <span className="mr-2">📍</span>
-            Edificio 210 Oficina 2004 / Campus Meléndez
+            Edificio D7, Tercer piso,Campus Meléndez
           </p>
         </div>
 

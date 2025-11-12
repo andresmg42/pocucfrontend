@@ -35,7 +35,7 @@ const Category = () => {
 
   return (
 
-    <div className="flex-1 flex ">
+    <div className="flex-1 flex flex-col md:flex-row ">
       
 
       <div className="md:w-1/2">
