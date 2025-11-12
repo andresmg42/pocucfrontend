@@ -40,7 +40,7 @@ const Visits = () => {
       />
 
       <button
-        // disabled={visitAddTriggerDisabled[surveysession_id]}
+        
         onClick={handleAddClick}
       >
         <img
