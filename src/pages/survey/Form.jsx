@@ -7,11 +7,31 @@ import usePageStore from "../../stores/use-page-store";
 
 const ANSWERS_STORAGE_KEY = "mySurveyAnswers";
 
+const COMMENTS_STORAGE_KEY="myComments"
+
 const Form = () => {
   const { category_id, surveysession_id, visit_id, survey_id, category_name } =
     useParams();
-  const { setVisitAddTriggerDisabled } = usePageStore();
+  
+  const [commentTrigger, setCommentTrigger] = useState({});
   const [questions, setQuestions] = useState([]);
+  const [comments, setComments] = useState(()=>{
+    const savedComments=localStorage.getItem(COMMENTS_STORAGE_KEY);
+    if (savedComments){
+      try {
+        return JSON.parse(savedComments)
+        
+      } catch (error) {
+        console.error("Failed to parse comments from localStorage")
+        return {};
+        
+      }
+
+    }
+
+    return {};
+  });
+
   const [answers, setAnswers] = useState(() => {
     const savedAnswers = localStorage.getItem(ANSWERS_STORAGE_KEY);
     if (savedAnswers) {
@@ -24,6 +44,7 @@ const Form = () => {
     }
     return {};
   });
+
   const [openTextFields, setOpenTextFields] = useState({});
   const [isCompleted, setIsCompleted] = useState();
   const [loading, setLoading] = useState(false);
@@ -40,7 +61,8 @@ const Form = () => {
 
   useEffect(() => {
     localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(answers));
-  }, [answers]);
+    localStorage.setItem(COMMENTS_STORAGE_KEY,JSON.stringify(comments));
+  }, [answers,comments]);
 
   useEffect(() => {
     async function initializeForm() {
@@ -58,6 +80,12 @@ const Form = () => {
             `survey/get_survey/?surveysession_id=${surveysession_id}&category_id=${category_id}`
           );
           setQuestions(questionsResponse.data);
+          setCommentTrigger(()=>{
+            const parent_questions=questionsResponse.data.filter(q=>['matrix_parent','unique_response'].includes(q.question_type))
+            const triggers={}
+            parent_questions.map((q)=>triggers[q.id]=false)
+            return triggers
+          })
 
           console.log("questions in form", questionsResponse.data);
         }
@@ -106,6 +134,16 @@ const Form = () => {
     }));
   };
 
+  const handleCommentChange = (questionId, comment) => {
+    setComments((prev) => ({
+      ...prev,
+      [questionId]: {
+        visitId: visit_id,
+        comment: comment,
+      },
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -124,12 +162,17 @@ const Form = () => {
 
         console.log("respuesta en el form", res);
 
+        
+
         localStorage.removeItem(ANSWERS_STORAGE_KEY);
+        localStorage.removeItem(COMMENTS_STORAGE_KEY);
 
         setAnswers({});
 
+        setComments({});
+
         toast.success("Survey saved successfully");
-        
+
         navigate(-1);
       } else {
         toast.error("Debes Completar todas las respuestas obligatorias");
@@ -304,6 +347,30 @@ const Form = () => {
                         )}
                       </div>
                     </div>
+                      {/* Comment */}
+                    <div>
+                      <div className="cursor-pointer" onClick={() => setCommentTrigger((prev) => ({...prev,[q.id]:!prev[q.id]}))}>
+                        <h1 className=" text-md text-blue-700">Comentario</h1>
+                      </div>
+
+                      {commentTrigger[q.id] && (
+                        <div>
+                          <div className="mt-2 ">
+                            <textarea
+                              id={`${q.id}_comment`}
+                              placeholder="Escriba un comentario"
+                              value={comments[q.id]?.comment}
+                              onChange={(e) =>
+                                handleCommentChange(q.id, e.target.value)
+                              }
+                              autoFocus
+                              // Your styles like h-[20vh] will now work correctly!
+                              className="block  w-full h-[15vh] p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            ></textarea>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </fieldset>
                 );
 
@@ -429,6 +496,30 @@ const Form = () => {
                         </fieldset>
                       );
                     })}
+
+                    <div>
+                      <div className="cursor-pointer" onClick={() => setCommentTrigger((prev) => ({...prev,[q.id]:!prev[q.id]}))}>
+                        <h1 className=" text-md text-blue-700">Comentario</h1>
+                      </div>
+
+                      {commentTrigger[q.id] && (
+                        <div>
+                          <div className="mt-2 ">
+                            <textarea
+                              id={`${q.id}_comment`}
+                              placeholder="Escriba un comentario"
+                              value={comments[q.id]?.comment}
+                              onChange={(e) =>
+                                handleCommentChange(q.id, e.target.value)
+                              }
+                              autoFocus
+                              
+                              className="block w-full h-[15vh]  p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            ></textarea>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </fieldset>
                 );
 
