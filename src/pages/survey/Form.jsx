@@ -5,12 +5,25 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import usePageStore from "../../stores/use-page-store";
 
+const ANSWERS_STORAGE_KEY = "mySurveyAnswers";
+
 const Form = () => {
   const { category_id, surveysession_id, visit_id, survey_id, category_name } =
     useParams();
   const { setVisitAddTriggerDisabled } = usePageStore();
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState(() => {
+    const savedAnswers = localStorage.getItem(ANSWERS_STORAGE_KEY);
+    if (savedAnswers) {
+      try {
+        return JSON.parse(savedAnswers);
+      } catch (e) {
+        console.error("Failed to parse answers from localStorage", e);
+        return {};
+      }
+    }
+    return {};
+  });
   const [openTextFields, setOpenTextFields] = useState({});
   const [isCompleted, setIsCompleted] = useState();
   const [loading, setLoading] = useState(false);
@@ -24,6 +37,10 @@ const Form = () => {
     const digitRegex = /^\d+$/;
     return digitRegex.test(str);
   }
+
+  useEffect(() => {
+    localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(answers));
+  }, [answers]);
 
   useEffect(() => {
     async function initializeForm() {
@@ -93,8 +110,6 @@ const Form = () => {
     e.preventDefault();
 
     try {
-      // questions_required= questions.filter((q)=>q.is_required)
-      // response_completed = questions_required.reduce((bool,q) => bool && q.id in answers,true)
       const problemQuestions = questions.filter(
         (q) =>
           q.is_required &&
@@ -109,7 +124,12 @@ const Form = () => {
 
         console.log("respuesta en el form", res);
 
+        localStorage.removeItem(ANSWERS_STORAGE_KEY);
+
+        setAnswers({});
+
         toast.success("Survey saved successfully");
+        
         navigate(-1);
       } else {
         toast.error("Debes Completar todas las respuestas obligatorias");
@@ -147,7 +167,6 @@ const Form = () => {
         }
       `}</style>
 
-        
         <form
           onSubmit={handleSubmit}
           className="w-full mx-auto max-w-3xl bg-white shadow-2xl rounded-2xl p-6 md:p-10   border border-gray-100 h-fit"
@@ -196,8 +215,6 @@ const Form = () => {
                     key={q.id}
                     className="pb-8 mb-8 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0 space-y-3"
                   >
-                    
-
                     <div className="flex gap-3">
                       {q.is_required && (
                         <legend className="text-red-700 font-bold text-lg">
@@ -211,81 +228,81 @@ const Form = () => {
                     </div>
 
                     {/* Options map */}
-                    <div className="flex flex-wrap gap-2 md:gap-4 pl-0 md:pl-4" >
+                    <div className="flex flex-wrap gap-2 md:gap-4 pl-0 md:pl-4">
                       {q.options.map((option) => (
-                      <label
-                        key={option.id}
-                        className="flex items-center gap-3 p-3.5 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-blue-50 border border-transparent hover:border-blue-200"
-                      >
-                        <input
-                          type="radio"
-                          id={option.id}
-                          name={q.id}
-                          value={option.description}
-                          required={q.is_required}
-                          checked={
-                            answers[q.id]?.numeric_value ===
-                              option.description ||
-                            answers[q.id]?.textValue === option.description
-                          }
-                          onChange={() =>
-                            handleRadioChange(
-                              q.id,
-                              option.description,
-                              option.id
-                            )
-                          }
-                          // Styled radio button
-                          className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
-                        />
-                        <span className="font-medium text-gray-700">
-                          {option.description}
-                        </span>
-                      </label>
-                    ))}
-                    
-
-                    {/* "Other" Option */}
-                    <div>
-                      <label className="flex items-center gap-3 p-3.5 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-blue-50 border border-transparent hover:border-blue-200">
-                        <input
-                          type="radio"
-                          id={`${q.id}-other`}
-                          name={q.id}
-                          value="other"
-                          required={q.is_required}
-                          checked={isOtherSelected}
-                          onChange={() => handleRadioChange(q.id, "other", "")}
-                          className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
-                        />
-                        <span className="font-medium text-gray-700">mas</span>
-                      </label>
-
-                      {/* Indented "Other" text field */}
-                     
-                        {isOtherOpen && (
-                           <div className="pl-10 mt-2 ">
+                        <label
+                          key={option.id}
+                          className="flex items-center gap-3 p-3.5 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-blue-50 border border-transparent hover:border-blue-200"
+                        >
                           <input
-                            type="text"
-                            id={q.id}
-                            placeholder="Especifique su respuesta"
-                            value={
-                              answers[q.id]?.numeric_value ||
-                              answers[q.id]?.textValue ||
-                              ""
-                            }
-                            onChange={(e) =>
-                              handleOtherTextChange(q.id, e.target.value)
-                            }
+                            type="radio"
+                            id={option.id}
+                            name={q.id}
+                            value={option.description}
                             required={q.is_required}
-                            autoFocus
-                            // Styled text input
-                            className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            checked={
+                              answers[q.id]?.numeric_value ===
+                                option.description ||
+                              answers[q.id]?.textValue === option.description
+                            }
+                            onChange={() =>
+                              handleRadioChange(
+                                q.id,
+                                option.description,
+                                option.id
+                              )
+                            }
+                            // Styled radio button
+                            className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
                           />
+                          <span className="font-medium text-gray-700">
+                            {option.description}
+                          </span>
+                        </label>
+                      ))}
+
+                      {/* "Other" Option */}
+                      <div>
+                        <label className="flex items-center gap-3 p-3.5 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-blue-50 border border-transparent hover:border-blue-200">
+                          <input
+                            type="radio"
+                            id={`${q.id}-other`}
+                            name={q.id}
+                            value="other"
+                            required={q.is_required}
+                            checked={isOtherSelected}
+                            onChange={() =>
+                              handleRadioChange(q.id, "other", "")
+                            }
+                            className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
+                          />
+                          <span className="font-medium text-gray-700">mas</span>
+                        </label>
+
+                        {/* Indented "Other" text field */}
+
+                        {isOtherOpen && (
+                          <div className="pl-10 mt-2 ">
+                            <input
+                              type="text"
+                              id={q.id}
+                              placeholder="Especifique su respuesta"
+                              value={
+                                answers[q.id]?.numeric_value ||
+                                answers[q.id]?.textValue ||
+                                ""
+                              }
+                              onChange={(e) =>
+                                handleOtherTextChange(q.id, e.target.value)
+                              }
+                              required={q.is_required}
+                              autoFocus
+                              // Styled text input
+                              className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            />
                           </div>
                         )}
-                      
-                    </div>
+                      </div>
                     </div>
                   </fieldset>
                 );
@@ -384,9 +401,8 @@ const Form = () => {
                                 </span>
                               </label>
 
-                              
-                                {isOtherOpen && (
-                                  <div className="pl-10 mt-2">
+                              {isOtherOpen && (
+                                <div className="pl-10 mt-2">
                                   <input
                                     type="text"
                                     id={sub_q.id}
@@ -406,9 +422,8 @@ const Form = () => {
                                     autoFocus
                                     className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
                                   />
-                                  </div>
-                                )}
-                              
+                                </div>
+                              )}
                             </div>
                           </div>
                         </fieldset>
