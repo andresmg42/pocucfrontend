@@ -158,7 +158,13 @@ const Form = () => {
         console.log("answers", answers);
 
         setLoading(true);
-        const res = await api.post("response/create/", answers);
+
+        const payLoad={
+          "answers":answers,
+          "comments":comments
+        }
+
+        const res = await api.post("response/create/", payLoad);
 
         console.log("respuesta en el form", res);
 
