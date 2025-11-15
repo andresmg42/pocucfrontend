@@ -66,7 +66,7 @@ const handleRowClick=(item)=>{
 
 if(loading){
     return (
-      <div className='flex flex-col items-center justify-center flex-1 h-[60vh] bg-[url("/registro-sesiones/sesion2.png")] bg-cover bg-center bg-no-repeat'>
+      <div className='flex flex-col items-center justify-center flex-1 h-[60vh]'>
         <Spinner/>
         
       <span className="text-lg text-slate-600">
@@ -80,7 +80,7 @@ if(loading){
   return (
   
      
-    <div className='bg-[url("/visitas/visitas.png")] bg-cover bg-center bg-no-repeat flex-1 p-5'>
+    <div className=' flex-1 p-5'>
       {data.length > 0 ? (
         
         <CompactTable columns={COLUMNS} data={tableData} theme={theme} />

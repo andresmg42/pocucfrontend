@@ -12,7 +12,7 @@ const Footer = () => {
       </div>
 
       {/* Main content container for alignment */}
-      <div className="container mx-auto px-5 py-4  flex  flex-col md:flex-row justify-between items-start md:items-end">
+      <div className=" mx-auto px-5 py-4  flex  flex-col md:flex-row justify-start items-start md:items-end">
         {/* Left Section: Contact Information */}
         <div className="flex flex-col mb-4 md:mb-0 text-sm">
           <h3 className="font-bold text-lg mb-2">Vicerrectoría de Bienestar Universitario</h3>
@@ -30,7 +30,7 @@ const Footer = () => {
         </div>
 
         {/* Right Section: Social Media Icons */}
-        <div className="flex space-x-4 mb-4 md:mb-0 text-2xl">
+        <div className="flex   gap-5 ml-auto  mb-4 md:mb-0 text-4xl">
           <a 
             href="https://www.youtube.com/user/univallecol" 
             target="_blank" 

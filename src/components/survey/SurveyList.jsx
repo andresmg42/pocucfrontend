@@ -28,8 +28,8 @@ const SurveyList = () => {
  
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row bg-[url('/home/home.png')] bg-no-repeat bg-cover">
-      <div className="bt-green-700 md:w-1/2 "></div>
+    <div className="flex-1 flex flex-col md:flex-row ">
+      
 
       <div className="md:w-1/2">
       {!loading?
@@ -52,6 +52,9 @@ const SurveyList = () => {
     }
         
       </div>
+
+      <div className="bt-green-700 md:w-1/2 bg-[url('/home/home.jpg')] bg-no-repeat bg-contain bg-center "></div>
+
     </div>
   );
 };
