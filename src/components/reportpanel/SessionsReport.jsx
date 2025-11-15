@@ -97,7 +97,7 @@ const select = useRowSelect(tableData, {
 
   if(loading){
     return (
-      <div className='flex flex-col items-center justify-center flex-1 h-[60vh] bg-[url("/registro-sesiones/sesion2.png")] bg-cover bg-center bg-no-repeat'>
+      <div className='flex flex-col items-center justify-center flex-1 h-[60vh]'>
         <Spinner/>
         
       <span className="text-lg text-slate-600">
@@ -111,7 +111,7 @@ const select = useRowSelect(tableData, {
   return (
   
      
-    <div className='flex-1 bg-[url("/registro-sesiones/sesion2.png")] bg-cover bg-center bg-no-repeat p-5'>
+    <div className='flex-1  p-5'>
 
       {data.length > 0 ? (
         
