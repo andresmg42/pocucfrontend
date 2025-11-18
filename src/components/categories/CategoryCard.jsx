@@ -4,6 +4,11 @@ import api from "../../api/user.api";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+
+const ANSWERS_STORAGE_KEY = "mySurveyAnswers";
+
+const COMMENTS_STORAGE_KEY="myComments"
+
 const CategoryCard = ({ category, surveysession_id, visit_id }) => {
   const navigate = useNavigate();
   const [isCompleted,setIsCompleted]=useState(false);
@@ -39,6 +44,8 @@ const CategoryCard = ({ category, surveysession_id, visit_id }) => {
       const resp=await api.delete(`response/delete_responses_by_category/?category_id=${category_id}&visit_id=${visit_id}`)
       setIsEliminated(prev=>!prev)
       toast.success('responses of the form deleted successfully')
+      localStorage.removeItem(ANSWERS_STORAGE_KEY);
+      localStorage.removeItem(COMMENTS_STORAGE_KEY);
       
     } catch (error) {
 
