@@ -218,7 +218,7 @@ const SessionList2 = ({ survey_id }) => {
                             clipRule="evenodd"
                           />
                         </svg>
-                        <span>Zona: {session.zone}</span>
+                        <span>Zona: {session.zone_name}</span>
                       </div>
 
                       <div className="flex items-center gap-2">
