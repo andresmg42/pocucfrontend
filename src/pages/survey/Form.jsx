@@ -272,7 +272,7 @@ const Form = () => {
                       )}
 
                       <legend className="text-xl font-semibold text-gray-800 mb-4">
-                        {`${q.code} ${q.description}`}
+                        {`${q.code}. ${q.description}`}
                       </legend>
                     </div>
 
@@ -393,7 +393,7 @@ const Form = () => {
                         </legend>
                       )}
                       <legend className="text-xl font-semibold text-gray-800 mb-4">
-                        {`${q.code} ${q.description}`}
+                        {`${q.code}. ${q.description}`}
                       </legend>
                     </div>
 
