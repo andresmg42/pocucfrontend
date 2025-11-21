@@ -128,7 +128,7 @@ const SessionList2 = ({ survey_id }) => {
           </div>
           
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10 ">
+          <div className="grid  grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10 ">
             {sessions.map((session) => {
               console.log("session_id: ", session.id);
               console.log("session_state: ", session.state);

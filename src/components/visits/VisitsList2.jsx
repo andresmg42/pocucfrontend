@@ -146,7 +146,7 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
 
   return (
     <>
-      <div className="sm:p-6 flex-1  flex flex-col items-center">
+      <div className="sm:p-6  flex flex-col items-center">
 
         <div className=" w-full  flex items-center justify-center p-2">
 
@@ -156,7 +156,7 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
         
 
         {/* Responsive grid layout that adjusts to screen size */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">
+        <div className="grid  grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10">
           {visits.map((visit) => {
             var localTimeStart = null;
             var localTimeEnd = null;
