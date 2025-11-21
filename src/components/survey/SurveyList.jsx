@@ -28,35 +28,27 @@ const SurveyList = () => {
  
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row ">
-      
-
-      <div className="md:w-1/2">
-      {!loading?
-
-      <div className="grid grid-cols-1 m-5 md:grid-cols-2 gap-3 ">
-          {surveys.map((survey) => (
-            <SurveyCard key={survey.id} survey={survey} />
-          ))}
+    <div className="flex-1 flex flex-col">
+      {!loading ? (
+        <div className="w-full p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full items-stretch">
+            {surveys.map((survey) => (
+              <SurveyCard key={survey.id} survey={survey} />
+            ))}
+          </div>
         </div>
-        :
-        <div className="grid grid-cols-1 m-5   md:grid-cols-2 gap-3 ">
-          <SurveyCardPlaceholder/>
-          <SurveyCardPlaceholder/>
-          <SurveyCardPlaceholder/>
-          <SurveyCardPlaceholder/>
-
+      ) : (
+        <div className="w-full p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full items-stretch">
+            <SurveyCardPlaceholder />
+            <SurveyCardPlaceholder />
+            <SurveyCardPlaceholder />
+            <SurveyCardPlaceholder />
+          </div>
         </div>
-        
-      
-    }
-        
-      </div>
-
-      <div className="bt-green-700 md:w-1/2 bg-[url('/home/home.jpg')] bg-no-repeat bg-contain bg-center "></div>
-
+      )}
     </div>
   );
-};
+}
 
 export default SurveyList;
