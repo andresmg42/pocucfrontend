@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import api from "../../api/user.api";
 
 const Visits = () => {
-  const { surveysession_id, visit_number } = useParams();
+  const { survey_id,surveysession_id, visit_number } = useParams();
 
   const {
     addTriggerVisit,
@@ -37,6 +37,7 @@ const Visits = () => {
       <VisitsList2
         surveysession_id={surveysession_id}
         visit_number={visit_number}
+        survey_id={survey_id}
       />
 
       <button
