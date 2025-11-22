@@ -8,8 +8,12 @@ import usePageStore from "../../stores/use-page-store";
 import Placeholder1 from "../placeholders/Placeholder1";
 import ConfirmationModal from "../auxiliarcomponents/ConfirmationModal";
 import VisitsPlaceholderCard from "./VisitsPlaceholderCard";
+import { deleteVisitDataFromSession } from "../../utils/storage_functions";
 
-const VisitsList2 = ({ surveysession_id, visit_number }) => {
+const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
+
+  const ANSWERS_STORAGE_KEY = `mySurveySessionData_${surveysession_id}`;
+
   const [visits, setVisits] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -108,6 +112,10 @@ const VisitsList2 = ({ surveysession_id, visit_number }) => {
         setVisitIsDeleted((prev) => !prev);
 
         setVisitAddTriggerDisabled({ [surveysession_id]: false });
+
+        // localStorage.removeItem(ANSWERS_STORAGE_KEY)
+        // localStorage.removeItem(COMMENTS_STORAGE_KEY)
+        deleteVisitDataFromSession(ANSWERS_STORAGE_KEY,surveysession_id,visit_id)
 
         toast.success("Visita Eliminada Exitosamente");
       } catch (error) {
