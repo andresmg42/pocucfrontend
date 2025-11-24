@@ -13,7 +13,7 @@ const VisitReport = () => {
   const [data,setData]=useState([]);
    const theme = useTheme(getTheme())
    const navigate=useNavigate()
-   const {session_id}=useParams();
+   const {session_id,session_number}=useParams();
 
    const tableData={ nodes: data }
 
@@ -78,15 +78,22 @@ if(loading){
 
 
   return (
-  
-     
-    <div className=' flex-1 p-5'>
+
+    <div className='flex flex-col items-center justify-center w-full'>
+
+    <div className='flex items-center justify-center bg-black/2 w-full p-5'>
+
+      <h1 className='text-black text-xl font-bold'>Reporte de visitas para la sesión numero {session_number}</h1>
+
+    </div>
+    <div className='flex-1 p-5 w-full'>
       {data.length > 0 ? (
         
         <CompactTable columns={COLUMNS} data={tableData} theme={theme} />
       ) : (
-        <div className='text-black'>Cargando datos o no hay observadores...</div>
+        <div className='text-black'>Cargando datos o no hay Visitas...</div>
       )}
+    </div>
     </div>
    
    

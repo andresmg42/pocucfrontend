@@ -14,7 +14,7 @@ const SessionsReport = () => {
    const [data,setData]=useState([]);
    const theme = useTheme(getTheme())
    const navigate=useNavigate()
-   const {observer_id,survey_id}=useParams();
+   const {observer_id,survey_id,observer_name}=useParams();
 
    const tableData={ nodes: data }
 
@@ -80,7 +80,7 @@ const SessionsReport = () => {
 const handleRowClick=(item)=>{
   
 
-  navigate(`report-panel-visits/${item.id}`)
+  navigate(`report-panel-visits/${item.id}/${item.number_session}`)
   
 }
 
@@ -109,6 +109,14 @@ const select = useRowSelect(tableData, {
 
 
   return (
+
+    <div className='flex flex-col items-center justify-center'>
+
+    <div className='flex items-center justify-center bg-black/2 w-full p-5'>
+
+      <h1 className='text-black text-xl font-bold'>Reporte de Sesiones para {observer_name}</h1>
+
+    </div>
   
      
     <div className='flex-1  p-5'>
@@ -117,9 +125,10 @@ const select = useRowSelect(tableData, {
         
         <CompactTable columns={COLUMNS} data={tableData} theme={theme} select={select}/>
       ) : (
-        <div className='text-black'>Cargando datos o no hay observadores...</div>
+        <div className='text-black'>Cargando datos o no hay visitas...</div>
       )}
 
+    </div>
     </div>
     
    

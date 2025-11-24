@@ -15,7 +15,7 @@ import NoDataPlaceholder from "./NoDataPlaceholder";
 import AggregationPanelText from "../../components/reportpanel/charts/AggregationPanelText";
 
 const Stats = () => {
-  const { question_id, survey_id } = useParams();
+  const { question_id, survey_id, description, code } = useParams();
   const [question, setQuestion] = useState(null);
   const [BarChartDataMR, setBarChartDataMR] = useState([]);
   const [BarChartDataMRText, setBarChartDataMRText] = useState([]);
@@ -25,7 +25,6 @@ const Stats = () => {
   const [charTriggerUR, setCharTriggerUR] = useState(false);
   const [idZone, setIdZone] = useState(0);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   const [noData, setNoData] = useState(true);
 
@@ -105,14 +104,20 @@ const Stats = () => {
   if (noData) {
     console.log("aggregate data into if");
     return (
-      <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <NoDataPlaceholder />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat p-10 flex-col  ">
+    <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat p-10 flex-col items-center justify-center  ">
+      <div className="flex items-center justify-center rounded-lg shadow-lg w-fit h-fit p-2">
+        <h1 className="text-xl text-black font-bold">
+          {code} {description}
+        </h1>
+      </div>
+
       <div className=" flex flex-col md:flex-row items-center justify-center">
         <div>
           <ZonaTable setIdZone={setIdZone} />
@@ -142,7 +147,9 @@ const Stats = () => {
               <div className="h-[50vh] w-[140vh] bg-gray-200 rounded-lg">
                 <ChartBarUniqueR data={BarChartDataURText} />
               </div>
-              <div><AggregationPanelText data={question?.aggregate_stats}/></div>
+              <div>
+                <AggregationPanelText data={question?.aggregate_stats} />
+              </div>
             </div>
           )}
         </div>
@@ -160,7 +167,6 @@ const Stats = () => {
               <div>
                 <AggregationPanelNumeric data={question?.aggregate_stats} />
               </div>
-              
             </div>
           )}
 
@@ -172,7 +178,9 @@ const Stats = () => {
               <div className="h-[50vh] w-[140vh] bg-gray-200 rounded-lg">
                 <ChartBarMatrixR data={BarChartDataMRText} />
               </div>
-              <div><AggregationPanelText data={question?.aggregate_stats}/></div>
+              <div>
+                <AggregationPanelText data={question?.aggregate_stats} />
+              </div>
             </div>
           )}
         </div>

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router";
 
 const QuestionPanel = () => {
 
-  const {survey_id}=useParams();
+  const {survey_id,survey_name}=useParams();
  
   const [questions, setQuestions] = useState([]);
   const [tdata, setTData] = useState([]);
@@ -36,7 +36,7 @@ const QuestionPanel = () => {
 
   const handleRowClick = (clickedItem) => {
 
-    navigate(`stats/${clickedItem.id}`)
+    navigate(`stats/${clickedItem.id}/${encodeURIComponent(clickedItem.description)}/${clickedItem.code}`)
     
 
     
@@ -65,6 +65,13 @@ const QuestionPanel = () => {
   ];
 
   return (
+
+    <div className='flex flex-col items-center justify-center'>
+     <div className='flex items-center justify-center bg-black/2 w-full p-5'>
+
+      <h1 className='text-black text-xl font-bold'>Preguntas para formulario {survey_name}</h1>
+
+    </div>
     <div className="flex-1 p-5">
       <CompactTable
           columns={COLUMNS}
@@ -72,6 +79,7 @@ const QuestionPanel = () => {
           theme={theme}
           select={select}/>
 
+    </div>
     </div>
               
   );
