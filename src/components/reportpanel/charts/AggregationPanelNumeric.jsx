@@ -9,7 +9,7 @@ const AggregationPanelNumeric = ({ data }) => {
   }, []);
 
   return (
-    <div className="rounded-lg shadow-md overflow-hidden border border-gray-200 bg-white">
+    <div className="rounded-lg m-10 shadow-md overflow-hidden border border-gray-200 bg-white">
       <div className="px-6 py-4">
       <h1 className="text-2xl font-bold text-gray-800">Estadisticas Descriptivas Numericas</h1>
     </div>
