@@ -54,12 +54,12 @@ const SurveyReport = () => {
     renderCell: (item) => item.description,
   },
   { label: 'Fecha de Creacion', renderCell: (item) =>new Date(item.uploaded_at).toLocaleDateString() },
-  { label: 'Estadisticas', renderCell: (item) =><button  className='text-blue-700 cursor-pointer' onClick={()=>navigate(`/questions-panel/${item.id}`)}>{`Estadisticas ${item.name}`}</button> },
+  { label: 'Estadisticas', renderCell: (item) =><button  className='text-blue-700 cursor-pointer' onClick={()=>navigate(`/questions-panel/${item.id}/${item.name}`)}>{`Estadisticas ${item.name}`}</button> },
 ];
 
 const handleRowClick=(item)=>{
 
-  navigate(`report-panel-observers/${item.id}`)
+  navigate(`report-panel-observers/${item.id}/${item.name}`)
   
 }
 
@@ -88,9 +88,15 @@ const select = useRowSelect(tableData, {
 
 
   return (
+
+    <div >
   
-     
-    <div className=''>
+     <div className='flex items-center justify-center bg-black/2 w-full p-5'>
+
+      <h1 className='text-black text-xl font-bold'>Reporte de Formularios</h1>
+
+    </div>
+    <div className='flex-1 p-5 '>
       {data.length > 0 ? (
         
        
@@ -100,7 +106,7 @@ const select = useRowSelect(tableData, {
         <div className='text-black'>Cargando datos o no hay observadores...</div>
       )}
     </div>
-   
+   </div>
    
     
   )

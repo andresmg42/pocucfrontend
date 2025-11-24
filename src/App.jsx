@@ -41,23 +41,23 @@ function App() {
           <Route path="report-panel-surveys/" element={<ReportMain />}></Route>
           {/* <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route> */}
           <Route
-            path="report-panel-surveys/report-panel-observers/:survey_id"
+            path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name"
             element={<ObserverReport />}
           ></Route>
           <Route
-            path="report-panel-surveys/report-panel-observers/:survey_id/report-panel-sessions/:observer_id"
+            path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name/report-panel-sessions/:observer_id/:observer_name"
             element={<SessionsReport />}
           ></Route>
           <Route
-            path="report-panel-surveys/report-panel-observers/:survey_id/report-panel-sessions/:observer_id/report-panel-visits/:session_id"
+            path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name/report-panel-sessions/:observer_id/:observer_name/report-panel-visits/:session_id/:session_number"
             element={<VisitReport />}
           ></Route>
           <Route
-            path="questions-panel/:survey_id"
+            path="questions-panel/:survey_id/:survey_name"
             element={<QuestionPanel />}
           />
           <Route
-            path="questions-panel/:survey_id/stats/:question_id"
+            path="questions-panel/:survey_id/:survey_name/stats/:question_id/:description/:code"
             element={<Stats />}
           />
         </Routes>

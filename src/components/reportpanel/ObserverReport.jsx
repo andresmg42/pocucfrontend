@@ -9,7 +9,7 @@ import Spinner from './Spinner';
 
 
 const ObserverReport = () => {
-  const {survey_id}=useParams();
+  const {survey_id,survey_name}=useParams();
   const [data,setData]=useState([]);
    const theme = useTheme(getTheme())
    const navigate=useNavigate()
@@ -60,7 +60,7 @@ const ObserverReport = () => {
 
 const handleRowClick=(item)=>{
 
-  navigate(`report-panel-sessions/${item.id}`)
+  navigate(`report-panel-sessions/${item.id}/${item.name}`)
   
 }
 
@@ -89,8 +89,14 @@ const select = useRowSelect(tableData, {
 
 
   return (
-  
-     
+
+   <div className='flex flex-col items-center justify-center'>
+    <div className='flex items-center justify-center bg-black/2 w-full p-5'>
+
+      <h1 className='text-black text-xl font-bold'>Reporte de Observadores para formulario {survey_name}</h1>
+
+    </div>
+
    <div className="flex-1 p-5 ">
       {data.length > 0 ? (
         
@@ -99,6 +105,7 @@ const select = useRowSelect(tableData, {
         <div className='text-black'>Cargando datos o no hay observadores...</div>
       )}
     </div>
+   </div>
    
    
     
