@@ -56,6 +56,10 @@ const SessionsReport = () => {
     renderCell: (item) => item.zone_name,
   },
   {
+    label: '# Zona',
+    renderCell: (item) => item.zone,
+  },
+  {
     label: 'Distanacia Ob.',
     renderCell: (item) => item.observational_distance,
   },
