@@ -446,7 +446,7 @@ const Form = () => {
                                 </span>
                               </label>
 
-                              {isOtherOpen && (
+                              {isOtherSelected && (
                                 <div className="pl-10 mt-2">
                                   <input
                                     type="text"
