@@ -302,7 +302,7 @@ const Form = () => {
 
                         {/* Indented "Other" text field */}
 
-                        {isOtherOpen && (
+                        {isOtherSelected && (
                           <div className="pl-10 mt-2 ">
                             <input
                               type="text"
