@@ -51,19 +51,30 @@ const CreateSession = ({ survey_id }) => {
     try {
       setLoading(true);
 
-      const res =
-        session && update
-          ? await api.put(`surveysession/${session.id}/`, formData)
-          : await api.post("surveysession/", formData);
+      let res
 
-      if ((res.status = 200)) {
+      if(session && update){
+        if(session.visits_created>formData.visit_number){
+          toast.error('Hay más visitas creadas que las actualizadas, borra algunas visitas para disminuir el número de visitas actual')
+          return
+
+        }
+        res=await api.put(`surveysession/${session.id}/`, formData)
+      }else{
+        res=await api.post("surveysession/", formData);
+      }
+    
+
+      // const res =
+      //   session && update
+      //     ? await api.put(`surveysession/${session.id}/`, formData)
+      //     : await api.post("surveysession/", formData);
+
+      if (res.status === 200 || res.status === 201) {
         setAddTrigger(!addTrigger);
         setUpdate(false);
         setFormData({
           zone: "",
-          // number_session: "",
-          // start_date: "",
-          // end_date: "",
           visit_number: "",
           observational_distance: "",
           url: "",
