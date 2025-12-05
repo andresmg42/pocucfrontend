@@ -1,24 +1,33 @@
 import React, { useEffect } from "react";
-import {  useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import api from "../../api/user.api";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { getInitialState,saveStorageState } from "../../utils/storage_functions";
-
-
+import {
+  getInitialState,
+  saveStorageState,
+} from "../../utils/storage_functions";
 
 const Form = () => {
-  const { category_id, surveysession_id, visit_id, survey_id, category_name,visit_number } =
-    useParams();
-
-
+  const {
+    category_id,
+    surveysession_id,
+    visit_id,
+    survey_id,
+    category_name,
+    visit_number,
+  } = useParams();
 
   const ANSWERS_STORAGE_KEY = `mySurveySessionData_${surveysession_id}`;
-  
+
   const [commentTrigger, setCommentTrigger] = useState({});
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState(() => getInitialState(ANSWERS_STORAGE_KEY,visit_id,'answer'));
-  const [comments, setComments] = useState(() => getInitialState(ANSWERS_STORAGE_KEY,visit_id,'comment'));
+  const [answers, setAnswers] = useState(() =>
+    getInitialState(ANSWERS_STORAGE_KEY, visit_id, "answer")
+  );
+  const [comments, setComments] = useState(() =>
+    getInitialState(ANSWERS_STORAGE_KEY, visit_id, "comment")
+  );
   const [openTextFields, setOpenTextFields] = useState({});
   const [isCompleted, setIsCompleted] = useState();
   const [loading, setLoading] = useState(false);
@@ -34,11 +43,9 @@ const Form = () => {
   }
 
   useEffect(() => {
-
-
-    saveStorageState(ANSWERS_STORAGE_KEY,visit_id,"answer",answers)
-    saveStorageState(ANSWERS_STORAGE_KEY,visit_id,"comment",comments)
-  }, [answers,comments]);
+    saveStorageState(ANSWERS_STORAGE_KEY, visit_id, "answer", answers);
+    saveStorageState(ANSWERS_STORAGE_KEY, visit_id, "comment", comments);
+  }, [answers, comments]);
 
   useEffect(() => {
     async function initializeForm() {
@@ -56,12 +63,14 @@ const Form = () => {
             `survey/get_survey/?surveysession_id=${surveysession_id}&category_id=${category_id}`
           );
           setQuestions(questionsResponse.data);
-          setCommentTrigger(()=>{
-            const parent_questions=questionsResponse.data.filter(q=>['matrix_parent','unique_response'].includes(q.question_type))
-            const triggers={}
-            parent_questions.map((q)=>triggers[q.id]=false)
-            return triggers
-          })
+          setCommentTrigger(() => {
+            const parent_questions = questionsResponse.data.filter((q) =>
+              ["matrix_parent", "unique_response"].includes(q.question_type)
+            );
+            const triggers = {};
+            parent_questions.map((q) => (triggers[q.id] = false));
+            return triggers;
+          });
 
           console.log("questions in form", questionsResponse.data);
         }
@@ -98,13 +107,24 @@ const Form = () => {
   };
 
   const handleOtherTextChange = (questionId, textValue) => {
-    const isDigit = isAllDigits(textValue);
     setAnswers((prev) => ({
       ...prev,
       [questionId]: {
         optionId: "",
-        numeric_value: isDigit ? textValue : null,
-        textValue: !isDigit ? textValue : null,
+        numeric_value: null,
+        textValue: textValue,
+        visitId: visit_id,
+      },
+    }));
+  };
+
+  const handleOtherNumericChange = (questionId, numericValue) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: {
+        optionId: "",
+        numeric_value: numericValue,
+        textValue: null,
         visitId: visit_id,
       },
     }));
@@ -135,16 +155,15 @@ const Form = () => {
 
         setLoading(true);
 
-        const payLoad={
-          "answers":answers,
-          "comments":comments
-        }
+        const payLoad = {
+          answers: answers,
+          comments: comments,
+        };
 
         const res = await api.post("response/create/", payLoad);
 
         console.log("respuesta en el form", res);
 
-        
         setAnswers({});
 
         setComments({});
@@ -303,31 +322,97 @@ const Form = () => {
                         {/* Indented "Other" text field */}
 
                         {isOtherSelected && (
-                          <div className="pl-10 mt-2 ">
-                            <input
-                              type="text"
-                              id={q.id}
-                              placeholder="Especifique su respuesta"
-                              value={
-                                answers[q.id]?.numeric_value ||
-                                answers[q.id]?.textValue ||
-                                ""
-                              }
-                              onChange={(e) =>
-                                handleOtherTextChange(q.id, e.target.value)
-                              }
-                              required={q.is_required}
-                              autoFocus
-                              // Styled text input
-                              className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
-                            />
-                          </div>
+                          <>
+                            {q.input_type === "STR" ? (
+                              <div className="pl-10 mt-2 ">
+                                <input
+                                  type="text"
+                                  id={q.id}
+                                  placeholder="Especifique su respuesta"
+                                  value={
+                                    answers[q.id]?.numeric_value ||
+                                    answers[q.id]?.textValue ||
+                                    ""
+                                  }
+                                  onChange={(e) =>
+                                    handleOtherTextChange(q.id, e.target.value)
+                                  }
+                                  required={q.is_required}
+                                  autoFocus
+                                  // Styled text input
+                                  className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                                />
+                              </div>
+                            ) : (
+                              <div className="pl-4 sm:pl-10 mt-2">
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                                  <input
+                                    type="number"
+                                    id={q.id}
+                                    placeholder="Especifique su respuesta"
+                                    value={
+                                      answers[q.id]?.numeric_value || ""
+                                    }
+                                    onChange={(e) =>
+                                      handleOtherNumericChange(
+                                        q.id,
+                                        e.target.value
+                                      )
+                                    }
+                                    required={q.is_required}
+                                    autoFocus
+                                    className="w-full p-2 text-gray-900 text-center border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                                  />
+
+                                  <div className="flex gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const currentValue =
+                                          answers[q.id]?.numeric_value || 0;
+                                        handleOtherNumericChange(
+                                          q.id,
+                                          String(Number(currentValue) - 1)
+                                        );
+                                      }}
+                                      className="flex-1 sm:flex-initial sm:w-10 h-10 bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-700 font-bold rounded-lg flex items-center justify-center touch-manipulation"
+                                    >
+                                      −
+                                    </button>
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const currentValue =
+                                          answers[q.id]?.numeric_value || 0;
+                                        handleOtherNumericChange(
+                                          q.id,
+                                          String(Number(currentValue) + 1)
+                                        );
+                                      }}
+                                      className="flex-1 sm:flex-initial sm:w-10 h-10 bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-700 font-bold rounded-lg flex items-center justify-center touch-manipulation"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
-                      {/* Comment */}
+                    {/* Comment */}
                     <div>
-                      <div className="cursor-pointer" onClick={() => setCommentTrigger((prev) => ({...prev,[q.id]:!prev[q.id]}))}>
+                      <div
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setCommentTrigger((prev) => ({
+                            ...prev,
+                            [q.id]: !prev[q.id],
+                          }))
+                        }
+                      >
                         <h1 className=" text-md text-blue-700">Comentario</h1>
                       </div>
 
@@ -447,27 +532,84 @@ const Form = () => {
                               </label>
 
                               {isOtherSelected && (
-                                <div className="pl-10 mt-2">
-                                  <input
-                                    type="text"
-                                    id={sub_q.id}
-                                    placeholder="Especifique su respuesta"
-                                    value={
-                                      answers[sub_q.id]?.numeric_value ||
-                                      answers[sub_q.id]?.textValue ||
-                                      ""
-                                    }
-                                    onChange={(e) =>
-                                      handleOtherTextChange(
-                                        sub_q.id,
-                                        e.target.value
-                                      )
-                                    }
-                                    required={sub_q.is_required}
-                                    autoFocus
-                                    className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
-                                  />
-                                </div>
+                                <>
+                                  {q.input_type === "STR" ? (
+                                    <div className="pl-10 mt-2">
+                                      <input
+                                        type="text"
+                                        id={sub_q.id}
+                                        placeholder="Especifique su respuesta"
+                                        value={answers[sub_q.id]?.textValue}
+                                        onChange={(e) =>
+                                          handleOtherTextChange(
+                                            sub_q.id,
+                                            e.target.value
+                                          )
+                                        }
+                                        required={sub_q.is_required}
+                                        autoFocus
+                                        className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="pl-4 sm:pl-10 mt-2">
+                                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                                        <input
+                                          type="number"
+                                          id={sub_q.id}
+                                          placeholder="Especifique su respuesta"
+                                          value={
+                                            answers[sub_q.id]?.numeric_value ||
+                                            ""
+                                          }
+                                          onChange={(e) =>
+                                            handleOtherNumericChange(
+                                              sub_q.id,
+                                              e.target.value
+                                            )
+                                          }
+                                          required={sub_q.is_required}
+                                          autoFocus
+                                          className="w-full p-2 text-gray-900 text-center border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
+                                        />
+
+                                        <div className="flex gap-2">
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              const currentValue =
+                                                answers[sub_q.id]
+                                                  ?.numeric_value || 0;
+                                              handleOtherNumericChange(
+                                                sub_q.id,
+                                                String(Number(currentValue) - 1)
+                                              );
+                                            }}
+                                            className="flex-1 sm:flex-initial sm:w-10 h-10 bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-700 font-bold rounded-lg flex items-center justify-center touch-manipulation"
+                                          >
+                                            −
+                                          </button>
+
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              const currentValue =
+                                                answers[sub_q.id]
+                                                  ?.numeric_value || 0;
+                                              handleOtherNumericChange(
+                                                sub_q.id,
+                                                String(Number(currentValue) + 1)
+                                              );
+                                            }}
+                                            className="flex-1 sm:flex-initial sm:w-10 h-10 bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-700 font-bold rounded-lg flex items-center justify-center touch-manipulation"
+                                          >
+                                            +
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </>
                               )}
                             </div>
                           </div>
@@ -476,7 +618,15 @@ const Form = () => {
                     })}
 
                     <div>
-                      <div className="cursor-pointer" onClick={() => setCommentTrigger((prev) => ({...prev,[q.id]:!prev[q.id]}))}>
+                      <div
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setCommentTrigger((prev) => ({
+                            ...prev,
+                            [q.id]: !prev[q.id],
+                          }))
+                        }
+                      >
                         <h1 className=" text-md text-blue-700">Comentario</h1>
                       </div>
 
@@ -491,7 +641,6 @@ const Form = () => {
                                 handleCommentChange(q.id, e.target.value)
                               }
                               autoFocus
-                              
                               className="block w-full h-[15vh]  p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
                             ></textarea>
                           </div>
