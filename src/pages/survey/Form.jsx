@@ -339,6 +339,7 @@ const Form = () => {
                                   }
                                   required={q.is_required}
                                   autoFocus
+                                  maxLength={30}
                                   // Styled text input
                                   className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
                                 />
@@ -350,9 +351,7 @@ const Form = () => {
                                     type="number"
                                     id={q.id}
                                     placeholder="Especifique su respuesta"
-                                    value={
-                                      answers[q.id]?.numeric_value || ""
-                                    }
+                                    value={answers[q.id]?.numeric_value || ""}
                                     onChange={(e) =>
                                       handleOtherNumericChange(
                                         q.id,
@@ -548,6 +547,7 @@ const Form = () => {
                                         }
                                         required={sub_q.is_required}
                                         autoFocus
+                                        maxLength={30}
                                         className="block w-full p-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-sm focus:ring-blue-500 focus:border-blue-500"
                                       />
                                     </div>
