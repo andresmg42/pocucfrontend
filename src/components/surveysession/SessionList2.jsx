@@ -92,7 +92,10 @@ const SessionList2 = ({ survey_id }) => {
     if (confirmed) {
       try {
         const res = await api.delete(`surveysession/${surveysession_id}/`);
+
+        localStorage.removeItem(`mySurveySessionData_${surveysession_id}`)
         toast.success("Secion de Encuesta Eliminada Exitosamente");
+
 
         setSessionIsDeleted((prev) => !prev);
       } catch (error) {
