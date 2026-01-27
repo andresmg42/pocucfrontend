@@ -14,6 +14,7 @@ import VisitReport from "./components/reportpanel/VisitReport.jsx";
 import ReportMain from "./pages/reportpanel/ReportMain.jsx";
 import Stats from "./pages/reportpanel/Stats.jsx";
 import QuestionPanel from "./pages/reportpanel/QuestionPanel.jsx";
+import Form2 from "./pages/survey/Form2.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -36,7 +37,7 @@ function App() {
           ></Route>
           <Route
             path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/"
-            element={<Form />}
+            element={<Form2 />}
           ></Route>
           <Route path="report-panel-surveys/" element={<ReportMain />}></Route>
           {/* <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route> */}
