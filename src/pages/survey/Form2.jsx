@@ -8,7 +8,7 @@ import {
   saveStorageState,
 } from "../../utils/storage_functions";
 import UniqueResponseForm from "./UniqueResponseForm";
-import MatrixParent from "./MatrixParent";
+import MatrixParentForm from "./MatrixParentForm";
 
 const Form2 = () => {
   const {
@@ -260,7 +260,7 @@ const Form2 = () => {
 
               case "matrix_parent":
                 return (
-                  <MatrixParent
+                  <MatrixParentForm
                     q={q}
                     comments={comments}
                     answers={answers}

@@ -1,6 +1,6 @@
 import React from "react";
 
-const MatrixParent = ({q,comments,commentTrigger,answers,handleRadioChange,handleOtherTextChange,handleOtherNumericChange,setCommentTrigger,handleCommentChange,openTextFields}) => {
+const MatrixParentForm = ({q,comments,commentTrigger,answers,handleRadioChange,handleOtherTextChange,handleOtherNumericChange,setCommentTrigger,handleCommentChange,openTextFields}) => {
   return (
     <fieldset
       key={q.id}
@@ -189,4 +189,4 @@ const MatrixParent = ({q,comments,commentTrigger,answers,handleRadioChange,handl
   );
 };
 
-export default MatrixParent;
+export default MatrixParentForm;
