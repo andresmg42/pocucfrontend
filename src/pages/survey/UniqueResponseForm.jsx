@@ -114,7 +114,7 @@ const UniqueResponseForm = ({
                       type="number"
                       id={q.id}
                       placeholder="Especifique su respuesta"
-                      value={answers[q.id]?.numeric_value || ""}
+                      value={answers[q.id]?.numeric_value || "6"}
                       onChange={(e) =>
                         handleOtherNumericChange(q.id, e.target.value)
                       }
@@ -128,7 +128,7 @@ const UniqueResponseForm = ({
                         type="button"
                         onClick={() => {
                           const currentValue =
-                            answers[q.id]?.numeric_value || 0;
+                            answers[q.id]?.numeric_value || 6;
                           handleOtherNumericChange(
                             q.id,
                             String(Number(currentValue) - 1),
@@ -143,7 +143,7 @@ const UniqueResponseForm = ({
                         type="button"
                         onClick={() => {
                           const currentValue =
-                            answers[q.id]?.numeric_value || 0;
+                            answers[q.id]?.numeric_value || 6;
                           handleOtherNumericChange(
                             q.id,
                             String(Number(currentValue) + 1),

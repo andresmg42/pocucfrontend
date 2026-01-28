@@ -88,7 +88,15 @@ const Form = () => {
   const handleRadioChange = (questionId, questionV, optionId) => {
     if (questionV == "other") {
       setOpenTextFields((prev) => ({ ...prev, [questionId]: true }));
-      setAnswers((prev) => ({ ...prev, [questionId]: {} }));
+      setAnswers((prev) => ({
+        ...prev,
+        [questionId]: {
+          optionId: "",
+          numeric_value: "6",
+          textValue: null,
+          visitId: visit_id,
+        },
+      }));
     } else {
       setOpenTextFields((prev) => ({ ...prev, [questionId]: false }));
       setAnswers((prevAnswers) => {

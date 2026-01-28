@@ -106,7 +106,7 @@ const MatrixParentForm = ({q,comments,commentTrigger,answers,handleRadioChange,h
                             type="number"
                             id={sub_q.id}
                             placeholder="Especifique su respuesta"
-                            value={answers[sub_q.id]?.numeric_value || ""}
+                            value={answers[sub_q.id]?.numeric_value || "6"}
                             onChange={(e) =>
                               handleOtherNumericChange(sub_q.id, e.target.value)
                             }
@@ -135,7 +135,7 @@ const MatrixParentForm = ({q,comments,commentTrigger,answers,handleRadioChange,h
                               type="button"
                               onClick={() => {
                                 const currentValue =
-                                  answers[sub_q.id]?.numeric_value || 0;
+                                  answers[sub_q.id]?.numeric_value || 6;
                                 handleOtherNumericChange(
                                   sub_q.id,
                                   String(Number(currentValue) + 1),
