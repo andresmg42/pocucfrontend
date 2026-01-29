@@ -165,8 +165,33 @@ const Form2 = () => {
 
         setLoading(true);
 
+        // Get all question IDs from the current category (including sub-questions)
+        const currentQuestionIds = new Set();
+        questions.forEach((q) => {
+          currentQuestionIds.add(q.id);
+          if (q.sub_questions && q.sub_questions.length > 0) {
+            q.sub_questions.forEach((sub_q) => currentQuestionIds.add(sub_q.id));
+          }
+        });
+
+        // Filter answers to only include questions from the current category
+        const validAnswers = Object.fromEntries(
+          Object.entries(answers).filter(([key, value]) => {
+            const questionId = parseInt(key);
+            // Check if the question is in the current category and has valid data
+            return (
+              currentQuestionIds.has(questionId) &&
+              value &&
+              typeof value === "object" &&
+              value.visitId
+            );
+          })
+        );
+
+        console.log('validated answers',validAnswers)
+
         const payLoad = {
-          answers: answers,
+          answers: validAnswers,
           comments: comments,
         };
 
@@ -174,9 +199,9 @@ const Form2 = () => {
 
         console.log("respuesta en el form", res);
 
-        setAnswers({});
+        //setAnswers({});
 
-        setComments({});
+        // setComments({});
 
         toast.success("Survey saved successfully");
 
