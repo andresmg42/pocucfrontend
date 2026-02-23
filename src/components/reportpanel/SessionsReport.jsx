@@ -55,6 +55,10 @@ const SessionsReport = () => {
             : "No Iniciada",
     },
     {
+      label: "Campus",
+      renderCell: (item) => item.campus_name,
+    },
+    {
       label: "Zona",
       renderCell: (item) => item.zone_name,
     },
