@@ -65,6 +65,7 @@ const CreateSession = ({ survey_id }) => {
 
   const handleSelectCampus = (campus) => {
     setSelectedCampus(campus);
+    setSelectedZone(null);
     setCampusIsOpen(false); 
   };
 
