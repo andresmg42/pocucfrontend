@@ -164,8 +164,8 @@ const CreateSession = ({ survey_id }) => {
   };
 
   return (
-    <div className=" flex mx-auto m-5 items-center justify-center z-10">
-      <div className="relative w-full max-w-md lg:max-w-2xl space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+    <div className="w-full min-w-0 flex mx-auto m-5 items-center justify-center p-5 z-10">
+      <div className="relative w-full max-w-md lg:max-w-2xl min-w-0 overflow-hidden space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
         <div className="absolute top-4 right-4">
           <button
             onClick={handleCloseClick}
@@ -208,14 +208,14 @@ const CreateSession = ({ survey_id }) => {
                 Campus
               </label>
 
-              <div className="relative">
+              <div className="relative min-w-0">
                 {/* Botón Principal */}
                 <button
                   type="button"
                   onClick={() => setCampusIsOpen(!CampusIsOpen)}
-                  className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-left overflow-hidden"
                 >
-                  <span className="block truncate">
+                  <span className="block truncate pr-8">
                     {selectedCampus ? selectedCampus.name : "Selecciona una..."}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -281,14 +281,14 @@ const CreateSession = ({ survey_id }) => {
                 Zona
               </label>
 
-              <div className="relative">
+              <div className="relative min-w-0">
                 {/* Botón Principal */}
                 <button
                   type="button"
                   onClick={() => setZoneIsOpen(!ZoneIsOpen)}
-                  className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-left overflow-hidden"
                 >
-                  <span className="block truncate">
+                  <span className="block truncate pr-8">
                     {selectedZone ? selectedZone.name : "Selecciona una..."}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">

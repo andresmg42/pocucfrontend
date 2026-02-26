@@ -16,7 +16,7 @@ const SurveySession = () => {
     
   };
   return (
-    <div className="flex flex-1 bg-[url('/registro-sesiones/sesion2.png')] bg-cover bg-center bg-no-repeat">
+    <div className="flex flex-1 min-w-0 overflow-hidden bg-[url('/registro-sesiones/sesion2.png')] bg-cover bg-center bg-no-repeat">
       {addTrigger ? (
         <SessionList2 survey_id={survey_id} />
       ) : (
