@@ -11,22 +11,39 @@ const CreateSession = ({ survey_id }) => {
   const { userLogged } = useAuthStore();
 
   const [availableZones, setAvailableZones] = useState([]);
+  const [availableCampuss, setAvailableCampuss] = useState([]);
+  const [selectedZone, setSelectedZone] = useState(null);
 
   const [formData, setFormData] = useState({
-  zone: "",
-  visit_number: "",
-  observational_distance: "",
-  url: "",
-  observer: userLogged.email,
-  survey: survey_id,
-});
+    zone: "",
+    visit_number: "",
+    observational_distance: "",
+    url: "",
+    observer: userLogged.email,
+    survey: survey_id,
+  });
 
-// Handle update mode when zones are available
-useEffect(() => {
-  if (session && update && availableZones.length > 0) {
-    const currentZone = availableZones.find(zone => zone.number === session.zone);
-    if (currentZone) {
-      setSelected(currentZone);
+  
+  useEffect(() => {
+    
+
+    if (session && update && availableCampuss) {
+      const currentCampus = availableCampuss.find(
+        (campus) => campus.name === session.campus_name,
+      );
+
+      setSelectedCampus(currentCampus);
+    }
+  }, [session, update, availableCampuss, userLogged.email, survey_id]);
+
+  useEffect(() => {
+    if (availableZones && session && update) {
+      const currentZone = availableZones.find(
+        (zone) => zone.id === session.zone,
+      );
+
+      setSelectedZone(currentZone);
+
       setFormData({
         zone: session.zone,
         visit_number: session.visit_number,
@@ -36,31 +53,40 @@ useEffect(() => {
         survey: survey_id,
       });
     }
-  }
-}, [session, update, availableZones, userLogged.email, survey_id]);
-
-   
-  
-    
-  
+  }, [availableZones, session, update,userLogged.email, survey_id]);
 
   const [loading, setLoading] = useState(false);
 
-  const [selected, setSelected] = useState(null); // Guarda la opción elegida
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCampus, setSelectedCampus] = useState(null); // Guarda la opción elegida
+  const [CampusIsOpen, setCampusIsOpen] = useState(false);
+  const [ZoneIsOpen, setZoneIsOpen] = useState(false);
 
   const options = ["JavaScript", "Python", "Go", "Rust", "TypeScript"];
 
-  const handleSelect = (zone) => {
-    setSelected(zone);
-    setFormData(prev=>({...prev, zone:zone.number}));
-    setIsOpen(false); // Cerramos al seleccionar
+  const handleSelectCampus = (campus) => {
+    setSelectedCampus(campus);
+    setSelectedZone(null);
+    setCampusIsOpen(false); 
+  };
+
+  const handleSelectZone = (zone) => {
+    setSelectedZone(zone);
+    setFormData((prev) => ({ ...prev, zone: zone.id }));
+    setZoneIsOpen(false); 
   };
 
   useEffect(() => {
+    if (!selectedCampus || !selectedCampus.id) {
+      setAvailableZones([]);
+      return;
+    }
+
     async function getAvailableZones() {
       try {
-        const res = await api.get("/zone");
+        const res = await api.get(
+          `/zone/get_zones_by_campus/?campus_id=${selectedCampus.id}`,
+        );
+        
         setAvailableZones(res.data);
       } catch (error) {
         console.error("Zone request error", error);
@@ -68,6 +94,18 @@ useEffect(() => {
     }
 
     getAvailableZones();
+  }, [selectedCampus]);
+
+  useEffect(() => {
+    async function getAvailableCampuss() {
+      try {
+        const res = await api.get("/campus");
+        
+        setAvailableCampuss(res.data);
+      } catch (error) {}
+    }
+
+    getAvailableCampuss();
   }, []);
 
   const handleChange = (e) => {
@@ -97,10 +135,7 @@ useEffect(() => {
         res = await api.post("surveysession/", formData);
       }
 
-      // const res =
-      //   session && update
-      //     ? await api.put(`surveysession/${session.id}/`, formData)
-      //     : await api.post("surveysession/", formData);
+      
 
       if (res.status === 200 || res.status === 201) {
         setAddTrigger(!addTrigger);
@@ -129,8 +164,8 @@ useEffect(() => {
   };
 
   return (
-    <div className=" flex mx-auto m-5 items-center justify-center z-10">
-      <div className="relative w-full max-w-md lg:max-w-2xl space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+    <div className="w-full min-w-0 flex mx-auto m-5 items-center justify-center p-5 z-10">
+      <div className="relative w-full max-w-md lg:max-w-2xl min-w-0 overflow-hidden space-y-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
         <div className="absolute top-4 right-4">
           <button
             onClick={handleCloseClick}
@@ -165,23 +200,23 @@ useEffect(() => {
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-            {/* menu deplegable */}
+          <div className="flex flex-col gap-y-5">
+            {/* campus desplegable */}
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                Zona
+                Campus
               </label>
 
-              <div className="relative">
+              <div className="relative min-w-0">
                 {/* Botón Principal */}
                 <button
                   type="button"
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  onClick={() => setCampusIsOpen(!CampusIsOpen)}
+                  className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-left overflow-hidden"
                 >
-                  <span className="block truncate">
-                    {selected? selected.name : "Selecciona una..."}
+                  <span className="block truncate pr-8">
+                    {selectedCampus ? selectedCampus.name : "Selecciona una..."}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     <svg
@@ -201,23 +236,96 @@ useEffect(() => {
                 </button>
 
                 {/* Lista de Opciones */}
-                {isOpen && (
+                {CampusIsOpen && (
+                  <ul className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                    {availableCampuss.map((campus) => (
+                      <li
+                        key={campus.id}
+                        onClick={() => handleSelectCampus(campus)}
+                        className={`cursor-pointer select-none relative py-2 pl-3 pr-9 transition-colors
+                  ${selectedCampus === campus.id ? "text-white bg-indigo-600" : "text-gray-900 hover:bg-indigo-100"}`}
+                      >
+                        <span
+                          className={`block truncate ${selectedCampus === campus.id ? "font-semibold" : "font-normal"}`}
+                        >
+                          {campus.name}
+                        </span>
+
+                        {/* Checkmark cuando está seleccionado */}
+                        {selectedCampus === campus.id && (
+                          <span className="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <svg
+                              className="h-5 w-5 text-white"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            {/* menu deplegable */}
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Zona
+              </label>
+
+              <div className="relative min-w-0">
+                {/* Botón Principal */}
+                <button
+                  type="button"
+                  onClick={() => setZoneIsOpen(!ZoneIsOpen)}
+                  className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-left overflow-hidden"
+                >
+                  <span className="block truncate pr-8">
+                    {selectedZone ? selectedZone.name : "Selecciona una..."}
+                  </span>
+                  <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                    >
+                      <path
+                        d="M7 7l3-3 3 3m0 6l-3 3-3-3"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </button>
+
+                {/* Lista de Opciones */}
+                {ZoneIsOpen && selectedCampus && (
                   <ul className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
                     {availableZones.map((zone) => (
                       <li
                         key={zone.id}
-                        onClick={() => handleSelect(zone)}
+                        onClick={() => handleSelectZone(zone)}
                         className={`cursor-pointer select-none relative py-2 pl-3 pr-9 transition-colors
-                  ${selected === zone.id ? "text-white bg-indigo-600" : "text-gray-900 hover:bg-indigo-100"}`}
+                  ${selectedZone === zone.id ? "text-white bg-indigo-600" : "text-gray-900 hover:bg-indigo-100"}`}
                       >
                         <span
-                          className={`block truncate ${selected === zone.id ? "font-semibold" : "font-normal"}`}
+                          className={`block truncate ${selectedZone === zone.id ? "font-semibold" : "font-normal"}`}
                         >
                           {zone.name}
                         </span>
 
                         {/* Checkmark cuando está seleccionado */}
-                        {selected === zone.id && (
+                        {selectedZone === zone.id && (
                           <span className="absolute inset-y-0 right-0 flex items-center pr-4">
                             <svg
                               className="h-5 w-5 text-white"
