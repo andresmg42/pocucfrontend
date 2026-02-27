@@ -79,7 +79,7 @@ const UniqueResponseForm = ({
               onChange={() => handleRadioChange(q.id, "other", "")}
               className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
             />
-            <span className="font-medium text-gray-700">mas</span>
+            <span className="font-medium text-gray-700">Más</span>
           </label>
 
           {/* Indented "Other" text field */}
