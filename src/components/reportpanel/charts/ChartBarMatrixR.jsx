@@ -1,10 +1,10 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis,Cell, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Helper function to generate a random color
 const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
 
-const ChartBarMatrixR = ({ data }) => {
+const ChartBarMatrixR = ({ data,colors }) => {
 
   console.log('data in chartBarMatrix: ',data)
 
@@ -15,40 +15,24 @@ const ChartBarMatrixR = ({ data }) => {
   }
   // const barKeys = Object.keys(data[0]).filter(key => key !== 'name');
 
-  const barKeys = [...new Set(
-  data.flatMap(item => 
-    Object.keys(item).filter(key => key !== 'name')
-  )
-)];
+  const barKeys = data
 
   console.log('Bar Keys',barKeys)
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <BarChart
-        data={data}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis label={{
-    value: 'Frecuencia Opciones',
-    angle: -90,
-    position: 'insideLeft',
-  }} />
-        <Tooltip />
-        <Legend />
-        
-        
-        {barKeys.map(key => (
-          <Bar 
-            key={key} 
-            dataKey={key} 
-            fill={getRandomColor()}
-            maxBarSize={60} 
-          />
+      <BarChart width={400} height={300} data={data} maxBarSize={150}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="description" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="average"  radius={[6, 6, 0, 0]} >
+        {data.map((entry, index) => (
+          <Cell key={index} fill={colors?.length ? colors[index % colors.length] : getRandomColor()} />
         ))}
-      </BarChart>
+      </Bar>
+    </BarChart>
     </ResponsiveContainer>
   );
 };

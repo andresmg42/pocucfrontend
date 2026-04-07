@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import AggregationPanelNumeric from "../../components/reportpanel/charts/AggregationPanelNumeric";
 import NoDataPlaceholder from "./NoDataPlaceholder";
 import AggregationPanelText from "../../components/reportpanel/charts/AggregationPanelText";
+import PiePlot from "../../components/reportpanel/charts/PiePlot";
 
 const Stats = () => {
   const { question_id, survey_id, description, code } = useParams();
@@ -28,6 +29,10 @@ const Stats = () => {
 
   const [noData, setNoData] = useState(true);
 
+  const [Colors,setColors]= useState([]);
+
+  const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
   useEffect(() => {
     async function getStats() {
       try {
@@ -37,19 +42,19 @@ const Stats = () => {
 
         if (idZone === 0) {
           res = await api.get(
-            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&survey_id=${survey_id}`
+            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&survey_id=${survey_id}`,
           );
           console.log("respuesta en la zona 0", res.data);
         } else {
           res = await api.get(
-            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&zone_id=${idZone}&survey_id=${survey_id}`
+            `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&zone_id=${idZone}&survey_id=${survey_id}`,
           );
           console.log("respueta en la zona diferente de 0", res.data);
         }
 
         setQuestion(res.data);
         const hasData = res.data.aggregate_stats.some(
-          (item) => item.mode_numeric || item.mode_text
+          (item) => item.mode_numeric || item.mode_text,
         );
         setNoData(!hasData);
       } catch (error) {
@@ -75,8 +80,17 @@ const Stats = () => {
       return;
     }
 
+    const newColors = question.aggregate_stats.map(() => getRandomColor());
+    setColors(newColors);
+    
+
     if (question.visualization_type === "stacked_bar_100_percent") {
-      setBarChartDataMR(question.data_numeric);
+      const data_barchart = question.aggregate_stats.map((q) => ({
+        description: q.description,
+        average: q.average,
+      }));
+
+      setBarChartDataMR(data_barchart);
       setBarChartDataMRText(question.data_text);
       setCharTriggerUR(false);
     } else {
@@ -161,7 +175,10 @@ const Stats = () => {
                 Grafico de Barras de R. Numericas
               </h1>
               <div className="h-[50vh] w-[140vh] bg-gray-200 rounded-lg">
-                <ChartBarMatrixR data={BarChartDataMR} />
+                <ChartBarMatrixR data={BarChartDataMR} colors={Colors}/>
+              </div>
+              <div>
+                <PiePlot data={BarChartDataMR} colors={Colors} />
               </div>
 
               <div>
