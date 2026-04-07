@@ -14,6 +14,7 @@ import AggregationPanelNumeric from "../../components/reportpanel/charts/Aggrega
 import NoDataPlaceholder from "./NoDataPlaceholder";
 import AggregationPanelText from "../../components/reportpanel/charts/AggregationPanelText";
 import PiePlot from "../../components/reportpanel/charts/PiePlot";
+import ChartBarMatrixRText from "../../components/reportpanel/charts/ChartBarMatrixRText";
 
 const Stats = () => {
   const { question_id, survey_id, description, code } = useParams();
@@ -29,9 +30,13 @@ const Stats = () => {
 
   const [noData, setNoData] = useState(true);
 
-  const [Colors,setColors]= useState([]);
+  const [Colors, setColors] = useState([]);
 
-  const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+  const getRandomColor = () =>
+    "#" +
+    Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, "0");
 
   useEffect(() => {
     async function getStats() {
@@ -82,15 +87,19 @@ const Stats = () => {
 
     const newColors = question.aggregate_stats.map(() => getRandomColor());
     setColors(newColors);
-    
+
+    const dataText = question.data_text ?? [];
 
     if (question.visualization_type === "stacked_bar_100_percent") {
-      const data_barchart = question.aggregate_stats.map((q) => ({
-        description: q.description,
-        average: q.average,
-      }));
+      if (dataText.length === 0) {
+        const data_barchart = question.aggregate_stats.map((q) => ({
+          description: q.description,
+          average: q.average,
+        }));
 
-      setBarChartDataMR(data_barchart);
+        setBarChartDataMR(data_barchart);
+      }
+
       setBarChartDataMRText(question.data_text);
       setCharTriggerUR(false);
     } else {
@@ -175,7 +184,7 @@ const Stats = () => {
                 Grafico de Barras de R. Numericas
               </h1>
               <div className="h-[50vh] w-[140vh] bg-gray-200 rounded-lg">
-                <ChartBarMatrixR data={BarChartDataMR} colors={Colors}/>
+                <ChartBarMatrixR data={BarChartDataMR} colors={Colors} />
               </div>
               <div>
                 <PiePlot data={BarChartDataMR} colors={Colors} />
@@ -193,7 +202,10 @@ const Stats = () => {
                 Grafico de Barras de R. Nominales
               </h1>
               <div className="h-[50vh] w-[140vh] bg-gray-200 rounded-lg">
-                <ChartBarMatrixR data={BarChartDataMRText} />
+                <ChartBarMatrixRText
+                  data={BarChartDataMRText}
+                  colors={Colors}
+                />
               </div>
               <div>
                 <AggregationPanelText data={question?.aggregate_stats} />
