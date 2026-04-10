@@ -58,7 +58,7 @@ const AggregationPanelText = ({ data }) => {
        
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           
-          {obj.mode_text?.description}
+          {obj.mode_text?.text_value}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           
