@@ -166,41 +166,17 @@ const Form2 = () => {
 
         setLoading(true);
 
-        // Get all question IDs from the current category (including sub-questions)
-        const currentQuestionIds = new Set();
-        questions.forEach((q) => {
-          currentQuestionIds.add(q.id);
-          if (q.sub_questions && q.sub_questions.length > 0) {
-            q.sub_questions.forEach((sub_q) =>
-              currentQuestionIds.add(sub_q.id),
-            );
-          }
-        });
+       
 
         // Filter answers to only include questions from the current category
-        const validAnswers = Object.fromEntries(
-          Object.entries(answers).filter(([key, value]) => {
-            const questionId = Number(key);
+       
 
-            return (
-              Number.isInteger(questionId) && 
-              currentQuestionIds.has(questionId) && 
-              value &&
-              typeof value === "object" && 
-              "visitId" in value && 
-              ("optionId" in value ||
-                "textValue" in value ||
-                "numeric_value" in value)
-            );
-          }),
-        );
+        
 
-        console.log("validated answers", validAnswers);
-
-        const safeAnswers = JSON.parse(JSON.stringify(validAnswers));
+        
 
         const payLoad = {
-          answers: safeAnswers,
+          answers: answers,
           comments: comments,
         };
 
