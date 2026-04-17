@@ -1,9 +1,5 @@
 /**
- * Deletes all answers and data associated with a specific visit from a survey session
- * that is stored in a single localStorage key.
- *
- * @param {string} surveysessionId - The ID of the session (e.g., '12345').
- * @param {string} visit_number - The ID of the visit to delete (e.g., '101').
+ * Deletes all answers and data associated with a specific visit
  */
 export function deleteVisitDataFromSession(
   storageKey,
@@ -30,112 +26,139 @@ export function deleteVisitDataFromSession(
     return;
   }
 
-  // --- Step 2: Modify the data (Delete the visit entry) ---
-  // The key in the object is structured as "visit_101", so we construct the full key name
   const visitKeyToDelete = `visit_${visit_number}`;
 
   if (sessionData[visitKeyToDelete]) {
-    // Use the delete operator to remove the entire property/object for that visit
     delete sessionData[visitKeyToDelete];
-    console.log(
-      `Successfully deleted data for ${visitKeyToDelete} from session ${surveysessionId}.`
-    );
+    console.log(`Deleted ${visitKeyToDelete}`);
   } else {
-    console.warn(
-      `Visit data not found for key: ${visitKeyToDelete} within the session.`
-    );
-    // No modification is needed if the key doesn't exist
+    console.warn(`Visit not found: ${visitKeyToDelete}`);
     return;
   }
 
-  // --- Step 3: Save the modified data back ---
   try {
-    const dataToSave = JSON.stringify(sessionData);
-    localStorage.setItem(storageKey, dataToSave);
-    console.log(`Updated session data saved back to localStorage.`);
+    localStorage.setItem(storageKey, JSON.stringify(sessionData));
   } catch (e) {
-    console.error("Failed to save modified session data to localStorage.", e);
+    console.error("Failed to save modified session data.", e);
   }
 }
 
 /**
- * Retrieves initial state (answers or comments) for a specific visit ID within a session.
- * * @param {string} storageKey - The top-level localStorage key (e.g., 'mySurveySessionData_123').
- * @param {string} visitNum - The ID of the visit (e.g., '101').
- * @param {string} dataType - 'answers' or 'comments' to identify the internal key.
+ * Get initial state (answers/comments) for visit + category
  */
-export function getInitialState(storageKey, visitNum, dataType) {
+export function getInitialState(
+  storageKey,
+  visitNum,
+  categoryId,
+  dataType // "answers" | "comments"
+) {
   const savedItem = localStorage.getItem(storageKey);
 
-  if (savedItem) {
-    try {
-      const sessionData = JSON.parse(savedItem);
+  if (!savedItem) return {};
 
-      // 1. Determine the outer key (the visit)
-      const visitKey = `visit_${visitNum}`;
-      const visitData = sessionData[visitKey];
+  try {
+    const sessionData = JSON.parse(savedItem);
 
-      if (!visitData) return {}; // No data found for this visit
+    const visitKey = `visit_${visitNum}`;
+    const categoryKey = `category_${categoryId}`;
 
-      // 2. Determine the inner key (simple 'answers' or 'comments')
-      const dataKey = dataType;
+    const visitData = sessionData[visitKey];
+    if (!visitData) return {};
 
-      // 3. Return the specific answers/comments object for this visit
-      // Returns the object or an empty object if the specific dataKey is missing
-      return visitData[dataKey] || {};
-    } catch (error) {
-      console.error(
-        `Failed to parse session data for key: ${storageKey}`,
-        error
-      );
-      return {};
-    }
+    const categoryData = visitData[categoryKey];
+    if (!categoryData) return {};
+
+    return categoryData[dataType] || {};
+  } catch (error) {
+    console.error(`Failed to parse storage for key: ${storageKey}`, error);
+    return {};
   }
-  return {};
 }
 
-export function saveStorageState(storageKey, visitNum, dataType, data) {
-    const savedItem = localStorage.getItem(storageKey);
-    let sessionData;
+/**
+ * Save answers/comments for visit + category
+ */
+export function saveStorageState(
+  storageKey,
+  visitNum,
+  categoryId,
+  dataType, // "answers" | "comments"
+  data
+) {
+  let sessionData;
 
-    // --- Step 1: Initialize or Retrieve sessionData ---
-    if (!savedItem) {
-        // If the top-level session key doesn't exist, initialize an empty object.
-        sessionData = {};
-        console.log(`Initialized new session data for key: ${storageKey}`);
-    } else {
-        try {
-            sessionData = JSON.parse(savedItem);
-        } catch (e) {
-            console.error("Failed to parse session data from localStorage. Data corrupted.", e);
-            return;
-        }
-    }
+  const savedItem = localStorage.getItem(storageKey);
 
-    // --- Step 2: Ensure the Visit structure exists ---
-    const visitToUpdate = `visit_${visitNum}`;
-    
-    // Initialize the visit object if it doesn't exist
-    if (!sessionData[visitToUpdate]) {
-        sessionData[visitToUpdate] = {}; 
-        console.log(`Initialized new visit entry: ${visitToUpdate}`);
-    }
-
-    // --- Step 3: Update the specific data type (answers/comments) ---
-    // dataType is expected to be 'answers' or 'comments'
-    sessionData[visitToUpdate][dataType] = data;
-    
-    console.log(
-        `Successfully updated data type '${dataType}' for visit ${visitToUpdate} in storage key ${storageKey}.`
-    );
-
-    // --- Step 4: Save the modified data back to localStorage ---
+  // Step 1: Load or init
+  if (!savedItem) {
+    sessionData = {};
+  } else {
     try {
-        const dataToSave = JSON.stringify(sessionData);
-        localStorage.setItem(storageKey, dataToSave);
-        console.log("Updated session data saved back to localStorage.");
-    } catch (error) {
-        // This catch handles errors like localStorage full
-        console.error("Failed to save modified session data to localStorage.", error);
+      sessionData = JSON.parse(savedItem);
+    } catch (e) {
+      console.error("Corrupted localStorage data.", e);
+      return;
     }
+  }
+
+  const visitKey = `visit_${visitNum}`;
+  const categoryKey = `category_${categoryId}`;
+
+  // Step 2: ensure visit exists
+  if (!sessionData[visitKey]) {
+    sessionData[visitKey] = {};
+  }
+
+  // Step 3: ensure category exists
+  if (!sessionData[visitKey][categoryKey]) {
+    sessionData[visitKey][categoryKey] = {};
+  }
+
+  // Step 4: set data
+  sessionData[visitKey][categoryKey][dataType] = data;
+
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(sessionData));
+  } catch (error) {
+    console.error("Failed saving to localStorage", error);
+  }
+}
+
+/**
+ * Delete ONLY a category inside a visit (NEW)
+ */
+export function deleteCategoryDataFromVisit(
+  storageKey,
+  visitNum,
+  categoryId
+) {
+  const savedItem = localStorage.getItem(storageKey);
+
+  if (!savedItem) return;
+
+  let sessionData;
+
+  try {
+    sessionData = JSON.parse(savedItem);
+  } catch (e) {
+    console.error("Failed to parse storage", e);
+    return;
+  }
+
+  const visitKey = `visit_${visitNum}`;
+  const categoryKey = `category_${categoryId}`;
+
+  if (
+    sessionData[visitKey] &&
+    sessionData[visitKey][categoryKey]
+  ) {
+    delete sessionData[visitKey][categoryKey];
+    console.log(`Deleted ${categoryKey} from ${visitKey}`);
+  }
+
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(sessionData));
+  } catch (e) {
+    console.error("Failed saving storage", e);
+  }
 }

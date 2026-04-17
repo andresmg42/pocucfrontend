@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import {
   getInitialState,
   saveStorageState,
+  deleteCategoryDataFromVisit
 } from "../../utils/storage_functions";
 import UniqueResponseForm from "./UniqueResponseForm";
 import MatrixParentForm from "./MatrixParentForm";
@@ -25,10 +26,10 @@ const Form2 = () => {
   const [commentTrigger, setCommentTrigger] = useState({});
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState(() =>
-    getInitialState(ANSWERS_STORAGE_KEY, visit_id, "answer"),
+    getInitialState(ANSWERS_STORAGE_KEY, visit_id,category_id, "answer"),
   );
   const [comments, setComments] = useState(() =>
-    getInitialState(ANSWERS_STORAGE_KEY, visit_id, "comment"),
+    getInitialState(ANSWERS_STORAGE_KEY, visit_id,category_id, "comment"),
   );
   const [openTextFields, setOpenTextFields] = useState({});
   const [isCompleted, setIsCompleted] = useState();
@@ -45,8 +46,8 @@ const Form2 = () => {
   }
 
   useEffect(() => {
-    saveStorageState(ANSWERS_STORAGE_KEY, visit_id, "answer", answers);
-    saveStorageState(ANSWERS_STORAGE_KEY, visit_id, "comment", comments);
+    saveStorageState(ANSWERS_STORAGE_KEY, visit_id,category_id, "answer", answers);
+    saveStorageState(ANSWERS_STORAGE_KEY, visit_id,category_id, "comment", comments);
   }, [answers, comments]);
 
   useEffect(() => {
@@ -165,33 +166,17 @@ const Form2 = () => {
 
         setLoading(true);
 
-        // Get all question IDs from the current category (including sub-questions)
-        const currentQuestionIds = new Set();
-        questions.forEach((q) => {
-          currentQuestionIds.add(q.id);
-          if (q.sub_questions && q.sub_questions.length > 0) {
-            q.sub_questions.forEach((sub_q) => currentQuestionIds.add(sub_q.id));
-          }
-        });
+       
 
         // Filter answers to only include questions from the current category
-        const validAnswers = Object.fromEntries(
-          Object.entries(answers).filter(([key, value]) => {
-            const questionId = parseInt(key);
-            // Check if the question is in the current category and has valid data
-            return (
-              currentQuestionIds.has(questionId) &&
-              value &&
-              typeof value === "object" &&
-              value.visitId
-            );
-          })
-        );
+       
 
-        console.log('validated answers',validAnswers)
+        
+
+        
 
         const payLoad = {
-          answers: validAnswers,
+          answers: answers,
           comments: comments,
         };
 
@@ -199,9 +184,10 @@ const Form2 = () => {
 
         console.log("respuesta en el form", res);
 
-        //setAnswers({});
+        // setAnswers({});
 
         // setComments({});
+        deleteCategoryDataFromVisit(ANSWERS_STORAGE_KEY, visit_id, category_id);
 
         toast.success("Survey saved successfully");
 
@@ -272,8 +258,6 @@ const Form2 = () => {
           </div>
 
           {questions.map((q) => {
-            
-
             switch (q.question_type) {
               case "unique_response":
                 return (

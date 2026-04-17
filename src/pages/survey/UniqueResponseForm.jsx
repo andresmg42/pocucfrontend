@@ -172,7 +172,7 @@ const UniqueResponseForm = ({
             }))
           }
         >
-          <h1 className=" text-md text-blue-700">Comentario</h1>
+          <h1 className=" text-md text-blue-700">Otra observación</h1>
         </div>
 
         {commentTrigger[q.id] && (
@@ -180,7 +180,7 @@ const UniqueResponseForm = ({
             <div className="mt-2 ">
               <textarea
                 id={`${q.id}_comment`}
-                placeholder="Escriba un comentario"
+                placeholder="Escriba otra observación"
                 value={comments[q.id]?.comment}
                 onChange={(e) => handleCommentChange(q.id, e.target.value)}
                 autoFocus

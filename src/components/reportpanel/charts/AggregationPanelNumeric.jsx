@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 
 const AggregationPanelNumeric = ({ data }) => {
-  const name_stats = ["average", "minimum", "maximum", "count", "mode"];
+  // const name_stats = ["average","median","std dev" ,"minimum", "maximum", "count", "mode"];
 
   useEffect(() => {
     console.log("data in aggreate:", data);
@@ -24,6 +24,12 @@ const AggregationPanelNumeric = ({ data }) => {
               Media
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Mediana
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              std dev
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Minimo
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -38,6 +44,9 @@ const AggregationPanelNumeric = ({ data }) => {
             </th>
              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Frecuencia Moda 
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              quartiles 
             </th>
         
           </tr>
@@ -65,6 +74,14 @@ const AggregationPanelNumeric = ({ data }) => {
           {obj.average?.toFixed(2)}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
+          {/* You might want to format this, e.g., obj.average.toFixed(2) */}
+          {obj.median?.toFixed(2)}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
+          {/* You might want to format this, e.g., obj.average.toFixed(2) */}
+          {obj.std_dev?.toFixed(2)}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {obj.minimum}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
@@ -80,9 +97,15 @@ const AggregationPanelNumeric = ({ data }) => {
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
           {/* FIX 4: Use optional chaining for safe access */}
           {obj.mode_numeric?.count}
-        </td>
-        
-        
+        </td> 
+        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
+          <div className="flex flex-col items-end gap-1">
+            <span>Q1: {obj.quartiles?.q1}</span>
+            <span>Q2: {obj.quartiles?.q2}</span>
+            <span>Q3: {obj.quartiles?.q3}</span>
+            <span>IQR: {obj.quartiles?.iqr}</span>
+          </div>
+        </td> 
       </tr>
     ))}
 </tbody>
