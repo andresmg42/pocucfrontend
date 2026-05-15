@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import api from "../../../api/user.api";
 import Forms from "./Forms";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const FormsTable = () => {
+  const navigate = useNavigate();
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -137,7 +139,11 @@ const FormsTable = () => {
                 <tr
                   key={survey.id}
                   className="cursor-pointer transition hover:bg-slate-50"
-                  onClick={() => {}}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    navigate(`create-questions/${survey.id}`);
+                  }}
                 >
                   <td className="px-4 py-3 font-medium text-slate-900">
                     {survey.name}

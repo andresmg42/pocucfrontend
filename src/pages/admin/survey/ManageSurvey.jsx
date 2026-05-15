@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import FormsTable from "../../../components/admin/forms/FormsTable";
+import FormsTable from "../../../components/admin/survey/FormsTable";
 
 const MENU_ITEMS = [
   "Usuarios",
