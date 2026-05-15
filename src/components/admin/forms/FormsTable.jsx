@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../../api/user.api";
 import Forms from "./Forms";
+import toast from "react-hot-toast";
 
 const FormsTable = () => {
   const [surveys, setSurveys] = useState([]);
@@ -10,6 +11,7 @@ const FormsTable = () => {
   const [selected, setSelected] = useState({});
   const [edit, setEdit] = useState(false);
   const [editPayload, setEditPayload] = useState({});
+  const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -24,7 +26,7 @@ const FormsTable = () => {
     };
 
     fetchSurveys();
-  }, [created]);
+  }, [created, deleted]);
 
   if (isCreateOpen) {
     return (
@@ -44,6 +46,21 @@ const FormsTable = () => {
     setIsCreateOpen(true);
     setEditPayload(survey);
     setEdit(true);
+  };
+
+  const handleDelete = async (event, survey_id) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const confirmed = window.confirm(
+      "¿Estas seguro de eliminar este FORMULARIO?",
+    );
+    if (confirmed) {
+      setLoading(true);
+      const res = await api.delete(`survey/surveys/${survey_id}/`);
+      setLoading(false);
+      setDeleted((prev) => !prev);
+      toast.success("Encuesta eliminada correctamente");
+    }
   };
 
   return (
@@ -184,7 +201,7 @@ const FormsTable = () => {
                         type="button"
                         aria-label="Eliminar"
                         className="flex h-8 w-8 items-center justify-center rounded-lg border border-rose-200 text-rose-600 transition hover:border-rose-300 hover:text-rose-700"
-                        onClick={(event) => event.stopPropagation()}
+                        onClick={(event) => handleDelete(event, survey.id)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
