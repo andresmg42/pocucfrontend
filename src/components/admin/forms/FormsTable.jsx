@@ -85,7 +85,7 @@ const FormsTable = () => {
               setEdit(false);
               setIsCreateOpen(true);
             }}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-lg font-semibold text-amber-600 shadow-sm transition hover:border-amber-300 hover:bg-amber-100"
+            className="inline-flex cursor-pointer h-10 w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-lg font-semibold text-amber-600 shadow-sm transition hover:border-amber-300 hover:bg-amber-100"
             aria-label="Crear nueva encuesta"
           >
             +
