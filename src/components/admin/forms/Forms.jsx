@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import api from "../../../api/user.api";
 
@@ -10,10 +10,24 @@ const emptyForm = {
   image_url: "",
 };
 
-const Forms = ({ onBack, setCreated }) => {
+const Forms = ({ onBack, setCreated, edit, editPayload = {}, setEdit }) => {
   const [formData, setFormData] = useState(emptyForm);
   const [createdSurveyId, setCreatedSurveyId] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (edit && editPayload?.id) {
+      setFormData({
+        name: editPayload.name || "",
+        topic: editPayload.topic || "",
+        version: editPayload.version || "",
+        description: editPayload.description || "",
+        image_url: editPayload.image_url || "",
+      });
+    } else {
+      setFormData(emptyForm);
+    }
+  }, [edit, editPayload]);
 
   const handleChange = (event) => {
     const { id, value } = event.target;
@@ -38,11 +52,16 @@ const Forms = ({ onBack, setCreated }) => {
         description: formData.description.trim(),
         image_url: formData.image_url.trim() || null,
       };
-
-      const response = await api.post("survey/surveys/", payload);
+      const isEditing = edit && editPayload?.id;
+      const response = !isEditing
+        ? await api.post("survey/surveys/", payload)
+        : await api.put(`survey/surveys/${editPayload.id}/`, payload);
       const newSurveyId = response?.data?.id ?? null;
       onBack();
       setCreated();
+      if (typeof setEdit === "function") {
+        setEdit(false);
+      }
 
       if (response.status === 200 || response.status === 201) {
         setFormData(emptyForm);
@@ -187,7 +206,13 @@ const Forms = ({ onBack, setCreated }) => {
             disabled={loading}
             className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
           >
-            {loading ? "Creando..." : "Crear"}
+            {!edit
+              ? loading
+                ? "Creando..."
+                : "Crear"
+              : loading
+                ? "Actualizando..."
+                : "Actualizar"}
           </button>
           <p className="text-xs text-slate-400">
             El ID de la encuesta se mostrara cuando se cree correctamente.

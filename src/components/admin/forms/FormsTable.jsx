@@ -7,6 +7,9 @@ const FormsTable = () => {
   const [loading, setLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [created, setCreated] = useState(false);
+  const [selected, setSelected] = useState({});
+  const [edit, setEdit] = useState(false);
+  const [editPayload, setEditPayload] = useState({});
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -28,12 +31,19 @@ const FormsTable = () => {
       <Forms
         onBack={() => setIsCreateOpen(false)}
         setCreated={() => setCreated(!created)}
+        editPayload={editPayload}
+        edit={edit}
+        setEdit={setEdit}
       />
     );
   }
 
-  const handleEdit = (event) => {
+  const handleEdit = (survey, event) => {
     event.preventDefault();
+    event.stopPropagation();
+    setIsCreateOpen(true);
+    setEditPayload(survey);
+    setEdit(true);
   };
 
   return (
@@ -54,7 +64,10 @@ const FormsTable = () => {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => setIsCreateOpen(true)}
+            onClick={() => {
+              setEdit(false);
+              setIsCreateOpen(true);
+            }}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-lg font-semibold text-amber-600 shadow-sm transition hover:border-amber-300 hover:bg-amber-100"
             aria-label="Crear nueva encuesta"
           >
@@ -150,7 +163,7 @@ const FormsTable = () => {
                         type="button"
                         aria-label="Editar"
                         className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-slate-400 hover:text-slate-900"
-                        onClick={(event) => handleEdit(event)}
+                        onClick={(event) => handleEdit(survey, event)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
