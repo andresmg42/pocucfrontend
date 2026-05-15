@@ -15,7 +15,7 @@ import ReportMain from "./pages/reportpanel/ReportMain.jsx";
 import Stats from "./pages/reportpanel/Stats.jsx";
 import QuestionPanel from "./pages/reportpanel/QuestionPanel.jsx";
 import Form2 from "./pages/survey/Form2.jsx";
-import CreateSurvey from "./pages/admin/CreateSurvey.jsx";
+import ManageSurvey from "./pages/admin/survey/ManageSurvey.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -62,7 +62,7 @@ function App() {
             path="questions-panel/:survey_id/:survey_name/stats/:question_id/:description/:code"
             element={<Stats />}
           />
-          <Route path="admin/" element={<CreateSurvey />} />
+          <Route path="admin/" element={<ManageSurvey />} />
         </Routes>
       </Layout>
     </BrowserRouter>
