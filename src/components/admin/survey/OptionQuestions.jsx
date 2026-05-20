@@ -50,7 +50,9 @@ const OptionQuestions = ({ isOpen, onClose, onSelectOption }) => {
   };
 
   const handleSelectOption = () => {
-    const selected = options.find((option) => option.id === selectedOptionId);
+    const selected = options.find(
+      (option) => String(option.id) === String(selectedOptionId),
+    );
     if (!selected) return;
 
     onSelectOption?.(selected);

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import api from "../../../api/user.api";
 import Question from "../../../components/admin/survey/Question";
@@ -31,7 +32,7 @@ const QuestionsSurvey = () => {
   const [groupedQuestions, setGroupedQuestions] = useState({});
   const [loading, setLoading] = useState(true);
   const [editingField, setEditingField] = useState(null);
-  const [dragState, setDragState] = useState(null);
+  const [movedIds, setMovedIds] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showBank, setShowBank] = useState(false);
   const [bankQuestions, setBankQuestions] = useState([]);
@@ -43,6 +44,9 @@ const QuestionsSurvey = () => {
   const [targetCategory, setTargetCategory] = useState("");
   const [targetSubcategory, setTargetSubcategory] = useState("");
   const [draftQuestion, setDraftQuestion] = useState(null);
+  const moveTimeoutRef = useRef(null);
+  const reorderTimeoutRef = useRef(null);
+  const pendingReorderRef = useRef(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -93,61 +97,204 @@ const QuestionsSurvey = () => {
     }, 0);
   }, [categories, groupedQuestions]);
 
+  const visibleCategory = targetCategory || categories[0] || "";
+  const subcategoriesForVisible = useMemo(() => {
+    if (!visibleCategory) return [];
+    return Object.keys(groupedQuestions[visibleCategory] || {}).filter(Boolean);
+  }, [groupedQuestions, visibleCategory]);
+
+  const visibleSubcategory =
+    targetSubcategory || subcategoriesForVisible[0] || "";
+
+  const normalizeSubcategoryKey = (subcategory) => {
+    if (!subcategory) return "";
+    if (typeof subcategory === "string") return subcategory;
+    return subcategory.name || "";
+  };
+
   const updateQuestion = (category, subcategory, questionId, updater) => {
     setGroupedQuestions((prev) => {
+      const subcategoryKey = normalizeSubcategoryKey(subcategory);
       const next = {
         ...prev,
         [category]: {
           ...(prev[category] || {}),
         },
       };
-      const list = [...(next[category][subcategory] || [])];
+      const list = [...(next[category][subcategoryKey] || [])];
       const index = list.findIndex((item) => item.id === questionId);
       if (index === -1) return prev;
       list[index] = updater(list[index]);
-      next[category][subcategory] = list;
+      next[category][subcategoryKey] = list;
       return next;
     });
   };
 
-  const handleDragStart = (category, subcategory, index) => {
-    setDragState({ category, subcategory, index });
+  const getCategoryIdByName = (categoryName) => {
+    const categoryGroups = groupedQuestions[categoryName] || {};
+    const firstList = Object.values(categoryGroups)[0] || [];
+    const firstItem = firstList[0];
+    return firstItem?.category?.id ?? firstItem?.category_id ?? null;
   };
 
-  const handleDrop = (category, subcategory, index) => {
-    if (!dragState) return;
+  const getSubcategoryIdByName = (categoryName, subcategoryName) => {
+    const categoryGroups = groupedQuestions[categoryName] || {};
+    const list = categoryGroups[subcategoryName] || [];
+    const firstItem = list[0];
+    return firstItem?.subcategory?.id ?? firstItem?.subcategory_id ?? null;
+  };
 
+  const resolveCategoryValue = (question, fallbackValue) => {
+    if (question?.category?.id) return question.category.id;
+    if (question?.category_id) return question.category_id;
+    if (fallbackValue?.id) return fallbackValue.id;
+    if (typeof fallbackValue === "string") {
+      return getCategoryIdByName(fallbackValue);
+    }
+    return null;
+  };
+
+  const resolveSubcategoryValue = (question, category, fallbackValue) => {
+    if (question?.subcategory?.id) return question.subcategory.id;
+    if (question?.subcategory_id) return question.subcategory_id;
+    if (fallbackValue?.id) return fallbackValue.id;
+    if (typeof fallbackValue === "string") {
+      return getSubcategoryIdByName(category, fallbackValue);
+    }
+    return null;
+  };
+
+  const resolveSurveyValue = (question) => {
+    if (Array.isArray(question?.survey) && question.survey.length) {
+      return question.survey.map((item) => (item?.id ? item.id : item));
+    }
+    if (survey_id) {
+      const parsedSurveyId = Number(survey_id);
+      return [Number.isFinite(parsedSurveyId) ? parsedSurveyId : survey_id];
+    }
+    return [];
+  };
+
+  const buildQuestionPayload = (question, category, subcategory) => {
+    const options = Array.isArray(question?.options)
+      ? question.options.map((option) => (option?.id ? option.id : option))
+      : [];
+
+    return {
+      category: resolveCategoryValue(question, category),
+      subcategory: resolveSubcategoryValue(question, category, subcategory),
+      options,
+      code: question?.code || "",
+      question_type: question?.question_type || "unique_response",
+      description: question?.description || "",
+      parent_question: question?.parent_question?.id
+        ? question.parent_question.id
+        : question?.parent_question || null,
+      survey: resolveSurveyValue(question),
+      is_required: Boolean(question?.is_required),
+      input_type: question?.input_type || "NUM",
+      position: question?.position ?? 1,
+    };
+  };
+
+  const removeQuestionFromList = (category, subcategory, questionId) => {
     setGroupedQuestions((prev) => {
+      const subcategoryKey = normalizeSubcategoryKey(subcategory);
       const next = {
         ...prev,
-        [dragState.category]: {
-          ...(prev[dragState.category] || {}),
-        },
         [category]: {
           ...(prev[category] || {}),
         },
       };
+      next[category][subcategoryKey] = (
+        next[category][subcategoryKey] || []
+      ).filter((item) => item.id !== questionId);
+      return next;
+    });
+  };
 
-      const sourceList = [
-        ...(next[dragState.category][dragState.subcategory] || []),
-      ];
-      const [moved] = sourceList.splice(dragState.index, 1);
-      if (!moved) return prev;
+  const moveQuestion = (category, subcategory, index, direction) => {
+    let moved = [];
+    let updatedList = [];
 
-      next[dragState.category][dragState.subcategory] = sourceList;
-      const targetList = [...(next[category][subcategory] || [])];
-      const targetIndex = typeof index === "number" ? index : targetList.length;
-      targetList.splice(targetIndex, 0, moved);
+    setGroupedQuestions((prev) => {
+      const subcategoryKey = normalizeSubcategoryKey(subcategory);
+      const next = {
+        ...prev,
+        [category]: {
+          ...(prev[category] || {}),
+        },
+      };
+      const list = [...(next[category][subcategoryKey] || [])];
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
 
-      next[category][subcategory] = targetList.map((item, idx) => ({
+      if (targetIndex < 0 || targetIndex >= list.length) {
+        return prev;
+      }
+
+      const temp = list[index];
+      list[index] = list[targetIndex];
+      list[targetIndex] = temp;
+      moved = [list[index].id, list[targetIndex].id];
+
+      updatedList = list.map((item, idx) => ({
         ...item,
         position: idx + 1,
       }));
 
+      next[category][subcategoryKey] = updatedList;
+
       return next;
     });
 
-    setDragState(null);
+    if (moved.length) {
+      if (moveTimeoutRef.current) {
+        clearTimeout(moveTimeoutRef.current);
+      }
+      setMovedIds(moved);
+      moveTimeoutRef.current = setTimeout(() => {
+        setMovedIds([]);
+      }, 350);
+    }
+
+    if (updatedList.length) {
+      pendingReorderRef.current = { category, subcategory, list: updatedList };
+      if (reorderTimeoutRef.current) {
+        clearTimeout(reorderTimeoutRef.current);
+      }
+      reorderTimeoutRef.current = setTimeout(async () => {
+        const pending = pendingReorderRef.current;
+        if (!pending) return;
+
+        const updates = pending.list
+          .filter((item) => {
+            const idValue = String(item?.id || "");
+            return (
+              idValue &&
+              !idValue.startsWith("draft-") &&
+              !idValue.startsWith("new-") &&
+              !idValue.startsWith("bank-")
+            );
+          })
+          .map((item) => {
+            const payload = buildQuestionPayload(
+              item,
+              pending.category,
+              pending.subcategory,
+            );
+            return api.put(`question/${item.id}/`, payload);
+          });
+
+        if (!updates.length) return;
+
+        try {
+          await Promise.all(updates);
+        } catch (error) {
+          console.error("Error updating question order", error);
+          toast.error("Error actualizando el orden de preguntas");
+        }
+      }, 600);
+    }
   };
 
   const startInlineEdit = (payload, event) => {
@@ -200,27 +347,166 @@ const QuestionsSurvey = () => {
     });
   };
 
+  const getOptionId = (option) => {
+    if (option && typeof option === "object") return option.id;
+    return option;
+  };
+
   const handleRemoveOption = (category, subcategory, questionId, optionId) => {
     updateQuestion(category, subcategory, questionId, (question) => ({
       ...question,
-      options: (question.options || []).filter((item) => item.id !== optionId),
+      options: (question.options || []).filter(
+        (item) => getOptionId(item) !== optionId,
+      ),
     }));
   };
 
-  const handleAddSubQuestion = (category, subcategory, questionId) => {
-    updateQuestion(category, subcategory, questionId, (question) => ({
-      ...question,
-      sub_questions: [
-        ...(question.sub_questions || []),
-        {
-          id: `sub-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-          description: "",
-          code: "",
-          input_type: question.input_type,
-          is_required: true,
-        },
-      ],
-    }));
+  const handleRemoveSubQuestion = async (
+    category,
+    subcategory,
+    questionId,
+    subQuestionId,
+  ) => {
+    const idValue = String(subQuestionId || "");
+    if (!idValue || idValue.startsWith("sub-")) {
+      updateQuestion(category, subcategory, questionId, (question) => ({
+        ...question,
+        sub_questions: (question.sub_questions || []).filter(
+          (item) => item.id !== subQuestionId,
+        ),
+      }));
+      return;
+    }
+
+    try {
+      await api.delete(`question/${subQuestionId}/`);
+      updateQuestion(category, subcategory, questionId, (question) => ({
+        ...question,
+        sub_questions: (question.sub_questions || []).filter(
+          (item) => item.id !== subQuestionId,
+        ),
+      }));
+    } catch (error) {
+      console.error("Error deleting subquestion", error);
+    }
+  };
+
+  const handleAddSubQuestion = async (
+    category,
+    subcategory,
+    question,
+    data,
+  ) => {
+    const rawSubcategoryId =
+      question?.subcategory?.id ??
+      question?.subcategory_id ??
+      subcategory?.id ??
+      null;
+    const parsedSubcategoryId = Number(rawSubcategoryId);
+    const subcategoryId = Number.isFinite(parsedSubcategoryId)
+      ? parsedSubcategoryId
+      : null;
+    if (!subcategoryId) {
+      toast.error("Subcategoria requerida para crear subpregunta.");
+      return null;
+    }
+
+    const payload = buildQuestionPayload(
+      {
+        ...question,
+        parent_question: question.id,
+        description: data?.description || "",
+        question_type: data?.question_type,
+        code: data?.code || "",
+        options: [],
+        position: (question.sub_questions || []).length + 1,
+      },
+      category,
+      subcategoryId,
+    );
+
+    payload.subcategory = subcategoryId;
+
+    console.log("payload from subquestions:", payload);
+
+    try {
+      const response = await api.post("question/", payload);
+      const created = response?.data || {
+        ...payload,
+        id: `sub-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      };
+      updateQuestion(category, subcategory, question.id, (item) => ({
+        ...item,
+        sub_questions: [...(item.sub_questions || []), created],
+      }));
+      return created;
+    } catch (error) {
+      console.error("Error creating subquestion", error);
+      return null;
+    }
+  };
+
+  const handleUpdateQuestion = async (category, subcategory, question) => {
+    const idValue = String(question?.id || "");
+    if (!idValue) return;
+
+    const payload = buildQuestionPayload(question, category, subcategory);
+
+    if (idValue.startsWith("draft-") || idValue.startsWith("new-")) {
+      try {
+        const response = await api.post("question/", payload);
+        const created = response?.data || payload;
+        updateQuestion(category, subcategory, question.id, (item) => ({
+          ...created,
+          id: created.id ?? item.id,
+          sub_questions: item.sub_questions || [],
+        }));
+        toast.success("Pregunta actualizada exitosamente");
+      } catch (error) {
+        console.error("Error creating question", error);
+      }
+      return;
+    }
+
+    const shouldKeepOptions = (incoming) => {
+      if (!Array.isArray(incoming)) return true;
+      if (incoming.length === 0) return false;
+      return typeof incoming[0] !== "object";
+    };
+
+    try {
+      const response = await api.put(`question/${question.id}/`, payload);
+      const updated = response?.data || payload;
+      updateQuestion(category, subcategory, question.id, (item) => ({
+        ...item,
+        ...updated,
+        options: shouldKeepOptions(updated.options)
+          ? item.options
+          : updated.options,
+      }));
+      toast.success("Pregunta actualizada exitosamente");
+    } catch (error) {
+      console.error("Error updating question", error);
+    }
+  };
+
+  const handleDeleteQuestion = async (category, subcategory, questionId) => {
+    const idValue = String(questionId || "");
+    if (
+      !idValue ||
+      idValue.startsWith("draft-") ||
+      idValue.startsWith("new-")
+    ) {
+      removeQuestionFromList(category, subcategory, questionId);
+      return;
+    }
+
+    try {
+      await api.delete(`question/${questionId}/`);
+      removeQuestionFromList(category, subcategory, questionId);
+    } catch (error) {
+      console.error("Error deleting question", error);
+    }
   };
 
   const openCreateForm = () => {
@@ -233,27 +519,44 @@ const QuestionsSurvey = () => {
     event.preventDefault();
     if (!draftQuestion?.category || !draftQuestion?.subcategory) return;
 
-    setGroupedQuestions((prev) => {
-      const next = {
-        ...prev,
-        [draftQuestion.category]: {
-          ...(prev[draftQuestion.category] || {}),
-        },
-      };
-      const list = [
-        ...(next[draftQuestion.category][draftQuestion.subcategory] || []),
-      ];
-      list.push({
-        ...draftQuestion,
-        id: `draft-${Date.now()}`,
-        position: list.length + 1,
-      });
-      next[draftQuestion.category][draftQuestion.subcategory] = list;
-      return next;
-    });
+    const subcategoryKey = normalizeSubcategoryKey(draftQuestion.subcategory);
 
-    setShowCreateForm(false);
-    setDraftQuestion(null);
+    const payload = buildQuestionPayload(
+      draftQuestion,
+      draftQuestion.category,
+      draftQuestion.subcategory,
+    );
+
+    const persistQuestion = async () => {
+      try {
+        const response = await api.post("question/", payload);
+        const created = response?.data || payload;
+        setGroupedQuestions((prev) => {
+          const next = {
+            ...prev,
+            [draftQuestion.category]: {
+              ...(prev[draftQuestion.category] || {}),
+            },
+          };
+          const list = [
+            ...(next[draftQuestion.category][subcategoryKey] || []),
+          ];
+          list.push({
+            ...created,
+            id: created.id ?? `draft-${Date.now()}`,
+            position: created.position ?? list.length + 1,
+          });
+          next[draftQuestion.category][subcategoryKey] = list;
+          return next;
+        });
+        setShowCreateForm(false);
+        setDraftQuestion(null);
+      } catch (error) {
+        console.error("Error creating question", error);
+      }
+    };
+
+    persistQuestion();
   };
 
   const handleAddBankQuestion = (event) => {
@@ -281,34 +584,65 @@ const QuestionsSurvey = () => {
     );
     if (!bankQuestion) return;
 
-    setGroupedQuestions((prev) => {
-      const next = {
-        ...prev,
-        [targetCategory]: {
-          ...(prev[targetCategory] || {}),
-        },
-      };
-      const list = [...(next[targetCategory]?.[targetSubcategory] || [])];
-      list.push({
-        id: `bank-${Date.now()}`,
+    const subcategoryKey = normalizeSubcategoryKey(targetSubcategory);
+    const payload = buildQuestionPayload(
+      {
         code: "",
         question_type: bankQuestion.question_type,
         description: bankQuestion.description,
         parent_question: null,
         survey: [],
         options: [],
-        sub_questions: [],
         is_required: true,
         input_type: bankQuestion.input_type,
-        position: list.length + 1,
-      });
-      next[targetCategory][targetSubcategory] = list;
-      return next;
-    });
+        position:
+          (groupedQuestions[targetCategory]?.[subcategoryKey] || []).length + 1,
+      },
+      targetCategory,
+      targetSubcategory,
+    );
+
+    const persistQuestion = async () => {
+      try {
+        const response = await api.post("question/", payload);
+        const created = response?.data || payload;
+        setGroupedQuestions((prev) => {
+          const next = {
+            ...prev,
+            [targetCategory]: {
+              ...(prev[targetCategory] || {}),
+            },
+          };
+          const list = [...(next[targetCategory]?.[subcategoryKey] || [])];
+          list.push({
+            ...created,
+            id: created.id ?? `bank-${Date.now()}`,
+            position: created.position ?? list.length + 1,
+          });
+          next[targetCategory][subcategoryKey] = list;
+          return next;
+        });
+      } catch (error) {
+        console.error("Error creating question from bank", error);
+      }
+    };
+
+    persistQuestion();
   };
 
   return (
     <div className="w-full min-w-0 rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-200/60">
+      <style>{`
+        @keyframes questionMoveFlash {
+          0% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.45); }
+          40% { transform: translateY(-2px); box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.12); }
+          100% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+        }
+
+        .question-move-flash {
+          animation: questionMoveFlash 220ms ease-out;
+        }
+      `}</style>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -318,8 +652,8 @@ const QuestionsSurvey = () => {
             Preguntas del formulario
           </h2>
           <p className="mt-2 text-sm text-slate-500">
-            Organiza las preguntas por categoria, subcategoria y arrastra para
-            reordenar.
+            Organiza las preguntas por categoria, subcategoria y ajusta la
+            posicion con los controles.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -609,30 +943,68 @@ const QuestionsSurvey = () => {
         </div>
       )}
 
-      {!loading &&
-        categories.map((category) => (
-          <div key={category} className="mb-8">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-slate-900">
-                {category}
-              </h3>
+      {!loading && visibleCategory && (
+        <div className="mb-8">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-lg font-semibold text-slate-900">
+              {visibleCategory}
+            </h3>
+            <div className="flex flex-wrap items-center gap-3">
+              <select
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+                value={visibleCategory}
+                onChange={(event) => {
+                  const nextCategory = event.target.value;
+                  const nextSubcategory = Object.keys(
+                    groupedQuestions[nextCategory] || {},
+                  )[0];
+                  setTargetCategory(nextCategory);
+                  setTargetSubcategory(nextSubcategory || "");
+                }}
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+                value={visibleSubcategory}
+                onChange={(event) => setTargetSubcategory(event.target.value)}
+                disabled={!subcategoriesForVisible.length}
+              >
+                {subcategoriesForVisible.map((subcategory) => (
+                  <option key={subcategory} value={subcategory}>
+                    {subcategory}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className="space-y-6">
-              {Object.entries(groupedQuestions[category] || {}).map(
-                ([subcategory, list]) => (
-                  <div
-                    key={subcategory}
-                    className="rounded-2xl border border-slate-200 bg-white p-4"
-                    onDragOver={(event) => event.preventDefault()}
-                    onDrop={() => handleDrop(category, subcategory)}
-                  >
+          </div>
+          <div className="space-y-6">
+            {(groupedQuestions[visibleCategory]?.[visibleSubcategory] || [])
+              .length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 px-6 py-8 text-center text-slate-500">
+                No hay preguntas para esta subcategoria.
+              </div>
+            ) : (
+              (() => {
+                const list =
+                  groupedQuestions[visibleCategory]?.[visibleSubcategory] || [];
+                const subcategoryMeta = list?.[0]?.subcategory ?? {
+                  name: visibleSubcategory,
+                };
+
+                return (
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4">
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                           Subcategoria
                         </p>
                         <h4 className="text-base font-semibold text-slate-800">
-                          {subcategory}
+                          {normalizeSubcategoryKey(subcategoryMeta)}
                         </h4>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -645,28 +1017,34 @@ const QuestionsSurvey = () => {
                         <Question
                           key={question.id}
                           question={question}
-                          category={category}
-                          subcategory={subcategory}
+                          category={visibleCategory}
+                          subcategory={subcategoryMeta}
                           index={index}
                           inputTypeLabels={INPUT_TYPE_LABELS}
                           editingField={editingField}
-                          onDragStart={handleDragStart}
-                          onDrop={handleDrop}
+                          isMoved={movedIds.includes(question.id)}
                           startInlineEdit={startInlineEdit}
                           applyInlineEdit={applyInlineEdit}
                           updateQuestion={updateQuestion}
                           handleAddSubQuestion={handleAddSubQuestion}
                           handleAddOption={handleAddOption}
                           handleRemoveOption={handleRemoveOption}
+                          handleRemoveSubQuestion={handleRemoveSubQuestion}
+                          handleUpdateQuestion={handleUpdateQuestion}
+                          handleDeleteQuestion={handleDeleteQuestion}
+                          onMove={moveQuestion}
+                          isFirst={index === 0}
+                          isLast={index === list.length - 1}
                         />
                       ))}
                     </div>
                   </div>
-                ),
-              )}
-            </div>
+                );
+              })()
+            )}
           </div>
-        ))}
+        </div>
+      )}
     </div>
   );
 };
