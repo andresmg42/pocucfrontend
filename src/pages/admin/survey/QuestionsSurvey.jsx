@@ -44,6 +44,7 @@ const QuestionsSurvey = () => {
   const [targetCategory, setTargetCategory] = useState("");
   const [targetSubcategory, setTargetSubcategory] = useState("");
   const [draftQuestion, setDraftQuestion] = useState(null);
+  const [focusState, setFocusState] = useState({ id: null, tick: 0 });
   const moveTimeoutRef = useRef(null);
   const reorderTimeoutRef = useRef(null);
   const pendingReorderRef = useRef(null);
@@ -216,6 +217,7 @@ const QuestionsSurvey = () => {
   const moveQuestion = (category, subcategory, index, direction) => {
     let moved = [];
     let updatedList = [];
+    let focusedId = null;
 
     setGroupedQuestions((prev) => {
       const subcategoryKey = normalizeSubcategoryKey(subcategory);
@@ -235,6 +237,7 @@ const QuestionsSurvey = () => {
       const temp = list[index];
       list[index] = list[targetIndex];
       list[targetIndex] = temp;
+      focusedId = temp.id;
       moved = [list[index].id, list[targetIndex].id];
 
       updatedList = list.map((item, idx) => ({
@@ -255,6 +258,10 @@ const QuestionsSurvey = () => {
       moveTimeoutRef.current = setTimeout(() => {
         setMovedIds([]);
       }, 350);
+    }
+
+    if (focusedId) {
+      setFocusState((prev) => ({ id: focusedId, tick: prev.tick + 1 }));
     }
 
     if (updatedList.length) {
@@ -1023,6 +1030,9 @@ const QuestionsSurvey = () => {
                           inputTypeLabels={INPUT_TYPE_LABELS}
                           editingField={editingField}
                           isMoved={movedIds.includes(question.id)}
+                          shouldScroll={
+                            question.id === focusState.id ? focusState.tick : 0
+                          }
                           startInlineEdit={startInlineEdit}
                           applyInlineEdit={applyInlineEdit}
                           updateQuestion={updateQuestion}

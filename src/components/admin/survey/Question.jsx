@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import ConfirmationModal from "../../auxiliarcomponents/ConfirmationModal";
 import OptionQuestions from "./OptionQuestions";
 import SubQuestionModal from "./SubQuestionModal";
@@ -11,6 +11,7 @@ const Question = ({
   inputTypeLabels,
   editingField,
   isMoved,
+  shouldScroll,
   startInlineEdit,
   applyInlineEdit,
   updateQuestion,
@@ -27,14 +28,24 @@ const Question = ({
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isSubQuestionOpen, setIsSubQuestionOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (!shouldScroll) return;
+    const node = containerRef.current;
+    if (!node) return;
+
+    const rect = node.getBoundingClientRect();
+    const targetTop =
+      window.scrollY + rect.top - (window.innerHeight / 2 - rect.height / 2);
+    const clampedTop = Math.max(0, targetTop);
+    window.scrollTo({ top: clampedTop, behavior: "auto" });
+  }, [shouldScroll]);
 
   return (
     <div
-      className={`rounded-2xl border border-slate-200 bg-slate-50/60 p-4 shadow-sm transition-all duration-200 ${
-        isMoved
-          ? "ring-2 ring-amber-200 bg-amber-50/60 question-move-flash"
-          : ""
-      }`}
+      ref={containerRef}
+      className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 shadow-sm transition-all duration-200"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-3">
