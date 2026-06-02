@@ -304,7 +304,7 @@ export default function QuestionCard({
         {/* Up/Down Buttons */}
         <div className="flex-shrink-0 flex flex-col gap-1 mt-1">
           <button
-            onClick={() => onMoveUp(index)}
+            onClick={() => onMoveUp(question.id)}
             disabled={index === 0}
             className={`p-1 rounded transition-colors ${
               index === 0
@@ -316,7 +316,7 @@ export default function QuestionCard({
             <ChevronUp size={20} />
           </button>
           <button
-            onClick={() => onMoveDown(index)}
+            onClick={() => onMoveDown(question.id)}
             disabled={index === totalQuestions - 1}
             className={`p-1 rounded transition-colors ${
               index === totalQuestions - 1

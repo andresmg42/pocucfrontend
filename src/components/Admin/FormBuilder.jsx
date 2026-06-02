@@ -171,81 +171,82 @@ export default function FormBuilder({ survey, onClose }) {
     );
   };
 
-  const handleMoveQuestionUp = (index) => {
-    if (index === 0) return; // Already at the top
-
-    const questionId = questions[index].id;
-    const updatedQuestions = [...questions];
-    [updatedQuestions[index - 1], updatedQuestions[index]] = [
-      updatedQuestions[index],
-      updatedQuestions[index - 1],
-    ];
-
-    // Update positions based on new order
-    const reorderedWithPositions = updatedQuestions.map((q, idx) => ({
-      ...q,
-      position: idx + 1,
-    }));
-
-    setQuestions(reorderedWithPositions);
-
-    // Scroll to the new position - only if needed
-    setTimeout(() => {
-      const element = questionRefs.current[questionId];
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-    }, 50);
-  };
-
-  const handleMoveQuestionDown = (index) => {
-    if (index === questions.length - 1) return; // Already at the bottom
-
-    const questionId = questions[index].id;
-    const updatedQuestions = [...questions];
-    [updatedQuestions[index], updatedQuestions[index + 1]] = [
-      updatedQuestions[index + 1],
-      updatedQuestions[index],
-    ];
-
-    // Update positions based on new order
-    const reorderedWithPositions = updatedQuestions.map((q, idx) => ({
-      ...q,
-      position: idx + 1,
-    }));
-
-    setQuestions(reorderedWithPositions);
-
-    // Scroll to the new position - only if needed
-    setTimeout(() => {
-      const element = questionRefs.current[questionId];
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-    }, 50);
-  };
-
   const selectedCategoryId = selectedCategory?.id ?? null;
   const selectedSubcategoryId = selectedSubcategory?.id ?? null;
 
-  const filteredQuestions = questions.filter((question) => {
-    if (!selectedCategoryId && !selectedSubcategoryId) return true;
-    const questionSubcategoryId = question.subcategory?.id ?? null;
-    const questionCategoryId = question.subcategory?.category ?? null;
+  const getFilteredQuestions = (list, categoryId, subcategoryId) => {
+    return list.filter((question) => {
+      if (!categoryId && !subcategoryId) return true;
+      const questionSubcategoryId = question.subcategory?.id ?? null;
+      const questionCategoryId = question.subcategory?.category ?? null;
 
-    if (selectedCategoryId && selectedSubcategoryId) {
-      return (
-        questionCategoryId === selectedCategoryId &&
-        questionSubcategoryId === selectedSubcategoryId
-      );
-    }
+      if (categoryId && subcategoryId) {
+        return (
+          questionCategoryId === categoryId &&
+          questionSubcategoryId === subcategoryId
+        );
+      }
 
-    if (selectedCategoryId) {
-      return questionCategoryId === selectedCategoryId;
-    }
+      if (categoryId) {
+        return questionCategoryId === categoryId;
+      }
 
-    return questionSubcategoryId === selectedSubcategoryId;
-  });
+      return questionSubcategoryId === subcategoryId;
+    });
+  };
+
+  const filteredQuestions = getFilteredQuestions(
+    questions,
+    selectedCategoryId,
+    selectedSubcategoryId,
+  );
+
+  const moveQuestionById = (questionId, direction) => {
+    const currentFiltered = getFilteredQuestions(
+      questions,
+      selectedCategoryId,
+      selectedSubcategoryId,
+    );
+    const currentIndex = currentFiltered.findIndex((q) => q.id === questionId);
+    const targetIndex = currentIndex + direction;
+
+    if (currentIndex === -1 || targetIndex < 0) return;
+    if (targetIndex >= currentFiltered.length) return;
+
+    const targetId = currentFiltered[targetIndex].id;
+    const updatedQuestions = [...questions];
+    const fromIndex = updatedQuestions.findIndex((q) => q.id === questionId);
+    const toIndex = updatedQuestions.findIndex((q) => q.id === targetId);
+
+    if (fromIndex === -1 || toIndex === -1) return;
+
+    [updatedQuestions[fromIndex], updatedQuestions[toIndex]] = [
+      updatedQuestions[toIndex],
+      updatedQuestions[fromIndex],
+    ];
+
+    const reorderedWithPositions = updatedQuestions.map((q, idx) => ({
+      ...q,
+      position: idx + 1,
+    }));
+
+    setQuestions(reorderedWithPositions);
+
+    setTimeout(() => {
+      const element = questionRefs.current[questionId];
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }, 50);
+  };
+
+  const handleMoveQuestionUp = (questionId) => {
+    moveQuestionById(questionId, -1);
+  };
+
+  const handleMoveQuestionDown = (questionId) => {
+    moveQuestionById(questionId, 1);
+  };
 
   if (loading) {
     return (
