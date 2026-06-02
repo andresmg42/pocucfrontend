@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDrag, useDrop } from "react-dnd";
-import api from "../../services/api";
+import api from "../../services/apiAdmin";
 
 // Draggable subquestion component
 function SubQuestion({
@@ -148,7 +148,7 @@ export default function QuestionCard({
   const loadOptions = async () => {
     try {
       const result = await api.option.list();
-      setOptions(result);
+      setOptions(result.data);
     } catch (error) {
       console.error("Error loading options:", error);
     } finally {
@@ -164,9 +164,10 @@ export default function QuestionCard({
 
     try {
       setCreatingOption(true);
-      const newOption = await api.option.create({
+      const result = await api.option.create({
         description: newOptionName.trim(),
       });
+      const newOption = result.data;
       // Add to options list
       setOptions([...options, newOption]);
       // Automatically select the new option for this question
