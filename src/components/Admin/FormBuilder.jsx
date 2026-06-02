@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import QuestionCard from "./QuestionCard";
 import QuestionBankModal from "./QuestionBankModal";
 import CategorySubcategoryFilter from "./CategorySubcategoryFilter";
-import api from "../../services/api";
+import api from "../../services/apiAdmin";
 
 export default function FormBuilder({ survey, onClose }) {
   const [questions, setQuestions] = useState([]);
@@ -23,7 +23,8 @@ export default function FormBuilder({ survey, onClose }) {
     try {
       setLoading(true);
       const result = await api.question.getBySurvey(survey.id);
-      setQuestions(result);
+      console.log("questions from backend", result.data);
+      setQuestions(result.data);
     } catch (error) {
       console.error("Error loading questions:", error);
       toast.error("Error loading questions");

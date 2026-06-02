@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../../services/api";
+import api from "../../services/apiAdmin";
 
 export default function CategorySubcategoryFilter({
   selectedCategory,
@@ -42,8 +42,8 @@ export default function CategorySubcategoryFilter({
         api.category.list(),
         api.subcategory.list(),
       ]);
-      setCategories(categoriesData);
-      setSubcategories(subcategoriesData);
+      setCategories(categoriesData.data);
+      setSubcategories(subcategoriesData.data);
     } catch (error) {
       console.error("Error loading categories/subcategories:", error);
     } finally {

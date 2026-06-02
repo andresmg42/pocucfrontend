@@ -60,31 +60,7 @@ const apiAdmin = {
   question: {
     ...createAPI("question"),
     getBySurvey: (surveyId) => {
-      console.log(`📋 question.getBySurvey(${surveyId}) called`);
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const questions = DB.question.filter((q) =>
-            q.survey.includes(surveyId),
-          );
-          // Build hierarchy: only return parent questions with their sub_questions
-          const parentQuestions = questions
-            .filter((q) => q.parent_question === null)
-            .map((parent) => {
-              const subQuestions = questions.filter(
-                (q) => q.parent_question === parent.id,
-              );
-              return {
-                ...parent,
-                sub_questions: subQuestions,
-              };
-            })
-            .sort((a, b) => a.position - b.position);
-          console.log(
-            `✅ question.getBySurvey(${surveyId}) returning ${parentQuestions.length} parent questions`,
-          );
-          resolve(JSON.parse(JSON.stringify(parentQuestions)));
-        }, 100);
-      });
+      return api.get(`/question/get_questions_by_survey?survey_id=${surveyId}`);
     },
     // Get all questions (including those not linked to any survey) - for question bank
     getBank: () => {
