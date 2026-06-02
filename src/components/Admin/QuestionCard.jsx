@@ -9,8 +9,7 @@ import {
   GripVertical,
 } from "lucide-react";
 import { toast } from "sonner";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useDrag, useDrop } from "react-dnd";
 import api from "../../services/api";
 
 // Draggable subquestion component
@@ -490,20 +489,18 @@ export default function QuestionCard({
               <div className="space-y-2">
                 {editedQuestion.sub_questions &&
                 editedQuestion.sub_questions.length > 0 ? (
-                  <DndProvider backend={HTML5Backend}>
-                    {editedQuestion.sub_questions.map((subQ, subIdx) => (
-                      <SubQuestion
-                        key={subQ.id}
-                        subQuestion={subQ}
-                        index={subIdx}
-                        isEditing={isEditing}
-                        onChange={handleSubQuestionChange}
-                        onRemove={handleRemoveSubQuestion}
-                        onMove={handleMoveSubQuestion}
-                        parentCode={editedQuestion.code}
-                      />
-                    ))}
-                  </DndProvider>
+                  editedQuestion.sub_questions.map((subQ, subIdx) => (
+                    <SubQuestion
+                      key={subQ.id}
+                      subQuestion={subQ}
+                      index={subIdx}
+                      isEditing={isEditing}
+                      onChange={handleSubQuestionChange}
+                      onRemove={handleRemoveSubQuestion}
+                      onMove={handleMoveSubQuestion}
+                      parentCode={editedQuestion.code}
+                    />
+                  ))
                 ) : (
                   <p className="text-sm text-gray-500 italic">
                     No subquestions yet

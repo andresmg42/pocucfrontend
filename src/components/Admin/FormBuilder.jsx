@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Database, Grid3x3, ListChecks } from "lucide-react";
 import { toast } from "sonner";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import QuestionCard from "./QuestionCard";
 import QuestionBankModal from "./QuestionBankModal";
 import CategorySubcategoryFilter from "./CategorySubcategoryFilter";
@@ -223,6 +225,28 @@ export default function FormBuilder({ survey, onClose }) {
     }, 50);
   };
 
+  const selectedCategoryId = selectedCategory?.id ?? null;
+  const selectedSubcategoryId = selectedSubcategory?.id ?? null;
+
+  const filteredQuestions = questions.filter((question) => {
+    if (!selectedCategoryId && !selectedSubcategoryId) return true;
+    const questionSubcategoryId = question.subcategory?.id ?? null;
+    const questionCategoryId = question.subcategory?.category ?? null;
+
+    if (selectedCategoryId && selectedSubcategoryId) {
+      return (
+        questionCategoryId === selectedCategoryId &&
+        questionSubcategoryId === selectedSubcategoryId
+      );
+    }
+
+    if (selectedCategoryId) {
+      return questionCategoryId === selectedCategoryId;
+    }
+
+    return questionSubcategoryId === selectedSubcategoryId;
+  });
+
   if (loading) {
     return (
       <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
@@ -280,66 +304,68 @@ export default function FormBuilder({ survey, onClose }) {
       </div>
 
       {/* Questions List */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-4xl mx-auto space-y-4">
-          {questions.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500 mb-4">
-                No questions yet. Start building your form!
-              </p>
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={handleAddUniqueResponseQuestion}
-                  className="inline-flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
-                >
-                  <ListChecks size={20} />
-                  Add Unique Response
-                </button>
-                <button
-                  onClick={handleAddMatrixQuestion}
-                  className="inline-flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
-                >
-                  <Grid3x3 size={20} />
-                  Add Matrix Question
-                </button>
+      <DndProvider backend={HTML5Backend}>
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <div className="max-w-4xl mx-auto space-y-4">
+            {filteredQuestions.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
+                <p className="text-gray-500 mb-4">
+                  No questions yet. Start building your form!
+                </p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={handleAddUniqueResponseQuestion}
+                    className="inline-flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
+                  >
+                    <ListChecks size={20} />
+                    Add Unique Response
+                  </button>
+                  <button
+                    onClick={handleAddMatrixQuestion}
+                    className="inline-flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
+                  >
+                    <Grid3x3 size={20} />
+                    Add Matrix Question
+                  </button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <>
-              {questions.map((question, index) => (
-                <QuestionCard
-                  key={question.id}
-                  setRef={(el) => (questionRefs.current[question.id] = el)}
-                  question={question}
-                  index={index}
-                  totalQuestions={questions.length}
-                  onSave={handleSaveQuestion}
-                  onDelete={handleDeleteQuestion}
-                  onUpdate={handleUpdateQuestion}
-                  onMoveUp={handleMoveQuestionUp}
-                  onMoveDown={handleMoveQuestionDown}
-                />
-              ))}
+            ) : (
+              <>
+                {filteredQuestions.map((question, index) => (
+                  <QuestionCard
+                    key={question.id}
+                    setRef={(el) => (questionRefs.current[question.id] = el)}
+                    question={question}
+                    index={index}
+                    totalQuestions={filteredQuestions.length}
+                    onSave={handleSaveQuestion}
+                    onDelete={handleDeleteQuestion}
+                    onUpdate={handleUpdateQuestion}
+                    onMoveUp={handleMoveQuestionUp}
+                    onMoveDown={handleMoveQuestionDown}
+                  />
+                ))}
 
-              {/* Add New Question Buttons */}
-              <div className="flex justify-center gap-4 py-4">
-                <button
-                  onClick={handleAddUniqueResponseQuestion}
-                  className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
-                >
-                  <ListChecks size={20} />+ Add Unique Response
-                </button>
-                <button
-                  onClick={handleAddMatrixQuestion}
-                  className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
-                >
-                  <Grid3x3 size={20} />+ Add Matrix Question
-                </button>
-              </div>
-            </>
-          )}
+                {/* Add New Question Buttons */}
+                <div className="flex justify-center gap-4 py-4">
+                  <button
+                    onClick={handleAddUniqueResponseQuestion}
+                    className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
+                  >
+                    <ListChecks size={20} />+ Add Unique Response
+                  </button>
+                  <button
+                    onClick={handleAddMatrixQuestion}
+                    className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
+                  >
+                    <Grid3x3 size={20} />+ Add Matrix Question
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      </DndProvider>
 
       {/* Question Bank Modal */}
       {showBankModal && (
