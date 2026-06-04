@@ -21,6 +21,7 @@ function SubQuestion({
   onRemove,
   onMove,
   parentCode,
+  parentId,
 }) {
   const displayCode = `${parentCode}.${index + 1}`;
   const subQuestionRef = useRef(null);
@@ -102,7 +103,7 @@ function SubQuestion({
           />
 
           <button
-            onClick={() => onRemove(subQuestion.id)}
+            onClick={() => onRemove(subQuestion.id, parentId)}
             className="text-red-600 hover:text-red-800"
           >
             <X size={16} />
@@ -123,6 +124,7 @@ function SubQuestion({
 }
 
 export default function QuestionCard({
+  onDeleteSubQuestions,
   question,
   index,
   totalQuestions,
@@ -230,7 +232,12 @@ export default function QuestionCard({
     handleFieldChange("sub_questions", reorderedWithPositions);
   };
 
-  const handleRemoveSubQuestion = (subQuestionId) => {
+  const handleRemoveSubQuestion = (subQuestionId, parentId) => {
+    onDeleteSubQuestions((prev) => {
+      const existing = prev[parentId] ?? [];
+      if (existing.includes(subQuestionId)) return prev;
+      return { ...prev, [parentId]: [...existing, subQuestionId] };
+    });
     const filteredSubQuestions = editedQuestion.sub_questions.filter(
       (sq) => sq.id !== subQuestionId,
     );
@@ -493,12 +500,14 @@ export default function QuestionCard({
                     <SubQuestion
                       key={subQ.id}
                       subQuestion={subQ}
+                      onDelete={onDeleteSubQuestions}
                       index={subIdx}
                       isEditing={isEditing}
                       onChange={handleSubQuestionChange}
                       onRemove={handleRemoveSubQuestion}
                       onMove={handleMoveSubQuestion}
                       parentCode={editedQuestion.code}
+                      parentId={editedQuestion.id}
                     />
                   ))
                 ) : (

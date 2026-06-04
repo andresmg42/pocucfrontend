@@ -15,6 +15,7 @@ export default function FormBuilder({ survey, onClose }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [showFilterWarning, setShowFilterWarning] = useState(false);
+  const [subQuestionsToDelete, setSubQuestionsToDelete] = useState({});
   const questionRefs = useRef({});
 
   useEffect(() => {
@@ -127,6 +128,19 @@ export default function FormBuilder({ survey, onClose }) {
         }
         toast.success("Question created successfully");
       } else {
+        console.log("questions to delete", subQuestionsToDelete[id]);
+
+        // Delete subquestions before update or create new ones
+        const subQuestionsForThisOne = subQuestionsToDelete[id] || [];
+        for (const subQuestionId of subQuestionsForThisOne) {
+          console.log("subquestionID", subQuestionId);
+          if (String(subQuestionId).startsWith("temp-")) continue;
+
+          await api.question.delete(subQuestionId);
+        }
+
+        setSubQuestionsToDelete((prev) => ({ ...prev, [id]: [] }));
+
         // Update existing question
         console.log("question to update", questionData);
         const { data: updatedQuestion } = await api.question.update(
@@ -374,6 +388,7 @@ export default function FormBuilder({ survey, onClose }) {
                     onUpdate={handleUpdateQuestion}
                     onMoveUp={handleMoveQuestionUp}
                     onMoveDown={handleMoveQuestionDown}
+                    onDeleteSubQuestions={setSubQuestionsToDelete}
                   />
                 ))}
 
