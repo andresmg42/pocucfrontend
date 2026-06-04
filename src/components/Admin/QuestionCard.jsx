@@ -201,12 +201,11 @@ export default function QuestionCard({
       question_type: "matrix_child",
       description: "",
       parent_question: editedQuestion.id,
-      survey: editedQuestion.survey,
+      survey: [...editedQuestion.survey],
       options: [],
       position: nextPosition,
-      sub_questions: [],
-      is_required: true,
-      input_type: "NUM",
+      is_required: editedQuestion.is_required,
+      input_type: editedQuestion.input_type,
       isNew: true,
     };
 

@@ -98,27 +98,57 @@ export default function FormBuilder({ survey, onClose }) {
   };
 
   const handleSaveQuestion = async (question) => {
+    const { isNew, sub_questions, id, ...questionDataRaw } = question;
+
+    const newOptions = questionDataRaw.options?.map((opt) => opt.id) || [];
+
+    const questionData = {
+      ...questionDataRaw,
+      options: newOptions,
+      subcategory: questionDataRaw.subcategory?.id,
+    };
+
     try {
-      let savedQuestion;
       if (question.isNew || typeof question.id === "string") {
         // Create new question
-        const { isNew, ...questionData } = question;
-        savedQuestion = await api.question.create(questionData);
+        console.log("question data", questionData);
+        const { data: savedQuestion } = await api.question.create(questionData);
         // Create subquestions if any
         if (question.sub_questions && question.sub_questions.length > 0) {
           for (const subQ of question.sub_questions) {
-            const { isNew: subIsNew, ...subQData } = subQ;
-            const createdSubQ = await api.question.create({
+            const { isNew: subIsNew, id, ...subQData } = subQ;
+            console.log("subquestion data", subQData);
+            const { data: createdSubQ } = await api.question.create({
               ...subQData,
               parent_question: savedQuestion.id,
-              survey: [survey.id],
+              subcategory: subQData.subcategory?.id,
             });
           }
         }
         toast.success("Question created successfully");
       } else {
         // Update existing question
-        savedQuestion = await api.question.update(question.id, question);
+        console.log("question to update", questionData);
+        const { data: updatedQuestion } = await api.question.update(
+          id,
+          questionData,
+        );
+        for (const subQRaw of question.sub_questions) {
+          const { isNew: subIsNew, id: subId, ...subQDataRaw } = subQRaw;
+          const subQ = {
+            ...subQDataRaw,
+            subcategory: subQDataRaw.subcategory?.id,
+            parent_question: id,
+          };
+          if (subIsNew) {
+            const { data: savedSubQuestion } = await api.question.create(subQ);
+          } else {
+            const { data: updatedSubQuestion } = await api.question.update(
+              subId,
+              subQ,
+            );
+          }
+        }
         toast.success("Question updated successfully");
       }
       await loadQuestions();
