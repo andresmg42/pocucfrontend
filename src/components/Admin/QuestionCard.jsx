@@ -186,7 +186,7 @@ export default function QuestionCard({
 
   const handleFieldChange = (field, value) => {
     const updated = { ...editedQuestion, [field]: value };
-    setEditedQuestion(updated);
+    setEditedQuestion((prev) => ({ ...prev, [field]: value }));
     onUpdate(updated);
   };
 
