@@ -38,30 +38,24 @@ function SubQuestion({
   const [, drop] = useDrop({
     accept: "SUBQUESTION",
     hover: (draggedItem, monitor) => {
-      if (!subQuestionRef.current) {
-        return;
-      }
+      if (!subQuestionRef.current) return;
 
       const dragIndex = draggedItem.index;
       const hoverIndex = index;
 
-      if (dragIndex === hoverIndex) {
-        return;
-      }
+      if (dragIndex === hoverIndex) return;
 
-      const hoverBoundingRect = subQuestionRef.current?.getBoundingClientRect();
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverBoundingRect = subQuestionRef.current.getBoundingClientRect();
       const clientOffset = monitor.getClientOffset();
+
+      if (!clientOffset) return; // ← null guard
+
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      const deadZoneTop = hoverBoundingRect.height * 0.2;
+      const deadZoneBottom = hoverBoundingRect.height * 0.8;
 
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
+      if (dragIndex < hoverIndex && hoverClientY < deadZoneBottom) return;
+      if (dragIndex > hoverIndex && hoverClientY > deadZoneTop) return;
 
       onMove(dragIndex, hoverIndex);
       draggedItem.index = hoverIndex;
