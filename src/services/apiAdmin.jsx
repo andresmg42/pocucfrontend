@@ -62,6 +62,9 @@ const apiAdmin = {
     getBySurvey: (surveyId) => {
       return api.get(`/question/get_questions_by_survey?survey_id=${surveyId}`);
     },
+    reorderQuestions: (data) => {
+      return api.post(`/question/reorder_questions`, data);
+    },
     // Get all questions (including those not linked to any survey) - for question bank
     getBank: () => {
       console.log(`📋 question.getBank() called`);

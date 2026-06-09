@@ -17,10 +17,30 @@ export default function FormBuilder({ survey, onClose }) {
   const [showFilterWarning, setShowFilterWarning] = useState(false);
   const [subQuestionsToDelete, setSubQuestionsToDelete] = useState({});
   const questionRefs = useRef({});
+  const [isReordering, setIsReordering] = useState(false);
 
   useEffect(() => {
     loadQuestions();
   }, [survey.id]);
+
+  useEffect(() => {
+    async function Reordering() {
+      if (questions.length === 0) return;
+
+      try {
+        const res = await api.question.reorderQuestions(questions);
+
+        console.log("response reorder", res.data);
+      } catch (error) {
+        console.error(
+          "an unexpected error ocurred in questions reordering ",
+          error,
+        );
+      }
+    }
+
+    Reordering();
+  }, [isReordering]);
 
   const loadQuestions = async () => {
     try {
@@ -275,6 +295,8 @@ export default function FormBuilder({ survey, onClose }) {
     }));
 
     setQuestions(reorderedWithPositions);
+
+    setIsReordering((prev) => !prev);
 
     setTimeout(() => {
       const element = questionRefs.current[questionId];
