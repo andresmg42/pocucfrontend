@@ -68,26 +68,7 @@ const apiAdmin = {
     // Get all questions (including those not linked to any survey) - for question bank
     getBank: () => {
       console.log(`📋 question.getBank() called`);
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const allQuestions = DB.question
-            .filter((q) => q.parent_question === null)
-            .map((parent) => {
-              const subQuestions = DB.question.filter(
-                (q) => q.parent_question === parent.id,
-              );
-              return {
-                ...parent,
-                sub_questions: subQuestions,
-              };
-            })
-            .sort((a, b) => a.position - b.position);
-          console.log(
-            `✅ question.getBank() returning ${allQuestions.length} questions`,
-          );
-          resolve(JSON.parse(JSON.stringify(allQuestions)));
-        }, 100);
-      });
+      return api.get("/question/get_questions_bank");
     },
   },
 };

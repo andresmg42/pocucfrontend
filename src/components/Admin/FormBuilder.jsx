@@ -188,6 +188,18 @@ export default function FormBuilder({ survey, onClose }) {
       await loadQuestions();
     } catch (error) {
       console.error("Error saving question:", error);
+
+      if (error.response?.data?.non_field_errors) {
+        const message = error.response.data.non_field_errors[0];
+        toast.error(`Error saving question: ${message}`);
+        return;
+      }
+
+      if (!error.response) {
+        toast.error("Network error, please check your connection.");
+        return;
+      }
+
       toast.error("Error saving question");
     }
   };
@@ -219,7 +231,7 @@ export default function FormBuilder({ survey, onClose }) {
     const questionsToAdd = selectedQuestions.map((q, index) => ({
       ...q,
       id: `temp-bank-${Date.now()}-${index}`,
-      survey: [...(q.survey || []), survey.id],
+      survey: [survey.id],
       position: maxPosition + index + 1,
       isNew: true,
     }));

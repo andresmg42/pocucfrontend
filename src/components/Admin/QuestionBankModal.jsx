@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Search } from "lucide-react";
-import api from "../../services/api";
+import api from "../../services/apiAdmin";
 
 export default function QuestionBankModal({
   onClose,
@@ -28,16 +28,26 @@ export default function QuestionBankModal({
   const loadData = async () => {
     try {
       setLoading(true);
-      const [questionsData, categoriesData, subcategoriesData] =
+      const [resQuestionData, resCategoriesData, resSubcategoriesData] =
         await Promise.all([
           api.question.getBank(),
           api.category.list(),
           api.subcategory.list(),
         ]);
+
+      const [questionsData, categoriesData, subcategoriesData] = [
+        resQuestionData.data,
+        resCategoriesData.data,
+        resSubcategoriesData.data,
+      ];
+
+      console.log("this is the question data:", questionsData);
       // Filter out questions that are already in this survey
       const availableQuestions = questionsData.filter(
         (q) => !q.survey || !q.survey.includes(surveyId),
       );
+
+      console.log("available questions", availableQuestions);
       setQuestions(availableQuestions);
       setCategories(categoriesData);
       setSubcategories(subcategoriesData);
