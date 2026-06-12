@@ -410,7 +410,7 @@ export default function QuestionCard({
                 Options
               </label>
               {isEditing ? (
-                <div className="space-y-2 bg-gray-50 p-3 rounded-lg">
+                <div className="space-y-2 bg-gray-50 p-3 rounded-lg max-h-50 overflow-y-auto">
                   {loadingOptions ? (
                     <p className="text-sm text-gray-500">Loading options...</p>
                   ) : (
