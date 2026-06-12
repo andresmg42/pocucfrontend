@@ -17,23 +17,22 @@ export default function CategorySubcategoryFilter({
   }, []);
 
   useEffect(() => {
-    if (selectedCategory) {
-      const filtered = subcategories.filter(
-        (sub) => sub.category === selectedCategory.id,
-      );
-      setFilteredSubcategories(filtered);
-      // Reset subcategory selection if it doesn't match the new category
-      if (
-        selectedSubcategory &&
-        selectedSubcategory.category !== selectedCategory.id
-      ) {
-        onSubcategoryChange(null);
-      }
-    } else {
+    if (!selectedCategory) {
       setFilteredSubcategories([]);
+    }
+
+    const filtered = subcategories.filter(
+      (sub) => sub.category === selectedCategory.id,
+    );
+    setFilteredSubcategories(filtered);
+    // Reset subcategory selection if it doesn't match the new category
+    if (
+      selectedSubcategory &&
+      selectedSubcategory.category !== selectedCategory.id
+    ) {
       onSubcategoryChange(null);
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, subcategories]);
 
   const loadData = async () => {
     try {
