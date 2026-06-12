@@ -9,7 +9,7 @@ export default function QuestionBankModal({
 }) {
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [selectedQuestions, setSelectedQuestions] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
@@ -91,30 +91,42 @@ export default function QuestionBankModal({
   };
 
   const handleToggleQuestion = (question) => {
-    const isSelected = selectedQuestions.find((q) => q.id === question.id);
-    if (isSelected) {
-      setSelectedQuestions(
-        selectedQuestions.filter((q) => q.id !== question.id),
-      );
-    } else {
-      setSelectedQuestions([...selectedQuestions, question]);
-    }
+    setSelectedQuestions((prev) => ({
+      ...prev,
+      [question.id]: !prev[question.id],
+    }));
   };
 
   const handleAddSelected = () => {
-    if (selectedQuestions.length === 0) {
+    const isAtLeastOneSelected = Object.values(selectedQuestions).reduce(
+      (acc, value) => acc || value,
+      false,
+    );
+    if (!isAtLeastOneSelected) {
       alert("Please select at least one question");
       return;
     }
-    onAddQuestions(selectedQuestions);
+    const questionsToAdd = filteredQuestions.filter(
+      (q) => !!selectedQuestions[q.id],
+    );
+    onAddQuestions(questionsToAdd);
   };
 
   const getSubcategoriesForCategory = (categoryId) => {
     return subcategories.filter((s) => s.category === parseInt(categoryId));
   };
 
+  const handleAllSelected = (checked) => {
+    const updated = filteredQuestions.reduce((acc, q) => {
+      acc[q.id] = checked;
+      return acc;
+    }, {});
+
+    setSelectedQuestions(updated);
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -208,57 +220,65 @@ export default function QuestionBankModal({
               <p className="text-gray-500">No questions found</p>
             </div>
           ) : (
-            <div className="space-y-3">
-              {filteredQuestions.map((question) => {
-                const isSelected = selectedQuestions.find(
-                  (q) => q.id === question.id,
-                );
-                return (
-                  <div
-                    key={question.id}
-                    onClick={() => handleToggleQuestion(question)}
-                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                      isSelected
-                        ? "border-red-700 bg-red-50"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => {}} // Handled by div onClick
-                        className="mt-1 w-4 h-4 text-red-700 border-gray-300 rounded focus:ring-red-500"
-                      />
+            <div>
+              <div className="flex  items-center gap-2 p-4 m-1">
+                <input
+                  type="checkbox"
+                  onChange={(e) => handleAllSelected(e.target.checked)}
+                  className="w-4 h-4 text-red-700 border-gray-300 rounded focus:ring-red-500"
+                />
 
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                            {question.code}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {question.subcategory.name}
-                          </span>
-                          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                            {question.question_type === "unique_response"
-                              ? "Unique"
-                              : "Matrix"}
-                          </span>
+                <span>All</span>
+              </div>
+
+              <div className="space-y-3">
+                {filteredQuestions.map((question) => {
+                  return (
+                    <div
+                      key={question.id}
+                      onClick={() => handleToggleQuestion(question)}
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        !!selectedQuestions[question.id]
+                          ? "border-red-700 bg-red-50"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={!!selectedQuestions[question.id]}
+                          className="mt-1 w-4 h-4 text-red-700 border-gray-300 rounded focus:ring-red-500"
+                        />
+
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                              {question.code}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {question.subcategory.name}
+                            </span>
+                            <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                              {question.question_type === "unique_response"
+                                ? "Unique"
+                                : "Matrix"}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-900">
+                            {question.description}
+                          </p>
+                          {question.sub_questions &&
+                            question.sub_questions.length > 0 && (
+                              <p className="text-xs text-gray-500 mt-1">
+                                {question.sub_questions.length} subquestion(s)
+                              </p>
+                            )}
                         </div>
-                        <p className="text-sm text-gray-900">
-                          {question.description}
-                        </p>
-                        {question.sub_questions &&
-                          question.sub_questions.length > 0 && (
-                            <p className="text-xs text-gray-500 mt-1">
-                              {question.sub_questions.length} subquestion(s)
-                            </p>
-                          )}
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -266,7 +286,7 @@ export default function QuestionBankModal({
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
           <p className="text-sm text-gray-600">
-            {selectedQuestions.length} question(s) selected
+            {Object.values(selectedQuestions).length} question(s) selected
           </p>
           <div className="flex gap-3">
             <button
@@ -277,7 +297,12 @@ export default function QuestionBankModal({
             </button>
             <button
               onClick={handleAddSelected}
-              disabled={selectedQuestions.length === 0}
+              disabled={
+                !Object.values(selectedQuestions).reduce(
+                  (acc, value) => acc || value,
+                  false,
+                )
+              }
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Add Selected Questions
