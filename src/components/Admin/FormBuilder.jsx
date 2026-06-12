@@ -345,35 +345,10 @@ export default function FormBuilder({ survey, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-50 z-50 overflow-hidden flex flex-col">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={onClose}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Back to Surveys
-          </button>
-          <div className="h-6 w-px bg-gray-300"></div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">{survey.name}</h1>
-            <p className="text-sm text-gray-500">Form Builder</p>
-          </div>
-        </div>
-
-        <button
-          onClick={() => setShowBankModal(true)}
-          className="flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
-        >
-          <Database size={20} />+ Add from Bank
-        </button>
-      </div>
-
+    <div className="flex h-screen">
       {/* Category/Subcategory Filter */}
       <div
-        className={`bg-white border-b border-gray-200 px-6 py-4 ${showFilterWarning ? "ring-2 ring-red-500" : ""}`}
+        className={`bg-white w-80 border-b border-gray-200 px-6 py-4 ${showFilterWarning ? "ring-2 ring-red-500" : ""}`}
       >
         <CategorySubcategoryFilter
           selectedCategory={selectedCategory}
@@ -389,79 +364,107 @@ export default function FormBuilder({ survey, onClose }) {
         )}
       </div>
 
-      {/* Questions List */}
-      <DndProvider backend={HTML5Backend}>
-        <div className="flex-1 overflow-y-auto px-6 py-6">
-          <div className="max-w-4xl mx-auto space-y-4">
-            {filteredQuestions.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-                <p className="text-gray-500 mb-4">
-                  No questions yet. Start building your form!
-                </p>
-                <div className="flex justify-center gap-4">
-                  <button
-                    onClick={handleAddUniqueResponseQuestion}
-                    className="inline-flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
-                  >
-                    <ListChecks size={20} />
-                    Add Unique Response
-                  </button>
-                  <button
-                    onClick={handleAddMatrixQuestion}
-                    className="inline-flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
-                  >
-                    <Grid3x3 size={20} />
-                    Add Matrix Question
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <>
-                {filteredQuestions.map((question, index) => (
-                  <QuestionCard
-                    key={question.id}
-                    setRef={(el) => (questionRefs.current[question.id] = el)}
-                    question={question}
-                    index={index}
-                    totalQuestions={filteredQuestions.length}
-                    onSave={handleSaveQuestion}
-                    onDelete={handleDeleteQuestion}
-                    onUpdate={handleUpdateQuestion}
-                    onMoveUp={handleMoveQuestionUp}
-                    onMoveDown={handleMoveQuestionDown}
-                    onDeleteSubQuestions={setSubQuestionsToDelete}
-                  />
-                ))}
-
-                {/* Add New Question Buttons */}
-                <div className="flex justify-center gap-4 py-4">
-                  <button
-                    onClick={handleAddUniqueResponseQuestion}
-                    className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
-                  >
-                    <ListChecks size={20} />+ Add Unique Response
-                  </button>
-                  <button
-                    onClick={handleAddMatrixQuestion}
-                    className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
-                  >
-                    <Grid3x3 size={20} />+ Add Matrix Question
-                  </button>
-                </div>
-              </>
-            )}
+      {/* Main Content */}
+      <div className="flex-1 bg-gray-50  overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onClose}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft size={20} />
+              Back to Surveys
+            </button>
+            <div className="h-6 w-px bg-gray-300"></div>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">{survey.name}</h1>
+              <p className="text-sm text-gray-500">Form Builder</p>
+            </div>
           </div>
-        </div>
-      </DndProvider>
 
-      {/* Question Bank Modal */}
-      {showBankModal && (
-        <QuestionBankModal
-          onClose={() => setShowBankModal(false)}
-          onAddQuestions={handleAddFromBank}
-          surveyId={survey.id}
-        />
-      )}
+          <button
+            onClick={() => setShowBankModal(true)}
+            className="flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
+          >
+            <Database size={20} />+ Add from Bank
+          </button>
+        </div>
+
+        {/* Questions List */}
+        <DndProvider backend={HTML5Backend}>
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            <div className="max-w-4xl mx-auto space-y-4">
+              {filteredQuestions.length === 0 ? (
+                <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
+                  <p className="text-gray-500 mb-4">
+                    No questions yet. Start building your form!
+                  </p>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={handleAddUniqueResponseQuestion}
+                      className="inline-flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
+                    >
+                      <ListChecks size={20} />
+                      Add Unique Response
+                    </button>
+                    <button
+                      onClick={handleAddMatrixQuestion}
+                      className="inline-flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
+                    >
+                      <Grid3x3 size={20} />
+                      Add Matrix Question
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {filteredQuestions.map((question, index) => (
+                    <QuestionCard
+                      key={question.id}
+                      setRef={(el) => (questionRefs.current[question.id] = el)}
+                      question={question}
+                      index={index}
+                      totalQuestions={filteredQuestions.length}
+                      onSave={handleSaveQuestion}
+                      onDelete={handleDeleteQuestion}
+                      onUpdate={handleUpdateQuestion}
+                      onMoveUp={handleMoveQuestionUp}
+                      onMoveDown={handleMoveQuestionDown}
+                      onDeleteSubQuestions={setSubQuestionsToDelete}
+                    />
+                  ))}
+
+                  {/* Add New Question Buttons */}
+                  <div className="flex justify-center gap-4 py-4">
+                    <button
+                      onClick={handleAddUniqueResponseQuestion}
+                      className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
+                    >
+                      <ListChecks size={20} />+ Add Unique Response
+                    </button>
+                    <button
+                      onClick={handleAddMatrixQuestion}
+                      className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
+                    >
+                      <Grid3x3 size={20} />+ Add Matrix Question
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </DndProvider>
+
+        {/* Question Bank Modal */}
+        {showBankModal && (
+          <QuestionBankModal
+            onClose={() => setShowBankModal(false)}
+            onAddQuestions={handleAddFromBank}
+            surveyId={survey.id}
+          />
+        )}
+      </div>
     </div>
   );
 }
