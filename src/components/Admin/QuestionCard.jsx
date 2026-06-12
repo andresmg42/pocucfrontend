@@ -11,6 +11,7 @@ import {
 import { toast } from "sonner";
 import { useDrag, useDrop } from "react-dnd";
 import api from "../../services/apiAdmin";
+import { a } from "@table-library/react-table-library/index-dc5a56d8";
 
 // Draggable subquestion component
 function SubQuestion({
@@ -120,6 +121,7 @@ function SubQuestion({
 export default function QuestionCard({
   onDeleteSubQuestions,
   question,
+  questions,
   index,
   totalQuestions,
   onSave,
@@ -267,6 +269,16 @@ export default function QuestionCard({
     }
   };
 
+  const validateCodeByCategory = (editedQuestion) => {
+    const categoryOfEditedQuestion = editedQuestion.subcategory.category;
+    return !questions.some(
+      (q) =>
+        q.id !== editedQuestion.id &&
+        q.subcategory.category === categoryOfEditedQuestion &&
+        q.code === editedQuestion.code,
+    );
+  };
+
   const handleSave = () => {
     // Validation
     if (!editedQuestion.code.trim()) {
@@ -275,6 +287,11 @@ export default function QuestionCard({
     }
     if (!editedQuestion.description.trim()) {
       alert("Please enter a question description");
+      return;
+    }
+
+    if (!validateCodeByCategory(editedQuestion)) {
+      alert("Please choose a different question code");
       return;
     }
 

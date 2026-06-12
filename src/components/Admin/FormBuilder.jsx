@@ -424,6 +424,7 @@ export default function FormBuilder({ survey, onClose }) {
                       key={question.id}
                       setRef={(el) => (questionRefs.current[question.id] = el)}
                       question={question}
+                      questions={questions}
                       index={index}
                       totalQuestions={filteredQuestions.length}
                       onSave={handleSaveQuestion}
