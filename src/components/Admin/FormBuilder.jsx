@@ -134,6 +134,7 @@ export default function FormBuilder({ survey, onClose }) {
         // Create new question
         console.log("question data", questionData);
         const { data: savedQuestion } = await api.question.create(questionData);
+
         // Create subquestions if any
         if (question.sub_questions && question.sub_questions.length > 0) {
           for (const subQ of question.sub_questions) {
@@ -148,8 +149,6 @@ export default function FormBuilder({ survey, onClose }) {
         }
         toast.success("Question created successfully");
       } else {
-        console.log("questions to delete", subQuestionsToDelete[id]);
-
         // Delete subquestions before update or create new ones
         const subQuestionsForThisOne = subQuestionsToDelete[id] || [];
         for (const subQuestionId of subQuestionsForThisOne) {
@@ -162,7 +161,7 @@ export default function FormBuilder({ survey, onClose }) {
         setSubQuestionsToDelete((prev) => ({ ...prev, [id]: [] }));
 
         // Update existing question
-        console.log("question to update", questionData);
+
         const { data: updatedQuestion } = await api.question.update(
           id,
           questionData,
@@ -228,15 +227,23 @@ export default function FormBuilder({ survey, onClose }) {
     const maxPosition =
       questions.length > 0 ? Math.max(...questions.map((q) => q.position)) : 0;
 
+    const timestamp = Date.now();
+
     const questionsToAdd = selectedQuestions.map((q, index) => ({
       ...q,
-      id: `temp-bank-${Date.now()}-${index}`,
+      id: `temp-bank-${timestamp}-${index}`,
       survey: [survey.id],
       position: maxPosition + index + 1,
       isNew: true,
+      sub_questions: q.sub_questions.map((sub_q, subIndex) => ({
+        ...sub_q,
+        survey: [survey.id],
+        id: `temp-bank-${timestamp}-${subIndex}`,
+        isNew: true,
+      })),
     }));
 
-    setQuestions([...questions, ...questionsToAdd]);
+    setQuestions((prev) => [...prev, ...questionsToAdd]);
     setShowBankModal(false);
     toast.success(`Added ${selectedQuestions.length} question(s) from bank`);
   };
