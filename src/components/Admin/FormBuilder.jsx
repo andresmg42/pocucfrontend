@@ -395,7 +395,12 @@ export default function FormBuilder({ survey, onClose }) {
 
         {/* Questions List */}
         <DndProvider backend={HTML5Backend}>
-          <div className="flex-1 overflow-y-auto px-6 py-6">
+          <div className="flex-1 overflow-y-auto px-6 py-6 relative">
+            {actionLoading && (
+              <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-700" />
+              </div>
+            )}
             <div className="max-w-4xl mx-auto space-y-4">
               {filteredQuestions.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
@@ -453,6 +458,7 @@ export default function FormBuilder({ survey, onClose }) {
                       <Grid3x3 size={20} />+ Add Matrix Question
                     </button>
                   </div>
+                  <div className="h-50"></div>
                 </>
               )}
             </div>
