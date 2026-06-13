@@ -10,7 +10,7 @@ import api from "../../services/apiAdmin";
 
 export default function FormBuilder({ survey, onClose }) {
   const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [showBankModal, setShowBankModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -18,9 +18,11 @@ export default function FormBuilder({ survey, onClose }) {
   const [subQuestionsToDelete, setSubQuestionsToDelete] = useState({});
   const questionRefs = useRef({});
   const [isReordering, setIsReordering] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
-    loadQuestions();
+    loadQuestions(true);
   }, [survey.id]);
 
   useEffect(() => {
@@ -42,9 +44,9 @@ export default function FormBuilder({ survey, onClose }) {
     Reordering();
   }, [isReordering]);
 
-  const loadQuestions = async () => {
+  const loadQuestions = async (isInitial = false) => {
     try {
-      setLoading(true);
+      isInitial ? setInitialLoading(true) : setActionLoading(true);
       const result = await api.question.getBySurvey(survey.id);
       console.log("questions from backend", result.data);
       setQuestions(result.data);
@@ -52,7 +54,7 @@ export default function FormBuilder({ survey, onClose }) {
       console.error("Error loading questions:", error);
       toast.error("Error loading questions");
     } finally {
-      setLoading(false);
+      isInitial ? setInitialLoading(false) : setActionLoading(false);
     }
   };
 
@@ -333,7 +335,7 @@ export default function FormBuilder({ survey, onClose }) {
     moveQuestionById(questionId, 1);
   };
 
-  if (loading) {
+  if (initialLoading) {
     return (
       <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
         <div className="text-center">

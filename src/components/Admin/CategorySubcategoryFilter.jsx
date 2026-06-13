@@ -19,6 +19,7 @@ export default function CategorySubcategoryFilter({
   useEffect(() => {
     if (!selectedCategory) {
       setFilteredSubcategories([]);
+      return;
     }
 
     const filtered = subcategories.filter(
@@ -32,7 +33,7 @@ export default function CategorySubcategoryFilter({
     ) {
       onSubcategoryChange(null);
     }
-  }, [selectedCategory, subcategories]);
+  }, [selectedCategory]);
 
   const loadData = async () => {
     try {
