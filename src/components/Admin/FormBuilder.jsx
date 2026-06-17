@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Database, Grid3x3, ListChecks } from "lucide-react";
+import {
+  ArrowLeft,
+  Database,
+  Grid3x3,
+  ListChecks,
+  RefreshCw,
+} from "lucide-react";
 import { toast } from "sonner";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -20,10 +26,15 @@ export default function FormBuilder({ survey, onClose }) {
   const [isReordering, setIsReordering] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     loadQuestions(true);
   }, [survey.id]);
+
+  useEffect(() => {
+    loadQuestions();
+  }, [refresh]);
 
   useEffect(() => {
     async function Reordering() {
@@ -186,7 +197,7 @@ export default function FormBuilder({ survey, onClose }) {
         }
         toast.success("Question updated successfully");
       }
-      await loadQuestions();
+      // await loadQuestions();
     } catch (error) {
       console.error("Error saving question:", error);
 
@@ -373,7 +384,7 @@ export default function FormBuilder({ survey, onClose }) {
           <div className="flex items-center gap-4">
             <button
               onClick={onClose}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex cursor-pointer items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft size={20} />
               Back to Surveys
@@ -385,12 +396,21 @@ export default function FormBuilder({ survey, onClose }) {
             </div>
           </div>
 
-          <button
-            onClick={() => setShowBankModal(true)}
-            className="flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
-          >
-            <Database size={20} />+ Add from Bank
-          </button>
+          <div className="flex gap-10">
+            <button>
+              <RefreshCw
+                onClick={() => setRefresh((prev) => !prev)}
+                className="cursor-pointer"
+              />
+            </button>
+
+            <button
+              onClick={() => setShowBankModal(true)}
+              className="flex cursor-pointer items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
+            >
+              <Database size={20} />+ Add from Bank
+            </button>
+          </div>
         </div>
 
         {/* Questions List */}

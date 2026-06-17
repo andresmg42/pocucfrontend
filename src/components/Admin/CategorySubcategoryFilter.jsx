@@ -54,6 +54,7 @@ export default function CategorySubcategoryFilter({
   const handleCategorySelect = (categoryId) => {
     const category = categories.find((c) => c.id === parseInt(categoryId));
     onCategoryChange(category || null);
+    if (!category) onSubcategoryChange(null);
   };
 
   const handleSubcategorySelect = (subcategoryId) => {
