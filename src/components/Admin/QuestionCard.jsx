@@ -141,12 +141,15 @@ export default function QuestionCard({
 
   useEffect(() => {
     loadOptions();
-  }, []);
+  }, [editedQuestion.input_type]);
 
   const loadOptions = async () => {
     try {
-      const result = await api.option.list();
-      setOptions(result.data);
+      const matchingType = editedQuestion.input_type;
+      console.log("matchingtype:", matchingType);
+      const result = await api.option.getOptions(matchingType || null);
+      const options = result?.data || [];
+      setOptions(options);
     } catch (error) {
       console.error("Error loading options:", error);
     } finally {

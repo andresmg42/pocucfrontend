@@ -50,7 +50,15 @@ const apiAdmin = {
     ...createAPI("observer"),
     createValidUser: (data) => api.post("/observer/create/", data),
   },
-  option: createAPI("options"),
+  option: {
+    ...createAPI("option"),
+    getOptions: (matchingType = null) => {
+      if (matchingType) {
+        return api.get(`/options?matching_type=${matchingType}`);
+      }
+      return api.get("/options/");
+    },
+  },
   response: createAPI("response"),
   subcategory: createAPI("subcategory"),
   survey: createAPI("survey/surveys"),
