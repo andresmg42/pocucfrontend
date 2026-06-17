@@ -27,13 +27,16 @@ export default function FormBuilder({ survey, onClose }) {
   const [initialLoading, setInitialLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
     loadQuestions(true);
+    loadOptions();
   }, [survey.id]);
 
   useEffect(() => {
     loadQuestions();
+    loadOptions();
   }, [refresh]);
 
   useEffect(() => {
@@ -54,6 +57,19 @@ export default function FormBuilder({ survey, onClose }) {
 
     Reordering();
   }, [isReordering]);
+
+  const loadOptions = async () => {
+    try {
+      const result = await api.option.getOptions();
+      const options = result?.data || [];
+      console.log("options uploaded from the backend", options);
+      setOptions(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    } finally {
+      setLoadingOptions(false);
+    }
+  };
 
   const loadQuestions = async (isInitial = false) => {
     try {
@@ -451,6 +467,7 @@ export default function FormBuilder({ survey, onClose }) {
                       key={question.id}
                       setRef={(el) => (questionRefs.current[question.id] = el)}
                       question={question}
+                      globalOptions={options}
                       questions={questions}
                       index={index}
                       totalQuestions={filteredQuestions.length}

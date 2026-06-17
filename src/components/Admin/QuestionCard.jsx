@@ -121,6 +121,7 @@ function SubQuestion({
 export default function QuestionCard({
   onDeleteSubQuestions,
   question,
+  globalOptions,
   questions,
   index,
   totalQuestions,
@@ -140,22 +141,17 @@ export default function QuestionCard({
   const [creatingOption, setCreatingOption] = useState(false);
 
   useEffect(() => {
-    loadOptions();
-  }, [editedQuestion.input_type]);
-
-  const loadOptions = async () => {
-    try {
-      const matchingType = editedQuestion.input_type;
-      console.log("matchingtype:", matchingType);
-      const result = await api.option.getOptions(matchingType || null);
-      const options = result?.data || [];
-      setOptions(options);
-    } catch (error) {
-      console.error("Error loading options:", error);
-    } finally {
-      setLoadingOptions(false);
+    if (globalOptions.length === 0) {
+      setLoadingOptions(true);
+      return;
     }
-  };
+    const filteredOptions = globalOptions.filter(
+      (opt) => opt.type === editedQuestion.input_type,
+    );
+    console.log("filtered options:", filteredOptions);
+    setOptions(filteredOptions);
+    setLoadingOptions(false);
+  }, [editedQuestion.input_type]);
 
   const handleCreateOption = async () => {
     if (!newOptionName.trim()) {
@@ -402,7 +398,7 @@ export default function QuestionCard({
           </div>
 
           {/* Question Description */}
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="block text-xs font-medium text-gray-600 mb-1">
               Question *
             </label>
@@ -422,6 +418,28 @@ export default function QuestionCard({
               </p>
             )}
           </div>
+
+          {isEditing && (
+            <div className="mb-3">
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Input Type
+              </label>
+              <select
+                value={editedQuestion.input_type}
+                onChange={(e) => {
+                  setEditedQuestion((prev) => ({
+                    ...prev,
+                    input_type: e.target.value,
+                    options: [],
+                  }));
+                }}
+                className="w-full px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="NUM">Numeric</option>
+                <option value="STR">Text</option>
+              </select>
+            </div>
+          )}
 
           {/* Options (only for non-matrix_child questions) */}
           {editedQuestion.question_type !== "matrix_child" && (
@@ -470,9 +488,9 @@ export default function QuestionCard({
                 <div className="space-y-1">
                   {editedQuestion.options &&
                   editedQuestion.options.length > 0 ? (
-                    editedQuestion.options.map((option, idx) => (
+                    editedQuestion.options.map((option) => (
                       <div
-                        key={idx}
+                        key={option.id}
                         className="flex items-center gap-2 text-sm text-gray-700"
                       >
                         <div className="w-4 h-4 rounded-full border-2 border-gray-400"></div>
@@ -550,21 +568,6 @@ export default function QuestionCard({
                   <span className="text-sm text-gray-700">Required</span>
                 </label>
               </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
-                  Input Type
-                </label>
-                <select
-                  value={editedQuestion.input_type}
-                  onChange={(e) =>
-                    handleFieldChange("input_type", e.target.value)
-                  }
-                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                >
-                  <option value="NUM">Numeric</option>
-                  <option value="STR">Text</option>
-                </select>
-              </div>
             </div>
           )}
         </div>
@@ -596,6 +599,14 @@ export default function QuestionCard({
           >
             <Trash2 size={20} />
           </button>
+          {isEditing && (
+            <button
+              onClick={() => setIsEditing(false)}
+              className="cursor-pointer"
+            >
+              <X />
+            </button>
+          )}
         </div>
       </div>
 
