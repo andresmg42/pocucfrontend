@@ -28,6 +28,7 @@ export default function FormBuilder({ survey, onClose }) {
   const [actionLoading, setActionLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [options, setOptions] = useState([]);
+  // const [loadingOptions, setLoadingOptions] = useState(true);
 
   useEffect(() => {
     loadQuestions(true);
@@ -45,8 +46,6 @@ export default function FormBuilder({ survey, onClose }) {
 
       try {
         const res = await api.question.reorderQuestions(questions);
-
-        console.log("response reorder", res.data);
       } catch (error) {
         console.error(
           "an unexpected error ocurred in questions reordering ",
@@ -62,12 +61,10 @@ export default function FormBuilder({ survey, onClose }) {
     try {
       const result = await api.option.getOptions();
       const options = result?.data || [];
-      console.log("options uploaded from the backend", options);
+
       setOptions(options);
     } catch (error) {
       console.error("Error loading options:", error);
-    } finally {
-      setLoadingOptions(false);
     }
   };
 
@@ -75,7 +72,7 @@ export default function FormBuilder({ survey, onClose }) {
     try {
       isInitial ? setInitialLoading(true) : setActionLoading(true);
       const result = await api.question.getBySurvey(survey.id);
-      console.log("questions from backend", result.data);
+
       setQuestions(result.data);
     } catch (error) {
       console.error("Error loading questions:", error);
@@ -161,27 +158,38 @@ export default function FormBuilder({ survey, onClose }) {
     try {
       if (question.isNew || typeof question.id === "string") {
         // Create new question
-        console.log("question data", questionData);
+
         const { data: savedQuestion } = await api.question.create(questionData);
 
         // Create subquestions if any
         if (question.sub_questions && question.sub_questions.length > 0) {
           for (const subQ of question.sub_questions) {
             const { isNew: subIsNew, id, ...subQData } = subQ;
-            console.log("subquestion data", subQData);
-            const { data: createdSubQ } = await api.question.create({
+
+            await api.question.create({
               ...subQData,
               parent_question: savedQuestion.id,
               subcategory: subQData.subcategory?.id,
             });
           }
         }
+
+        const { data: freshData } = await api.question.getBySurvey(
+          survey.id,
+          savedQuestion.id,
+        );
+        const newQuestion = freshData[0];
+
+        setQuestions((prev) =>
+          prev.map((q) => (q.id === question.id ? newQuestion : q)),
+        );
+
         toast.success("Question created successfully");
       } else {
         // Delete subquestions before update or create new ones
         const subQuestionsForThisOne = subQuestionsToDelete[id] || [];
+
         for (const subQuestionId of subQuestionsForThisOne) {
-          console.log("subquestionID", subQuestionId);
           if (String(subQuestionId).startsWith("temp-")) continue;
 
           await api.question.delete(subQuestionId);
@@ -203,17 +211,24 @@ export default function FormBuilder({ survey, onClose }) {
             parent_question: id,
           };
           if (subIsNew) {
-            const { data: savedSubQuestion } = await api.question.create(subQ);
+            await api.question.create(subQ);
           } else {
-            const { data: updatedSubQuestion } = await api.question.update(
-              subId,
-              subQ,
-            );
+            await api.question.update(subId, subQ);
           }
         }
+
+        const { data: freshData } = await api.question.getBySurvey(
+          survey.id,
+          updatedQuestion.id,
+        );
+        const newQuestion = freshData[0];
+
+        setQuestions((prev) =>
+          prev.map((q) => (q.id === updatedQuestion.id ? newQuestion : q)),
+        );
+
         toast.success("Question updated successfully");
       }
-      // await loadQuestions();
     } catch (error) {
       console.error("Error saving question:", error);
 
@@ -275,12 +290,6 @@ export default function FormBuilder({ survey, onClose }) {
     setQuestions((prev) => [...prev, ...questionsToAdd]);
     setShowBankModal(false);
     toast.success(`Added ${selectedQuestions.length} question(s) from bank`);
-  };
-
-  const handleUpdateQuestion = (updatedQuestion) => {
-    setQuestions(
-      questions.map((q) => (q.id === updatedQuestion.id ? updatedQuestion : q)),
-    );
   };
 
   const selectedCategoryId = selectedCategory?.id ?? null;
@@ -466,7 +475,7 @@ export default function FormBuilder({ survey, onClose }) {
                     <QuestionCard
                       key={question.id}
                       setRef={(el) => (questionRefs.current[question.id] = el)}
-                      question={question}
+                      question={structuredClone(question)}
                       globalOptions={options}
                       questions={questions}
                       index={index}
@@ -474,7 +483,6 @@ export default function FormBuilder({ survey, onClose }) {
                       refresh={refresh}
                       onSave={handleSaveQuestion}
                       onDelete={handleDeleteQuestion}
-                      onUpdate={handleUpdateQuestion}
                       onMoveUp={handleMoveQuestionUp}
                       onMoveDown={handleMoveQuestionDown}
                       onDeleteSubQuestions={setSubQuestionsToDelete}

@@ -67,8 +67,15 @@ const apiAdmin = {
   zone: createAPI("zone"),
   question: {
     ...createAPI("question"),
-    getBySurvey: (surveyId) => {
-      return api.get(`/question/get_questions_by_survey?survey_id=${surveyId}`);
+    getBySurvey: (surveyId, question_id = null) => {
+      if (!question_id) {
+        return api.get(
+          `/question/get_questions_by_survey?survey_id=${surveyId}`,
+        );
+      }
+      return api.get(
+        `/question/get_questions_by_survey?survey_id=${surveyId}&question_id=${question_id}`,
+      );
     },
     reorderQuestions: (data) => {
       return api.post(`/question/reorder_questions`, data);

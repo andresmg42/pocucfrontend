@@ -7,6 +7,7 @@ import {
   ChevronUp,
   ChevronDown,
   GripVertical,
+  RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDrag, useDrop } from "react-dnd";
@@ -127,7 +128,6 @@ export default function QuestionCard({
   totalQuestions,
   onSave,
   onDelete,
-  onUpdate,
   onMoveUp,
   onMoveDown,
   setRef,
@@ -136,8 +136,9 @@ export default function QuestionCard({
   const [isEditing, setIsEditing] = useState(question.isNew || false);
   const [editedQuestion, setEditedQuestion] = useState({});
   const [options, setOptions] = useState([]);
-  const [loadingOptions, setLoadingOptions] = useState(true);
   const [showCreateOptionModal, setShowCreateOptionModal] = useState(false);
+  const [localRefresh, setLocalRefresh] = useState(false);
+  const [loadingOptions, setLoadingOptions] = useState(true);
   const [newOption, setNewOption] = useState({
     type: editedQuestion.input_type,
   });
@@ -145,7 +146,7 @@ export default function QuestionCard({
 
   useEffect(() => {
     setEditedQuestion({ ...question });
-  }, [refresh, question]);
+  }, [refresh, localRefresh]);
 
   useEffect(() => {
     if (!globalOptions || globalOptions.length === 0) {
@@ -159,13 +160,19 @@ export default function QuestionCard({
       const filteredOptions = globalOptions.filter(
         (opt) => opt.type === activeInputType,
       );
-      console.log("filtered options:", filteredOptions);
+
       setOptions(filteredOptions);
 
       setNewOption((prev) => ({ ...prev, type: activeInputType }));
     }
     setLoadingOptions(false);
-  }, [editedQuestion.input_type, refresh, globalOptions, question.input_type]);
+  }, [
+    editedQuestion.input_type,
+    refresh,
+    globalOptions,
+    question.input_type,
+    localRefresh,
+  ]);
 
   function isStringANumber(str) {
     if (typeof str !== "string" || str.trim() === "") {
@@ -175,17 +182,12 @@ export default function QuestionCard({
   }
 
   const handleCreateOption = async () => {
-    console.log("newOption name", newOption.name);
-
     if (newOption && !newOption.name?.trim()) {
       toast.error("Please enter an option name");
       return;
     }
 
     const isNumber = isStringANumber(newOption.name);
-
-    console.log("isNumber", isNumber);
-    console.log("option type", newOption.type);
 
     if (
       (isNumber && newOption.type === "STR") ||
@@ -227,9 +229,7 @@ export default function QuestionCard({
   };
 
   const handleFieldChange = (field, value) => {
-    const updated = { ...editedQuestion, [field]: value };
     setEditedQuestion((prev) => ({ ...prev, [field]: value }));
-    onUpdate(updated);
   };
 
   const handleAddSubQuestion = () => {
@@ -620,13 +620,21 @@ export default function QuestionCard({
         {/* Action Buttons */}
         <div className="flex-shrink-0 flex gap-2">
           {isEditing ? (
-            <button
-              onClick={handleSave}
-              className="p-2 text-green-700 hover:bg-green-50 rounded-lg transition-colors"
-              title="Save"
-            >
-              <Save size={20} />
-            </button>
+            <div className="flex gap-4">
+              <button>
+                <RefreshCw
+                  onClick={() => setLocalRefresh((prev) => !prev)}
+                  className="cursor-pointer"
+                />
+              </button>
+              <button
+                onClick={handleSave}
+                className="p-2 text-green-700 hover:bg-green-50 rounded-lg transition-colors"
+                title="Save"
+              >
+                <Save size={20} />
+              </button>
+            </div>
           ) : (
             <button
               onClick={() => setIsEditing(true)}
