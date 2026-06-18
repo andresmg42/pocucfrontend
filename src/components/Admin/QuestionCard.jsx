@@ -131,51 +131,96 @@ export default function QuestionCard({
   onMoveUp,
   onMoveDown,
   setRef,
+  refresh,
 }) {
   const [isEditing, setIsEditing] = useState(question.isNew || false);
-  const [editedQuestion, setEditedQuestion] = useState({ ...question });
+  const [editedQuestion, setEditedQuestion] = useState({});
   const [options, setOptions] = useState([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
   const [showCreateOptionModal, setShowCreateOptionModal] = useState(false);
-  const [newOptionName, setNewOptionName] = useState("");
+  const [newOption, setNewOption] = useState({
+    type: editedQuestion.input_type,
+  });
   const [creatingOption, setCreatingOption] = useState(false);
 
   useEffect(() => {
-    if (globalOptions.length === 0) {
+    setEditedQuestion({ ...question });
+  }, [refresh, question]);
+
+  useEffect(() => {
+    if (!globalOptions || globalOptions.length === 0) {
       setLoadingOptions(true);
       return;
     }
-    const filteredOptions = globalOptions.filter(
-      (opt) => opt.type === editedQuestion.input_type,
-    );
-    console.log("filtered options:", filteredOptions);
-    setOptions(filteredOptions);
+
+    const activeInputType = editedQuestion?.input_type || question?.input_type;
+
+    if (activeInputType) {
+      const filteredOptions = globalOptions.filter(
+        (opt) => opt.type === activeInputType,
+      );
+      console.log("filtered options:", filteredOptions);
+      setOptions(filteredOptions);
+
+      setNewOption((prev) => ({ ...prev, type: activeInputType }));
+    }
     setLoadingOptions(false);
-  }, [editedQuestion.input_type]);
+  }, [editedQuestion.input_type, refresh, globalOptions, question.input_type]);
+
+  function isStringANumber(str) {
+    if (typeof str !== "string" || str.trim() === "") {
+      return false;
+    }
+    return !isNaN(str) && !isNaN(parseFloat(str));
+  }
 
   const handleCreateOption = async () => {
-    if (!newOptionName.trim()) {
+    console.log("newOption name", newOption.name);
+
+    if (newOption && !newOption.name?.trim()) {
       toast.error("Please enter an option name");
+      return;
+    }
+
+    const isNumber = isStringANumber(newOption.name);
+
+    console.log("isNumber", isNumber);
+    console.log("option type", newOption.type);
+
+    if (
+      (isNumber && newOption.type === "STR") ||
+      (!isNumber && newOption.type === "NUM")
+    ) {
+      toast.error(
+        "Please the option type must match with the question input type",
+      );
       return;
     }
 
     try {
       setCreatingOption(true);
       const result = await api.option.create({
-        description: newOptionName.trim(),
+        description: newOption.name.trim(),
+        type: newOption.type,
       });
-      const newOption = result.data;
+      const newOptionCreated = result.data;
       // Add to options list
-      setOptions([...options, newOption]);
+      setOptions([...options, newOptionCreated]);
       // Automatically select the new option for this question
       const currentOptions = editedQuestion.options || [];
-      handleFieldChange("options", [...currentOptions, newOption]);
+      handleFieldChange("options", [...currentOptions, newOptionCreated]);
       toast.success("Option created successfully");
       setShowCreateOptionModal(false);
-      setNewOptionName("");
+      setNewOption((prev) => ({ ...prev, name: "" }));
     } catch (error) {
-      console.error("Error creating option:", error);
-      toast.error("Error creating option");
+      const backendErrors = error.response?.data?.non_field_erros;
+
+      const errorMessage = Array.isArray(backendErrors)
+        ? backendErrors[0]
+        : error.response?.data?.detail || "An unexpected error occurred.";
+
+      console.error("Error creating option:", errorMessage);
+      toast.error(`Error creating option, Error: ${errorMessage}`);
     } finally {
       setCreatingOption(false);
     }
@@ -599,20 +644,12 @@ export default function QuestionCard({
           >
             <Trash2 size={20} />
           </button>
-          {isEditing && (
-            <button
-              onClick={() => setIsEditing(false)}
-              className="cursor-pointer"
-            >
-              <X />
-            </button>
-          )}
         </div>
       </div>
 
       {/* Create Option Modal */}
       {showCreateOptionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/50 bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 className="text-lg font-bold text-gray-900">
@@ -621,7 +658,7 @@ export default function QuestionCard({
               <button
                 onClick={() => {
                   setShowCreateOptionModal(false);
-                  setNewOptionName("");
+                  setNewOption((prev) => ({ ...prev, name: "" }));
                 }}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
               >
@@ -635,8 +672,10 @@ export default function QuestionCard({
               </label>
               <input
                 type="text"
-                value={newOptionName}
-                onChange={(e) => setNewOptionName(e.target.value)}
+                value={newOption?.name || ""}
+                onChange={(e) =>
+                  setNewOption((prev) => ({ ...prev, name: e.target.value }))
+                }
                 onKeyPress={(e) => {
                   if (e.key === "Enter" && !creatingOption) {
                     handleCreateOption();
@@ -652,7 +691,7 @@ export default function QuestionCard({
               <button
                 onClick={() => {
                   setShowCreateOptionModal(false);
-                  setNewOptionName("");
+                  setNewOption((prev) => ({ ...prev, name: "" }));
                 }}
                 className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >

@@ -471,6 +471,7 @@ export default function FormBuilder({ survey, onClose }) {
                       questions={questions}
                       index={index}
                       totalQuestions={filteredQuestions.length}
+                      refresh={refresh}
                       onSave={handleSaveQuestion}
                       onDelete={handleDeleteQuestion}
                       onUpdate={handleUpdateQuestion}

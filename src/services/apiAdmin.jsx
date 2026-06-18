@@ -51,7 +51,7 @@ const apiAdmin = {
     createValidUser: (data) => api.post("/observer/create/", data),
   },
   option: {
-    ...createAPI("option"),
+    ...createAPI("options"),
     getOptions: (matchingType = null) => {
       if (matchingType) {
         return api.get(`/options?matching_type=${matchingType}`);
