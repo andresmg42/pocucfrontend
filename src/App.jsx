@@ -17,6 +17,7 @@ import QuestionPanel from "./pages/reportpanel/QuestionPanel.jsx";
 import Form2 from "./pages/survey/Form2.jsx";
 import ManageSurvey from "./pages/admin/survey/ManageSurvey.jsx";
 import QuestionsSurvey from "./pages/admin/survey/QuestionsSurvey.jsx";
+import AdminLayout from "./pages/admin/AdminLayout.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -63,15 +64,7 @@ function App() {
             path="questions-panel/:survey_id/:survey_name/stats/:question_id/:description/:code"
             element={<Stats />}
           />
-          <Route path="admin/" element={<ManageSurvey />} />
-          <Route
-            path="questions-panel/:survey_id/:survey_name/stats/:question_id/:description/:code"
-            element={<Stats />}
-          />
-          <Route
-            path="admin/create-questions/:survey_id"
-            element={<QuestionsSurvey />}
-          />
+          <Route path="admin" element={<AdminLayout />} />
         </Routes>
       </Layout>
     </BrowserRouter>

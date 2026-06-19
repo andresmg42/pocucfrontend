@@ -8,24 +8,22 @@ import { getTheme } from "@table-library/react-table-library/baseline";
 import { useRowSelect } from "@table-library/react-table-library/select";
 import { useNavigate } from "react-router";
 
-
 const QuestionPanel = () => {
+  const { survey_id, survey_name } = useParams();
 
-  const {survey_id,survey_name}=useParams();
- 
   const [questions, setQuestions] = useState([]);
   const [tdata, setTData] = useState([]);
   const theme = useTheme(getTheme());
   const tableData = { nodes: tdata };
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     async function getQuestionsSurvey() {
       try {
-        
-
-        const res=await api.get(`question/get_questions_by_survey?survey_id=${survey_id}`)
-        console.log("data en questionsTable",res.data)
-        setTData(res.data)
+        const res = await api.get(
+          `question/get_questions_by_survey?survey_id=${survey_id}`,
+        );
+        console.log("data en questionsTable", res.data);
+        setTData(res.data);
       } catch (error) {
         console.error("error", error);
       }
@@ -35,11 +33,9 @@ const QuestionPanel = () => {
   }, []);
 
   const handleRowClick = (clickedItem) => {
-
-    navigate(`stats/${clickedItem.id}/${encodeURIComponent(clickedItem.description)}/${clickedItem.code}`)
-    
-
-    
+    navigate(
+      `stats/${clickedItem.id}/${encodeURIComponent(clickedItem.description)}/${clickedItem.code}`,
+    );
   };
 
   const select = useRowSelect(tableData, {
@@ -59,29 +55,25 @@ const QuestionPanel = () => {
       renderCell: (item) => item.code,
     },
     { label: "descripcion", renderCell: (item) => item.description },
-    { label: "subcategoria", renderCell: (item) => item.subcategory },
-    
-
+    { label: "subcategoria", renderCell: (item) => item.subcategory.name },
   ];
 
   return (
-
-    <div className='flex flex-col items-center justify-center'>
-     <div className='flex items-center justify-center bg-black/2 w-full p-5'>
-
-      <h1 className='text-black text-xl font-bold'>Preguntas para formulario {survey_name}</h1>
-
-    </div>
-    <div className="flex-1 p-5">
-      <CompactTable
+    <div className="flex flex-col items-center justify-center">
+      <div className="flex items-center justify-center bg-black/2 w-full p-5">
+        <h1 className="text-black text-xl font-bold">
+          Preguntas para formulario {survey_name}
+        </h1>
+      </div>
+      <div className="flex-1 p-5">
+        <CompactTable
           columns={COLUMNS}
           data={tableData}
           theme={theme}
-          select={select}/>
-
+          select={select}
+        />
+      </div>
     </div>
-    </div>
-              
   );
 };
 
