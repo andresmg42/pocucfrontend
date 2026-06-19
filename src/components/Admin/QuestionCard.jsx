@@ -100,7 +100,7 @@ function SubQuestion({
 
           <button
             onClick={() => onRemove(subQuestion.id, parentId)}
-            className="text-red-600 hover:text-red-800"
+            className="text-red-600 cursor-pointer hover:text-red-800"
           >
             <X size={16} />
           </button>
@@ -629,7 +629,7 @@ export default function QuestionCard({
               </button>
               <button
                 onClick={handleSave}
-                className="p-2 text-green-700 hover:bg-green-50 rounded-lg transition-colors"
+                className="p-2 cursor-pointer text-green-700 hover:bg-green-50 rounded-lg transition-colors"
                 title="Save"
               >
                 <Save size={20} />
@@ -638,7 +638,7 @@ export default function QuestionCard({
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 cursor-pointer text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               title="Edit"
             >
               ✏️
@@ -647,7 +647,7 @@ export default function QuestionCard({
 
           <button
             onClick={() => onDelete(question.id)}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-2 cursor-pointer text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             title="Delete"
           >
             <Trash2 size={20} />
