@@ -10,7 +10,7 @@ export default function OptionPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [formData, setFormData] = useState({ description: "" });
+  const [formData, setFormData] = useState({ description: "", type: "NUM" });
 
   useEffect(() => {
     loadData();
@@ -21,6 +21,7 @@ export default function OptionPage() {
       setLoading(true);
       const result = await api.option.list();
       setData(result.data);
+      console.log("data:", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading options");
@@ -37,7 +38,7 @@ export default function OptionPage() {
 
   const handleEdit = (item) => {
     setEditingItem(item);
-    setFormData({ description: item.description });
+    setFormData({ description: item.description, type: item.type });
     setIsModalOpen(true);
   };
 
@@ -76,6 +77,7 @@ export default function OptionPage() {
 
   const columns = [
     { key: "id", label: "ID" },
+    { key: "type", label: "Type" },
     { key: "description", label: "Description" },
   ];
 
@@ -123,6 +125,19 @@ export default function OptionPage() {
               required
               maxLength={30}
             />
+            <label className="block mb-2 mt-4 text-sm font-medium text-gray-700 mb-2">
+              Type
+            </label>
+            <select
+              value={formData.type}
+              onChange={(e) =>
+                setFormData({ ...formData, type: e.target.value })
+              }
+              className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            >
+              <option value="NUM">Numeric</option>
+              <option value="STR">Text</option>
+            </select>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
