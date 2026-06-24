@@ -19,7 +19,6 @@ export default function SurveysessionPage() {
     survey: "",
     observational_distance: "",
     url: "",
-    state: 0,
     visit_number: 1,
   });
 
@@ -94,7 +93,6 @@ export default function SurveysessionPage() {
       survey: "",
       observational_distance: "",
       url: "",
-      state: 0,
       visit_number: 1,
     });
     setIsModalOpen(true);
@@ -108,7 +106,6 @@ export default function SurveysessionPage() {
       survey: item.survey,
       observational_distance: item.observational_distance,
       url: item.url,
-      state: item.state,
       visit_number: item.visit_number,
     });
     setIsModalOpen(true);
@@ -142,8 +139,9 @@ export default function SurveysessionPage() {
       setIsModalOpen(false);
       loadData();
     } catch (error) {
+      const err = error?.response?.data;
       console.error("Error saving:", error);
-      toast.error("Error saving survey session");
+      toast.error(`Error saving survey session,error ${JSON.stringify(err)}`);
     }
   };
 
