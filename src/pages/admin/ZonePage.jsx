@@ -161,6 +161,7 @@ export default function ZonePage() {
               Number
             </label>
             <input
+              min={1}
               type="number"
               value={formData.number}
               onChange={(e) =>

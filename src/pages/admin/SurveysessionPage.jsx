@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
-import api from "../../services/api";
+import api from "../../services/apiAdmin";
 
 export default function SurveysessionPage() {
   const [data, setData] = useState([]);
@@ -12,6 +12,7 @@ export default function SurveysessionPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [observers, setObservers] = useState([]);
   const [formData, setFormData] = useState({
     zone: "",
     observer: "",
@@ -26,13 +27,26 @@ export default function SurveysessionPage() {
     loadData();
     loadZones();
     loadSurveys();
+    loadObservers();
   }, []);
 
   const loadData = async () => {
     try {
       setLoading(true);
       const result = await api.surveysession.list();
-      setData(result);
+      const valid_data = result?.data || [];
+
+      setData(
+        valid_data.map((item) => {
+          const state =
+            item.state === 0
+              ? "Iniciada"
+              : item.state === 1
+                ? "En Proceso"
+                : "Finalizada";
+          return { ...item, state: state };
+        }),
+      );
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading survey sessions");
@@ -44,7 +58,7 @@ export default function SurveysessionPage() {
   const loadZones = async () => {
     try {
       const result = await api.zone.list();
-      setZones(result);
+      setZones(result.data);
     } catch (error) {
       console.error("Error loading zones:", error);
       toast.error("Error loading zones");
@@ -54,10 +68,21 @@ export default function SurveysessionPage() {
   const loadSurveys = async () => {
     try {
       const result = await api.survey.list();
-      setSurveys(result);
+      setSurveys(result.data);
     } catch (error) {
       console.error("Error loading surveys:", error);
       toast.error("Error loading surveys");
+    }
+  };
+
+  const loadObservers = async () => {
+    try {
+      const result = await api.observer.list();
+      setObservers(result.data);
+      console.log("observers", result.data);
+    } catch (error) {
+      console.error("Error loading observers", error);
+      toast.error("Error Loading Observers");
     }
   };
 
@@ -126,9 +151,9 @@ export default function SurveysessionPage() {
     { key: "id", label: "ID" },
     { key: "zone_name", label: "Zone" },
     { key: "observer", label: "Observer" },
-    { key: "number_session", label: "Session #" },
+    { key: "number_session", label: "# Session" },
     { key: "state", label: "State" },
-    { key: "visit_number", label: "Visit #" },
+    { key: "visit_number", label: "Visits" },
   ];
 
   if (loading) {
@@ -181,49 +206,62 @@ export default function SurveysessionPage() {
               ))}
             </select>
           </div>
+          {!editingItem && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Observer
+                </label>
+                <select
+                  value={formData.observer}
+                  onChange={(e) =>
+                    setFormData({ ...formData, observer: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select Observer</option>
+                  {observers?.map((observer) => (
+                    <option key={observer.id} value={observer.email}>
+                      {observer.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Survey
+                </label>
+                <select
+                  value={formData.survey}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      survey: parseInt(e.target.value),
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select a survey</option>
+                  {surveys.map((survey) => (
+                    <option key={survey.id} value={survey.id}>
+                      {survey.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observer
+              Observational Distance (m)
             </label>
             <input
-              type="text"
-              value={formData.observer}
-              onChange={(e) =>
-                setFormData({ ...formData, observer: e.target.value })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Survey
-            </label>
-            <select
-              value={formData.survey}
-              onChange={(e) =>
-                setFormData({ ...formData, survey: parseInt(e.target.value) })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              required
-            >
-              <option value="">Select a survey</option>
-              {surveys.map((survey) => (
-                <option key={survey.id} value={survey.id}>
-                  {survey.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observational Distance
-            </label>
-            <input
-              type="text"
+              min={3}
+              type="Number"
               value={formData.observational_distance}
               onChange={(e) =>
                 setFormData({
@@ -252,27 +290,12 @@ export default function SurveysessionPage() {
               maxLength={100}
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              State
+              Number of Visits
             </label>
             <input
-              type="number"
-              value={formData.state}
-              onChange={(e) =>
-                setFormData({ ...formData, state: parseInt(e.target.value) })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Visit Number
-            </label>
-            <input
+              min={1}
               type="number"
               value={formData.visit_number}
               onChange={(e) =>
