@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import api from "../../api/user.api";
 
 const Visits = () => {
-  const { survey_id,surveysession_id, visit_number } = useParams();
+  const { survey_id, surveysession_id, visit_number } = useParams();
 
   const {
     addTriggerVisit,
@@ -23,7 +23,7 @@ const Visits = () => {
     if (!visitAddTriggerDisabled[surveysession_id]) {
       const res = await api.post("visit/", { surveysession: surveysession_id });
       console.log("respuesta in create visit:", res.data);
-      setAddTriggerVisit(!addTriggerVisit)
+      setAddTriggerVisit(!addTriggerVisit);
       toast.success("Visita creada exitosamente!");
     } else {
       toast.error("Ya no puedes crear mas visitas!");
@@ -40,14 +40,11 @@ const Visits = () => {
         survey_id={survey_id}
       />
 
-      <button
-        
-        onClick={handleAddClick}
-      >
+      <button onClick={handleAddClick}>
         <img
           src="/surveysession/add.svg"
           alt="add"
-          className="fixed m-8 h-15 w-15 md:w-20 md:h-20 top-10 right-0"
+          className="fixed m-8 h-15 w-15 md:w-20 md:h-20 cursor-pointer top-10 right-0"
         ></img>
       </button>
     </div>
