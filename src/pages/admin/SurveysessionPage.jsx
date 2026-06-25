@@ -155,7 +155,11 @@ export default function SurveysessionPage() {
     { key: "observer", label: "Observer" },
     { key: "survey_name", label: "Survey" },
     { key: "campus_name", label: "Campus" },
-    { key: "zone_name", label: "Zone" },
+    {
+      key: "zone_name",
+      label: "Zone",
+      render: (val) => val.slice(0, 20) + "...",
+    },
     {
       key: "state",
       label: "State",
@@ -167,12 +171,12 @@ export default function SurveysessionPage() {
     {
       key: "start_date",
       label: "Start Date",
-      render: (val) => (val ? Date(val).toLocaleString() : "-"),
+      render: (val) => (val ? Date(val).toLocaleString().slice(0, 25) : "-"),
     },
     {
       key: "end_date",
       label: "End Date",
-      render: (val) => (val ? Date(val).toLocaleString() : "-"),
+      render: (val) => (val ? Date(val).toLocaleString().slice(0, 25) : "-"),
     },
   ];
 
