@@ -29,11 +29,20 @@ export default function ResponsePage() {
 
   const columns = [
     { key: "id", label: "ID" },
+    {
+      key: "parent_question",
+      label: "Parent Question",
+      render: (val) => (val ? val : "-"),
+    },
     { key: "question", label: "Question ID" },
     { key: "question_description", label: "Q description" },
     { key: "option", label: "Option ID" },
     { key: "numeric_value", label: "Numeric Value" },
-    { key: "text_value", label: "Text Value" },
+    {
+      key: "text_value",
+      label: "Text Value",
+      render: (val) => (val ? val : "-"),
+    },
     { key: "subcategory", label: "Subcategory" },
     { key: "category", label: "category" },
     { key: "observer", label: "Observer" },
@@ -41,7 +50,7 @@ export default function ResponsePage() {
     { key: "survey", label: "Survey" },
     { key: "campus", label: "Campus" },
     { key: "zone", label: "Zone", render: (val) => val.slice(0, 20) + "..." },
-    { key: "surveysession", label: "Session Id" },
+    { key: "surveysession_id", label: "Session Id" },
     { key: "visita", label: "Visit ID" },
   ];
 
@@ -63,9 +72,6 @@ export default function ResponsePage() {
                   {column.label}
                 </th>
               ))}
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -91,7 +97,6 @@ export default function ResponsePage() {
                         : row[column.key]}
                     </td>
                   ))}
-                  <td className="px-6 py-4 text-right text-sm">export</td>
                 </tr>
               ))
             )}
