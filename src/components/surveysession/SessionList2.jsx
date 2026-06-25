@@ -34,7 +34,7 @@ const SessionList2 = ({ survey_id }) => {
     async function getSession() {
       try {
         const res = await api.get(
-          `surveysession/get_survey_session_by_survey_id?survey_id=${survey_id}&email=${userLogged.email}`
+          `surveysession/get_survey_session_by_survey_id?survey_id=${survey_id}&email=${userLogged.email}`,
         );
         console.log("esta es la respuesta en sessionlist", res);
         setSessions(res.data);
@@ -86,16 +86,15 @@ const SessionList2 = ({ survey_id }) => {
 
   const handleClickDelete = async (surveysession_id) => {
     const confirmed = window.confirm(
-      "Esta seguro de que desea eliminar esta Sesión?"
+      "Esta seguro de que desea eliminar esta Sesión?",
     );
 
     if (confirmed) {
       try {
         const res = await api.delete(`surveysession/${surveysession_id}/`);
 
-        localStorage.removeItem(`mySurveySessionData_${surveysession_id}`)
+        localStorage.removeItem(`mySurveySessionData_${surveysession_id}`);
         toast.success("Secion de Encuesta Eliminada Exitosamente");
-
 
         setSessionIsDeleted((prev) => !prev);
       } catch (error) {
@@ -116,7 +115,11 @@ const SessionList2 = ({ survey_id }) => {
         <Placeholder1
           page_name={"Sesión"}
           plural_page_name={"Sesiones"}
-          onButtonClick={() => setAddTrigger(!addTrigger)}
+          onButtonClick={(e) => {
+            e.preventDefault();
+            setAddTrigger(!addTrigger);
+            setUpdate(false);
+          }}
         />
       </div>
     );
@@ -126,10 +129,10 @@ const SessionList2 = ({ survey_id }) => {
       {addTrigger && (
         <div className=" sm:p-6  flex   flex-col items-center">
           <div className=" w-full  flex items-center justify-center p-2">
-            <h2 class="md:text-4xl text-2xl  font-bold  text-black ">Sesiones</h2>
-
+            <h2 class="md:text-4xl text-2xl  font-bold  text-black ">
+              Sesiones
+            </h2>
           </div>
-          
 
           <div className="grid  grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10 ">
             {sessions.map((session) => {
@@ -194,21 +197,20 @@ const SessionList2 = ({ survey_id }) => {
                   session.state === 2
                     ? "bg-green-100 text-green-800"
                     : session.state === 1
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-red-100 text-yellow-800"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-red-100 text-yellow-800"
                 }
               `}
                       >
                         {session.state === 2
                           ? "Completa"
                           : session.state == 1
-                          ? "En Proceso"
-                          : "Sin Iniciar"}
+                            ? "En Proceso"
+                            : "Sin Iniciar"}
                       </span>
                     </div>
 
                     <div className="mt-2 space-y-2 text-sm text-slate-500">
-
                       <div className="flex items-center gap-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
