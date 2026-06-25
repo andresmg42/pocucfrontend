@@ -13,6 +13,8 @@ export default function SurveysessionPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [observers, setObservers] = useState([]);
+  const [campuses, setCampuses] = useState([]);
+  const [selectedCampusId, setSelectedCampusId] = useState(null);
   const [formData, setFormData] = useState({
     zone: "",
     observer: "",
@@ -24,28 +26,22 @@ export default function SurveysessionPage() {
 
   useEffect(() => {
     loadData();
-    loadZones();
+    loadCampuses();
     loadSurveys();
     loadObservers();
   }, []);
+
+  useEffect(() => {
+    loadZones();
+  }, [selectedCampusId]);
 
   const loadData = async () => {
     try {
       setLoading(true);
       const result = await api.surveysession.list();
       const valid_data = result?.data || [];
-
-      setData(
-        valid_data.map((item) => {
-          const state =
-            item.state === 0
-              ? "Iniciada"
-              : item.state === 1
-                ? "En Proceso"
-                : "Finalizada";
-          return { ...item, state: state };
-        }),
-      );
+      console.log("surveysession data", valid_data);
+      setData(valid_data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading survey sessions");
@@ -55,12 +51,20 @@ export default function SurveysessionPage() {
   };
 
   const loadZones = async () => {
-    try {
-      const result = await api.zone.list();
+    if (selectedCampusId) {
+      const result = await api.zone.getZoneByCampus(selectedCampusId);
+      console.log("zones", result.data);
       setZones(result.data);
+    }
+  };
+
+  const loadCampuses = async () => {
+    try {
+      const result = await api.campus.list();
+      setCampuses(result.data);
     } catch (error) {
-      console.error("Error loading zones:", error);
-      toast.error("Error loading zones");
+      console.error("Error loading campus", error);
+      toast.error("Error Loading campus");
     }
   };
 
@@ -147,11 +151,29 @@ export default function SurveysessionPage() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "zone_name", label: "Zone" },
-    { key: "observer", label: "Observer" },
     { key: "number_session", label: "# Session" },
-    { key: "state", label: "State" },
+    { key: "observer", label: "Observer" },
+    { key: "survey_name", label: "Survey" },
+    { key: "campus_name", label: "Campus" },
+    { key: "zone_name", label: "Zone" },
+    {
+      key: "state",
+      label: "State",
+      render: (val) =>
+        val === 0 ? "Sin Iniciar" : val === 1 ? "En Proceso" : "Finalizada",
+    },
+
     { key: "visit_number", label: "Visits" },
+    {
+      key: "start_date",
+      label: "Start Date",
+      render: (val) => (val ? Date(val).toLocaleString() : "-"),
+    },
+    {
+      key: "end_date",
+      label: "End Date",
+      render: (val) => (val ? Date(val).toLocaleString() : "-"),
+    },
   ];
 
   if (loading) {
@@ -186,6 +208,24 @@ export default function SurveysessionPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
+              Campus
+            </label>
+            <select
+              value={selectedCampusId ? selectedCampusId : ""}
+              onChange={(e) => setSelectedCampusId(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              required
+            >
+              <option value="">Select a Campus</option>
+              {campuses?.map((campus) => (
+                <option key={campus.id} value={campus.id}>
+                  {campus.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Zone
             </label>
             <select
@@ -204,7 +244,7 @@ export default function SurveysessionPage() {
               ))}
             </select>
           </div>
-          {!editingItem && (
+          {(editingItem?.state === 0 || !editingItem) && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

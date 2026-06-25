@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
-import api from "../../services/api";
+import api from "../../services/apiAdmin";
 
 export default function VisitPage() {
   const [data, setData] = useState([]);
@@ -25,7 +25,8 @@ export default function VisitPage() {
     try {
       setLoading(true);
       const result = await api.visit.list();
-      setData(result);
+      setData(result.data);
+      console.log("visit data,", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading visits");
@@ -37,7 +38,7 @@ export default function VisitPage() {
   const loadSessions = async () => {
     try {
       const result = await api.surveysession.list();
-      setSessions(result);
+      setSessions(result.data);
     } catch (error) {
       console.error("Error loading sessions:", error);
       toast.error("Error loading sessions");
@@ -46,17 +47,22 @@ export default function VisitPage() {
 
   const handleCreate = () => {
     setEditingItem(null);
-    setFormData({ surveysession: "", state: 0 });
+    setFormData({ surveysession: "" });
     setIsModalOpen(true);
   };
 
   const handleEdit = (item) => {
     setEditingItem(item);
-    setFormData({
-      surveysession: item.surveysession,
-      state: item.state,
-    });
-    setIsModalOpen(true);
+    if (item.state === 0) {
+      setFormData({
+        surveysession: item.surveysession,
+      });
+      setIsModalOpen(true);
+    } else {
+      toast.error(
+        "No puedes editar una visita en estado diferente de 'Sin Iniciar'",
+      );
+    }
   };
 
   const handleDelete = async (item) => {
@@ -92,6 +98,14 @@ export default function VisitPage() {
 
   const columns = [
     { key: "id", label: "ID" },
+    {
+      key: "observer",
+      label: "Observer",
+    },
+    {
+      key: "survey",
+      label: "Survey",
+    },
     { key: "surveysession", label: "Survey Session ID" },
     { key: "visit_number", label: "Visit #" },
     {
@@ -104,7 +118,12 @@ export default function VisitPage() {
       label: "End Date",
       render: (val) => (val ? new Date(val).toLocaleString() : "-"),
     },
-    { key: "state", label: "State" },
+    {
+      key: "state",
+      label: "State",
+      render: (val) =>
+        val === 0 ? "Sin Iniciar" : val === 1 ? "En Proceso" : "Finalizada",
+    },
   ];
 
   if (loading) {
@@ -155,27 +174,12 @@ export default function VisitPage() {
               <option value="">Select a session</option>
               {sessions.map((session) => (
                 <option key={session.id} value={session.id}>
-                  Session #{session.id} - {session.zone_name}
+                  Session #{session.id}-{session.observer}-{session.campus_name}
+                  -{session.zone_name.slice(0, 20) + "..."}
                 </option>
               ))}
             </select>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              State
-            </label>
-            <input
-              type="number"
-              value={formData.state}
-              onChange={(e) =>
-                setFormData({ ...formData, state: parseInt(e.target.value) })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              required
-            />
-          </div>
-
           <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"

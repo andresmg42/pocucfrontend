@@ -64,7 +64,11 @@ const apiAdmin = {
   survey: createAPI("survey/surveys"),
   surveysession: createAPI("surveysession"),
   visit: createAPI("visit"),
-  zone: createAPI("zone"),
+  zone: {
+    ...createAPI("zone"),
+    getZoneByCampus: (campus_id) =>
+      api.get(`/zone/get_zones_by_campus/?campus_id=${campus_id}`),
+  },
   question: {
     ...createAPI("question"),
     getBySurvey: (surveyId, question_id = null) => {
