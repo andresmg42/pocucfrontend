@@ -18,6 +18,7 @@ import Form2 from "./pages/survey/Form2.jsx";
 import ManageSurvey from "./pages/admin/survey/ManageSurvey.jsx";
 import QuestionsSurvey from "./pages/admin/survey/QuestionsSurvey.jsx";
 import AdminLayout from "./pages/admin/AdminLayout.jsx";
+import ProtectedRoute from "./components/helpers/ProtectedRoute.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -42,29 +43,35 @@ function App() {
             path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/"
             element={<Form2 />}
           ></Route>
-          <Route path="report-panel-surveys/" element={<ReportMain />}></Route>
-          {/* <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route> */}
-          <Route
-            path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name"
-            element={<ObserverReport />}
-          ></Route>
-          <Route
-            path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name/report-panel-sessions/:observer_id/:observer_name"
-            element={<SessionsReport />}
-          ></Route>
-          <Route
-            path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name/report-panel-sessions/:observer_id/:observer_name/report-panel-visits/:session_id/:session_number"
-            element={<VisitReport />}
-          ></Route>
-          <Route
-            path="questions-panel/:survey_id/:survey_name"
-            element={<QuestionPanel />}
-          />
-          <Route
-            path="questions-panel/:survey_id/:survey_name/stats/:question_id/:description/:code"
-            element={<Stats />}
-          />
-          <Route path="admin" element={<AdminLayout />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route
+              path="report-panel-surveys/"
+              element={<ReportMain />}
+            ></Route>
+            {/* <Route  path="report-panel-surveys/" element={<SurveyReport/>}></Route> */}
+            <Route
+              path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name"
+              element={<ObserverReport />}
+            ></Route>
+            <Route
+              path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name/report-panel-sessions/:observer_id/:observer_name"
+              element={<SessionsReport />}
+            ></Route>
+            <Route
+              path="report-panel-surveys/report-panel-observers/:survey_id/:survey_name/report-panel-sessions/:observer_id/:observer_name/report-panel-visits/:session_id/:session_number"
+              element={<VisitReport />}
+            ></Route>
+            <Route
+              path="questions-panel/:survey_id/:survey_name"
+              element={<QuestionPanel />}
+            />
+            <Route
+              path="questions-panel/:survey_id/:survey_name/stats/:question_id/:description/:code"
+              element={<Stats />}
+            />
+            <Route path="admin" element={<AdminLayout />} />
+          </Route>
         </Routes>
       </Layout>
     </BrowserRouter>
