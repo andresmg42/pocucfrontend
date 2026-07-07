@@ -15,7 +15,6 @@ export default function ZonePage() {
   const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
-    number: 1,
     zone_type: "OP",
     campus: null,
   });
@@ -110,7 +109,7 @@ export default function ZonePage() {
         return types[val] || val;
       },
     },
-    { key: "campus", label: "Campus" },
+    { key: "campus_name", label: "Campus" },
   ];
 
   if (loading) {
@@ -133,7 +132,7 @@ export default function ZonePage() {
       <Filters
         data={data}
         setFilteredData={setFilteredData}
-        criteria={["name", "campus"]}
+        criteria={["name", { key: "campus_name", label: "campus" }]}
       />
 
       <DataTable
@@ -165,7 +164,7 @@ export default function ZonePage() {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Number
             </label>
@@ -179,7 +178,7 @@ export default function ZonePage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               required
             />
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
