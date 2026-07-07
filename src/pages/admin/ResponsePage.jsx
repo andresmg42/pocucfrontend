@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
-import Filters from "../../components/admin/Filters";
+import Filters from "../../components/Admin/Filters";
 
 export default function ResponsePage() {
   const [data, setData] = useState([]);
