@@ -119,7 +119,7 @@ export default function CategoryPage() {
         setFilteredData={setFilteredData}
         criteria={[
           { key: "name", label: "name" },
-          { key: "target_zone_type", label: "target zone" },
+          { key: "target_zone_type", label: "target zone type" },
         ]}
       />
 

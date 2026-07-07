@@ -30,6 +30,7 @@ export default function ZonePage() {
       setLoading(true);
       const result = await api.zone.list();
       setData(result.data);
+      console.log("zone data", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading zones");
@@ -109,7 +110,7 @@ export default function ZonePage() {
         return types[val] || val;
       },
     },
-    { key: "campus", label: "Campus ID" },
+    { key: "campus", label: "Campus" },
   ];
 
   if (loading) {
