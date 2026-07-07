@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function ZonePage() {
   const [data, setData] = useState([]);
@@ -11,6 +12,7 @@ export default function ZonePage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     number: 1,
@@ -127,9 +129,15 @@ export default function ZonePage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={["name", "campus"]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

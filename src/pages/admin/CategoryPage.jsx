@@ -4,12 +4,14 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function CategoryPage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     image: "",
@@ -25,6 +27,7 @@ export default function CategoryPage() {
       setLoading(true);
       const result = await api.category.list();
       setData(result.data);
+      // console.log("category data", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading categories");
@@ -112,9 +115,18 @@ export default function CategoryPage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={[
+          { key: "name", label: "name" },
+          { key: "target_zone_type", label: "target zone" },
+        ]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function SubcategoryPage() {
   const [data, setData] = useState([]);
@@ -11,6 +12,7 @@ export default function SubcategoryPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -26,6 +28,7 @@ export default function SubcategoryPage() {
       setLoading(true);
       const result = await api.subcategory.list();
       setData(result.data);
+      console.log("subcategory data", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading subcategories");
@@ -114,9 +117,15 @@ export default function SubcategoryPage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={["name", { key: "category_name", label: "category" }]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
