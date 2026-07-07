@@ -8,6 +8,7 @@ import api from "../../services/apiAdmin";
 export default function ResponsePage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -35,6 +36,7 @@ export default function ResponsePage() {
       render: (val) => (val ? val : "-"),
     },
     { key: "question", label: "Question ID" },
+    { key: "question_code", label: "Question Code" },
     { key: "question_description", label: "Q description" },
     { key: "option", label: "Option ID" },
     { key: "numeric_value", label: "Numeric Value" },

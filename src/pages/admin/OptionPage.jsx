@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function OptionPage() {
   const [data, setData] = useState([]);
@@ -11,6 +12,7 @@ export default function OptionPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({ description: "", type: "NUM" });
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -98,9 +100,15 @@ export default function OptionPage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={["description", "type"]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

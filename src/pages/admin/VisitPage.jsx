@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function VisitPage() {
   const [data, setData] = useState([]);
@@ -11,6 +12,7 @@ export default function VisitPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     surveysession: "",
     state: 0,
@@ -143,9 +145,24 @@ export default function VisitPage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={[
+          "observer",
+          "survey",
+          {
+            key: "state",
+            label: "State(0:Sin Iniciar,1:En Proceso,2:Finalizada)",
+          },
+          { key: "visit_start_date_time", label: "start date", type: "date" },
+          { key: "visit_end_date_time", label: "end date", type: "date" },
+        ]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

@@ -4,12 +4,14 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function ObserverPage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -101,9 +103,15 @@ export default function ObserverPage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={["name", "email"]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

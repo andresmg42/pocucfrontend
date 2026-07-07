@@ -28,7 +28,6 @@ export default function SubcategoryPage() {
       setLoading(true);
       const result = await api.subcategory.list();
       setData(result.data);
-      console.log("subcategory data", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading subcategories");

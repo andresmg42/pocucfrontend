@@ -5,6 +5,7 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import FormBuilder from "../../components/Admin/FormBuilder";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function SurveyPage() {
   const [data, setData] = useState([]);
@@ -12,6 +13,7 @@ export default function SurveyPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     topic: "",
@@ -132,9 +134,15 @@ export default function SurveyPage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={["name", "topic", "description"]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onRowClick={(item) => setSelectedSurvey(item)}

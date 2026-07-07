@@ -37,9 +37,16 @@ const Filters = ({ criteria, data, setFilteredData }) => {
 
         if (type === "date") {
           if (!value) return true;
+
+          const itemDate = new Date(item[key]);
+          const [filterYear, filterMonth, filterDay] = value
+            .split("-")
+            .map(Number);
+
           return (
-            new Date(item[key]).toDateString() ===
-            new Date(value).toDateString()
+            itemDate.getFullYear() === filterYear &&
+            itemDate.getMonth() + 1 === filterMonth && // getMonth() is 0-indexed
+            itemDate.getDate() === filterDay
           );
         }
 

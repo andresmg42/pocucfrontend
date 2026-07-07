@@ -27,7 +27,6 @@ export default function CategoryPage() {
       setLoading(true);
       const result = await api.category.list();
       setData(result.data);
-      // console.log("category data", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading categories");

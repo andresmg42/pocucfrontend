@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import Filters from "../../components/admin/Filters";
 
 export default function SurveysessionPage() {
   const [data, setData] = useState([]);
@@ -15,6 +16,7 @@ export default function SurveysessionPage() {
   const [observers, setObservers] = useState([]);
   const [campuses, setCampuses] = useState([]);
   const [selectedCampusId, setSelectedCampusId] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [formData, setFormData] = useState({
     zone: "",
     observer: "",
@@ -171,12 +173,40 @@ export default function SurveysessionPage() {
     {
       key: "start_date",
       label: "Start Date",
-      render: (val) => (val ? Date(val).toLocaleString().slice(0, 25) : "-"),
+      render: (val) =>
+        val
+          ? new Date(val).toLocaleString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })
+          : "-",
     },
     {
       key: "end_date",
       label: "End Date",
-      render: (val) => (val ? Date(val).toLocaleString().slice(0, 25) : "-"),
+      render: (val) =>
+        val
+          ? new Date(val).toLocaleString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })
+          : "-",
+    },
+    {
+      key: "uploaded_at",
+      label: "Uploaded at",
+      render: (val) =>
+        val
+          ? new Date(val).toLocaleDateString("en-US", { timeZone: "UTC" })
+          : "-",
     },
   ];
 
@@ -197,9 +227,27 @@ export default function SurveysessionPage() {
         </button>
       </div>
 
+      <Filters
+        data={data}
+        setFilteredData={setFilteredData}
+        criteria={[
+          "observer",
+          {
+            key: "state",
+            label: "State(0:Sin Iniciar,1:En Proceso,2:Finalizada)",
+          },
+          { key: "survey_name", label: "survey" },
+          { key: "campus_name", label: "campus" },
+          { key: "zone_name", label: "zone" },
+          { key: "start_date", label: "start date", type: "date" },
+          { key: "end_date", label: "end date", type: "date" },
+          { key: "uploaded_at", label: "uploaded at", type: "date" },
+        ]}
+      />
+
       <DataTable
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
