@@ -5,7 +5,7 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import FormBuilder from "../../components/Admin/FormBuilder";
 import api from "../../services/apiAdmin";
-import Filters from "../../components/admin/Filters";
+import Filters from "../../components/Admin/Filters";
 
 export default function SurveyPage() {
   const [data, setData] = useState([]);
