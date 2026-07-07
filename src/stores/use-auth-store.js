@@ -1,17 +1,34 @@
 import { create } from "zustand";
-import {  onAuthStateChanged,
-    signInWithPopup,
-    signOut,
-    GoogleAuthProvider} from "firebase/auth";
+import api from "../api/user.api";
+import {
+  onAuthStateChanged,
+  signInWithPopup,
+  signOut,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { auth } from "../../firebase.config";
+import { Header } from "@table-library/react-table-library";
 
 const useAuthStore = create((set) => {
   const observeAuthState = () => {
-    onAuthStateChanged(auth, (user) => {
-      if(user){
-        set({userLogged:user,isLoading:false});
-      }else{
-        set({userLogged:null,isLoading:false})
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        set({ userLogged: user, isLoading: false });
+        try {
+          const token = await user.getIdToken();
+          const res_role = await api.get("/users/get_role_status", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          set({ role: res_role?.data });
+        } catch (error) {
+          console.log("Error fetching user role", error);
+          set({ role: null });
+        }
+      } else {
+        set({ userLogged: null, isLoading: false });
       }
     });
   };
@@ -20,7 +37,8 @@ const useAuthStore = create((set) => {
 
   return {
     userLogged: null,
-    isLoading:true,
+    isLoading: true,
+    role: {},
 
     loginGooglePopUp: async () => {
       const provider = new GoogleAuthProvider();
@@ -37,12 +55,11 @@ const useAuthStore = create((set) => {
       try {
         await signOut(auth);
         set({ userLogged: null });
-        localStorage.removeItem('user_id')
+        localStorage.removeItem("user_id");
       } catch (error) {
         console.error("Error loggin out:", error);
       }
     },
-
   };
 });
 
