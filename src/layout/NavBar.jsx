@@ -92,9 +92,12 @@ function NavBar() {
             <li>
               <NavLink
                 to="/admin"
-                exact
-                className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-                activeClassName="text-blue-500"
+                end
+                className={({ isActive }) =>
+                  `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                    isActive ? "text-blue-500" : ""
+                  }`
+                }
                 onClick={closeMenu}
               >
                 Panel Administrativo
@@ -103,8 +106,11 @@ function NavBar() {
             <li>
               <NavLink
                 to="report-panel-surveys/"
-                className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-                activeClassName="text-blue-500"
+                className={({ isActive }) =>
+                  `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                    isActive ? "text-blue-500" : ""
+                  }`
+                }
                 onClick={closeMenu}
               >
                 Reportes
@@ -115,9 +121,12 @@ function NavBar() {
         <li>
           <NavLink
             to="/"
-            exact
-            className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-            activeClassName="text-blue-500"
+            end
+            className={({ isActive }) =>
+              `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                isActive ? "text-blue-500" : ""
+              }`
+            }
             onClick={closeMenu}
           >
             Formularios
@@ -127,8 +136,11 @@ function NavBar() {
         <li>
           <NavLink
             to="/about"
-            className="hover:text-[#797777] block md:inline-block py-2 md:py-0 "
-            activeClassName="text-blue-500"
+            className={({ isActive }) =>
+              `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                isActive ? "text-blue-500" : ""
+              }`
+            }
             onClick={closeMenu}
           >
             Sobre nosotros
@@ -138,8 +150,11 @@ function NavBar() {
           <li>
             <NavLink
               to="/login"
-              className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-              activeClassName="text-blue-500"
+              className={({ isActive }) =>
+                `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                  isActive ? "text-blue-500" : ""
+                }`
+              }
               onClick={closeMenu}
             >
               Iniciar Sesión
