@@ -10,7 +10,7 @@ const ReportMain = () => {
   const [usertoken, setUserToken] = useState();
   const navigate = useNavigate();
 
-  const isAdmin = role?.is_admin || false;
+  const isAdmin = role?.is_admin || role?.is_staff || false;
 
   return (
     <div className="flex-1  pl-5 pr-5">

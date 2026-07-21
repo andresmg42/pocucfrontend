@@ -11,34 +11,47 @@ import { Header } from "@table-library/react-table-library";
 
 const useAuthStore = create((set) => {
   const observeAuthState = () => {
-    onAuthStateChanged(auth, async (user) => {
+    return onAuthStateChanged(auth, async (user) => {
       if (user) {
-        set({ userLogged: user, isLoading: false });
         try {
           const token = await user.getIdToken();
-          const res_role = await api.get("/users/get_role_status", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
 
-          set({ role: res_role?.data });
+          set({ token: token });
+
+          const resback = await api.post("/observer/create/", {
+            name: user.displayName,
+            email: user.email,
+          });
+          localStorage.setItem("user_id", resback.data.user.id);
+
+          const res_role = await api.get("/users/get_role_status");
+
+          set({
+            role: res_role?.data,
+            userLogged: user,
+            isLoading: false,
+          });
         } catch (error) {
           console.log("Error fetching user role", error);
-          set({ role: null });
+          set({
+            userLogged: null,
+            isLoading: false,
+            role: {},
+            token: null,
+          });
         }
       } else {
-        set({ userLogged: null, isLoading: false });
+        set({ userLogged: null, isLoading: false, role: {}, token: null });
       }
     });
   };
 
-  observeAuthState();
-
   return {
+    observeAuthState,
     userLogged: null,
     isLoading: true,
     role: {},
+    token: null,
 
     loginGooglePopUp: async () => {
       const provider = new GoogleAuthProvider();
@@ -54,7 +67,7 @@ const useAuthStore = create((set) => {
     logout: async () => {
       try {
         await signOut(auth);
-        set({ userLogged: null });
+        set({ userLogged: null, token: null, role: null, isLoading: false });
         localStorage.removeItem("user_id");
       } catch (error) {
         console.error("Error loggin out:", error);
