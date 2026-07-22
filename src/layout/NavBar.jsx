@@ -3,6 +3,9 @@ import { useState } from "react";
 import { NavLink } from "react-router";
 import useAuthStore from "../stores/use-auth-store";
 import { useNavigate } from "react-router";
+import { Languages } from "lucide-react";
+import Dropdown from "../components/auxiliarcomponents/Dropdown";
+import i18n from "../i18n";
 
 function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -145,6 +148,15 @@ function NavBar() {
           >
             Sobre nosotros
           </NavLink>
+        </li>
+        <li>
+          <div className="flex">
+            <Languages />
+            <Dropdown
+              options={["en", "es"]}
+              onSelect={(option) => i18n.changeLanguage(option)}
+            />
+          </div>
         </li>
         {!userLogged && (
           <li>

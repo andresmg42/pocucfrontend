@@ -6,8 +6,10 @@ import Modal from "../../components/Admin/Modal";
 // import api from "../../api/user.api";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function CampusPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,7 +80,7 @@ export default function CampusPage() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "name", label: "Name" },
+    { key: "name", label: t("campusPage.name") },
   ];
 
   if (loading) {
@@ -94,14 +96,14 @@ export default function CampusPage() {
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
       <Filters
         data={data}
         setFilteredData={setFilteredData}
-        criteria={[{ key: "name", label: "Name" }]}
+        criteria={[{ key: "name", label: t("campusPage.name") }]}
       />
 
       <DataTable
@@ -114,12 +116,16 @@ export default function CampusPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Campus" : "Create Campus"}
+        title={
+          editingItem
+            ? t("campusPage.editCampus")
+            : t("campusPage.createCampus")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
+              {t("campusPage.name")}
             </label>
             <input
               type="text"
@@ -139,13 +145,13 @@ export default function CampusPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

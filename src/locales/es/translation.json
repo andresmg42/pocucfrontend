@@ -1,0 +1,46 @@
+{
+  "menu": {
+    "AdminPanel":"Sección de Administración",
+    "campus": "Campus",
+    "zone": "Zonas",
+    "category": "Categorías",
+    "subcategory": "Subcategorías",
+    "option": "Opciones",
+    "observer": "Observadores",
+    "survey": "Encuestas",
+    "surveysession": "Sesiones de Encuesta",
+    "visit": "Visitas",
+    "response": "Respuestas"
+  },
+  "dataTable":{
+    "actions":"Acciones",
+    "noData":"No hay datos disponibles."
+  },
+  "addNewButton":"Agregar Nuevo",
+  "cancelButton":"Cancelar",
+  "updateButton":"Actualizar",
+  "createButton":"Crear",
+  "nonePlaceholder":"Seleccione un Item",
+  "zonePage":{
+    "title":"Zonas",
+    "name":"Nombre",
+    "number":"Numero de Zona",
+    "zoneType":"Tipo de Zona",
+    "openSpace":"Espacio Abierto",
+    "closedSpace":"Espacio Cerrado",
+    "mixedSpace":"Espacio Mixto"
+    
+    
+  },
+  "campusPage":{
+    "name":"Nombre",
+    "editCampus":"Editar Campus",
+    "createCampus":"Crear Campus"
+    
+  },
+
+  "filtersComponent":{
+    "title":"Filtros",
+    "searchPlacehoder":"Buscar por"
+  }
+}

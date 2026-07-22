@@ -5,8 +5,10 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function ZonePage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [campuses, setCampuses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -99,13 +101,17 @@ export default function ZonePage() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "name", label: "Name" },
-    { key: "number", label: "Number" },
+    { key: "name", label: t("zonePage.name") },
+    { key: "number", label: t("zonePage.number") },
     {
       key: "zone_type",
-      label: "Zone Type",
+      label: t("zonePage.zoneType"),
       render: (val) => {
-        const types = { OP: "Open Space", CL: "Closed Space", MX: "Mixed" };
+        const types = {
+          OP: t("zonePage.openSpace"),
+          CL: t("zonePage.closedSpace"),
+          MX: t("zonePage.mixedSpace"),
+        };
         return types[val] || val;
       },
     },
@@ -119,20 +125,25 @@ export default function ZonePage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Zones</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("zonePage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
       <Filters
         data={data}
         setFilteredData={setFilteredData}
-        criteria={["name", { key: "campus_name", label: "campus" }]}
+        criteria={[
+          { key: "name", label: t("zonePage.name") },
+          { key: "campus_name", label: "campus" },
+        ]}
       />
 
       <DataTable
@@ -150,7 +161,7 @@ export default function ZonePage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
+              {t("zonePage.name")}
             </label>
             <input
               type="text"
@@ -164,25 +175,9 @@ export default function ZonePage() {
             />
           </div>
 
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Number
-            </label>
-            <input
-              min={1}
-              type="number"
-              value={formData.number}
-              onChange={(e) =>
-                setFormData({ ...formData, number: parseInt(e.target.value) })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              required
-            />
-          </div> */}
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Zone Type
+              {t("zonePage.zoneType")}
             </label>
             <select
               value={formData.zone_type}
@@ -192,9 +187,9 @@ export default function ZonePage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               required
             >
-              <option value="OP">Open Space</option>
-              <option value="CL">Closed Space</option>
-              <option value="MX">Mixed</option>
+              <option value="OP">{t("zonePage.openSpace")}</option>
+              <option value="CL">{t("zonePage.closedSpace")}</option>
+              <option value="MX">{t("zonePage.mixedSpace")}</option>
             </select>
           </div>
 
@@ -212,7 +207,7 @@ export default function ZonePage() {
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
-              <option value="">None</option>
+              <option value="">{t("nonePlaceholder")}</option>
               {campuses.map((campus) => (
                 <option key={campus.id} value={campus.id}>
                   {campus.name}
@@ -227,13 +222,13 @@ export default function ZonePage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>
