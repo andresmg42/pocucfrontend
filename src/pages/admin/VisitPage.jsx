@@ -5,8 +5,10 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function VisitPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -102,27 +104,27 @@ export default function VisitPage() {
     { key: "id", label: "ID" },
     {
       key: "observer",
-      label: "Observer",
+      label: t("visitPage.observer"),
     },
     {
       key: "survey",
-      label: "Survey",
+      label: t("visitPage.survey"),
     },
-    { key: "surveysession", label: "Survey Session ID" },
-    { key: "visit_number", label: "Visit #" },
+    { key: "surveysession", label: t("visitPage.surveySession") },
+    { key: "visit_number", label: t("visitPage.visitNumber") },
     {
       key: "visit_start_date_time",
-      label: "Start Date",
+      label: t("visitPage.startDate"),
       render: (val) => (val ? new Date(val).toLocaleString() : "-"),
     },
     {
       key: "visit_end_date_time",
-      label: "End Date",
+      label: t("visitPage.endDate"),
       render: (val) => (val ? new Date(val).toLocaleString() : "-"),
     },
     {
       key: "state",
-      label: "State",
+      label: t("visitPage.state"),
       render: (val) =>
         val === 0 ? "Sin Iniciar" : val === 1 ? "En Proceso" : "Finalizada",
     },
@@ -135,13 +137,15 @@ export default function VisitPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Visits</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("visitPage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
@@ -149,14 +153,22 @@ export default function VisitPage() {
         data={data}
         setFilteredData={setFilteredData}
         criteria={[
-          "observer",
-          "survey",
+          { key: "observer", label: t("visitPage.observer") },
+          { key: "survey", label: t("visitPage.survey") },
           {
             key: "state",
-            label: "State(0:Sin Iniciar,1:En Proceso,2:Finalizada)",
+            label: t("visitPage.filterState"),
           },
-          { key: "visit_start_date_time", label: "start date", type: "date" },
-          { key: "visit_end_date_time", label: "end date", type: "date" },
+          {
+            key: "visit_start_date_time",
+            label: t("visitPage.startDate"),
+            type: "date",
+          },
+          {
+            key: "visit_end_date_time",
+            label: t("visitPage.endDate"),
+            type: "date",
+          },
         ]}
       />
 
@@ -170,12 +182,14 @@ export default function VisitPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Visit" : "Create Visit"}
+        title={
+          editingItem ? t("visitPage.editVisit") : t("visitPage.createVisit")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Survey Session
+              {t("visitPage.surveySession")}
             </label>
             <select
               value={formData.surveysession}
@@ -188,11 +202,13 @@ export default function VisitPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               required
             >
-              <option value="">Select a session</option>
+              <option value="">
+                {t("visitPage.selectSessionPlaceholder")}
+              </option>
               {sessions.map((session) => (
                 <option key={session.id} value={session.id}>
-                  Session #{session.id}-{session.observer}-{session.campus_name}
-                  -{session.zone_name.slice(0, 20) + "..."}
+                  {`${t("visitPage.session")} #${session.id}-${session.observer}-${session.campus_name}
+                  -${session.zone_name.slice(0, 20) + "..."}`}
                 </option>
               ))}
             </select>
@@ -203,13 +219,13 @@ export default function VisitPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

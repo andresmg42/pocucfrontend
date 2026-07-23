@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import FormBuilder from "../../components/Admin/FormBuilder";
@@ -8,6 +9,7 @@ import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
 
 export default function SurveyPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +35,7 @@ export default function SurveyPage() {
       setData(result.data);
     } catch (error) {
       console.error("Error loading data:", error);
-      toast.error("Error loading surveys");
+      toast.error(t("surveyPage.loadError"));
     } finally {
       setLoading(false);
     }
@@ -64,14 +66,14 @@ export default function SurveyPage() {
   };
 
   const handleDelete = async (item) => {
-    if (window.confirm(`Are you sure you want to delete "${item.name}"?`)) {
+    if (window.confirm(t("surveyPage.deleteConfirm", { name: item.name }))) {
       try {
         await api.survey.delete(item.id);
-        toast.success("Survey deleted successfully");
+        toast.success(t("surveyPage.deleteSuccess"));
         loadData();
       } catch (error) {
         console.error("Error deleting:", error);
-        toast.error("Error deleting survey");
+        toast.error(t("surveyPage.deleteError"));
       }
     }
   };
@@ -81,32 +83,31 @@ export default function SurveyPage() {
     try {
       if (editingItem) {
         await api.survey.update(editingItem.id, formData);
-        toast.success("Survey updated successfully");
+        toast.success(t("surveyPage.updateSuccess"));
       } else {
         await api.survey.create(formData);
-        toast.success("Survey created successfully");
+        toast.success(t("surveyPage.createSuccess"));
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
       console.error("Error saving:", error);
-      toast.error("Error saving survey");
+      toast.error(t("surveyPage.saveError"));
     }
   };
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "name", label: "Name" },
-    { key: "topic", label: "Topic" },
-    { key: "version", label: "Version" },
-    { key: "description", label: "Description" },
+    { key: "name", label: t("surveyPage.name") },
+    { key: "topic", label: t("surveyPage.topic") },
+    { key: "version", label: t("surveyPage.version") },
+    { key: "description", label: t("surveyPage.description") },
   ];
 
   if (loading) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return <div className="p-8 text-center">{t("surveyPage.loading")}</div>;
   }
 
-  // Show form builder if a survey is selected
   if (selectedSurvey) {
     return (
       <FormBuilder
@@ -120,9 +121,11 @@ export default function SurveyPage() {
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Surveys</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            {t("surveyPage.title")}
+          </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Click on any survey to open the form builder
+            {t("surveyPage.subtitle")}
           </p>
         </div>
         <button
@@ -130,14 +133,18 @@ export default function SurveyPage() {
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
       <Filters
         data={data}
         setFilteredData={setFilteredData}
-        criteria={["name", "topic", "description"]}
+        criteria={[
+          { key: "name", label: t("surveyPage.name") },
+          { key: "topic", label: t("surveyPage.topic") },
+          { key: "description", label: t("surveyPage.description") },
+        ]}
       />
 
       <DataTable
@@ -151,12 +158,16 @@ export default function SurveyPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Survey" : "Create Survey"}
+        title={
+          editingItem
+            ? t("surveyPage.editSurvey")
+            : t("surveyPage.createSurvey")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
+              {t("surveyPage.name")}
             </label>
             <input
               type="text"
@@ -172,7 +183,7 @@ export default function SurveyPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Topic
+              {t("surveyPage.topic")}
             </label>
             <input
               type="text"
@@ -188,7 +199,7 @@ export default function SurveyPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Version
+              {t("surveyPage.version")}
             </label>
             <input
               type="text"
@@ -204,7 +215,7 @@ export default function SurveyPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
+              {t("surveyPage.description")}
             </label>
             <input
               type="text"
@@ -220,7 +231,7 @@ export default function SurveyPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Image URL
+              {t("surveyPage.imageUrl")}
             </label>
             <input
               type="text"
@@ -239,13 +250,13 @@ export default function SurveyPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

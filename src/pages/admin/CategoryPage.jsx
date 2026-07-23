@@ -5,8 +5,10 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,14 +86,18 @@ export default function CategoryPage() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "name", label: "Name" },
-    { key: "image", label: "Image" },
+    { key: "name", label: t("categoryPage.name") },
+    { key: "image", label: t("categoryPage.image") },
     {
       key: "target_zone_type",
-      label: "Target Zone Type",
+      label: t("categoryPage.targetZoneType"),
       render: (val) => {
         if (!val) return "-";
-        const types = { OP: "Open Space", CL: "Closed Space", MX: "Mixed" };
+        const types = {
+          OP: t("zonePage.openSpace"),
+          CL: t("zonePage.closedSpace"),
+          MX: t("zonePage.mixedSpace"),
+        };
         return types[val] || val;
       },
     },
@@ -104,13 +110,15 @@ export default function CategoryPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Categories</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("categoryPage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
@@ -118,8 +126,8 @@ export default function CategoryPage() {
         data={data}
         setFilteredData={setFilteredData}
         criteria={[
-          { key: "name", label: "name" },
-          { key: "target_zone_type", label: "target zone type" },
+          { key: "name", label: t("categoryPage.name") },
+          { key: "target_zone_type", label: t("categoryPage.targetZoneType") },
         ]}
       />
 
@@ -133,12 +141,16 @@ export default function CategoryPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Category" : "Create Category"}
+        title={
+          editingItem
+            ? t("categoryPage.editCategory")
+            : t("categoryPage.createCategory")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
+              {t("categoryPage.name")}
             </label>
             <input
               type="text"
@@ -154,7 +166,7 @@ export default function CategoryPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Image URL
+              {t("categoryPage.imageURL")}
             </label>
             <input
               type="text"
@@ -169,7 +181,7 @@ export default function CategoryPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Target Zone Type
+              {t("categoryPage.targetZoneType")}
             </label>
             <select
               value={formData.target_zone_type || ""}
@@ -181,10 +193,10 @@ export default function CategoryPage() {
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
-              <option value="">Any Zone Type</option>
-              <option value="OP">Open Space</option>
-              <option value="CL">Closed Space</option>
-              <option value="MX">Mixed</option>
+              <option value="">{t("categoryPage.anyZoneType")}</option>
+              <option value="OP">{t("zonePage.openSpace")}</option>
+              <option value="CL">{t("zonePage.closedSpace")}</option>
+              <option value="MX">{t("zonePage.mixedSpace")}</option>
             </select>
           </div>
 
@@ -194,13 +206,13 @@ export default function CategoryPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import api from "../../services/apiAdmin";
 
 export default function CategorySubcategoryFilter({
@@ -7,6 +8,7 @@ export default function CategorySubcategoryFilter({
   onCategoryChange,
   onSubcategoryChange,
 }) {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
@@ -65,27 +67,33 @@ export default function CategorySubcategoryFilter({
   };
 
   if (loading) {
-    return <div className="text-sm text-gray-500">Loading filters...</div>;
+    return (
+      <div className="text-sm text-gray-500">
+        {t("categorySubcategoryFilter.loading")}
+      </div>
+    );
   }
 
   return (
     <div className="space-y-3">
       <p className="text-sm font-medium text-gray-700">
-        Select Category and Subcategory for new questions:
+        {t("categorySubcategoryFilter.helperText")}
       </p>
 
       <div className="grid grid-cols-1 gap-4">
         {/* Category Select */}
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">
-            Category *
+            {t("categorySubcategoryFilter.categoryLabel")}
           </label>
           <select
             value={selectedCategory?.id || ""}
             onChange={(e) => handleCategorySelect(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
           >
-            <option value="">-- Select Category --</option>
+            <option value="">
+              {t("categorySubcategoryFilter.categoryPlaceholder")}
+            </option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -97,7 +105,7 @@ export default function CategorySubcategoryFilter({
         {/* Subcategory Select */}
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">
-            Subcategory *
+            {t("categorySubcategoryFilter.subcategoryLabel")}
           </label>
           <select
             value={selectedSubcategory?.id || ""}
@@ -105,7 +113,9 @@ export default function CategorySubcategoryFilter({
             disabled={!selectedCategory}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
-            <option value="">-- Select Subcategory --</option>
+            <option value="">
+              {t("categorySubcategoryFilter.subcategoryPlaceholder")}
+            </option>
             {filteredSubcategories.map((subcategory) => (
               <option key={subcategory.id} value={subcategory.id}>
                 {subcategory.name}
@@ -117,9 +127,10 @@ export default function CategorySubcategoryFilter({
 
       {selectedCategory && selectedSubcategory && (
         <div className="text-sm text-green-700 bg-green-50 px-3 py-2 rounded-lg">
-          ✓ New questions will be created under:{" "}
-          <strong>{selectedCategory.name}</strong> →{" "}
-          <strong>{selectedSubcategory.name}</strong>
+          {t("categorySubcategoryFilter.selectionSummary", {
+            category: selectedCategory.name,
+            subcategory: selectedSubcategory.name,
+          })}
         </div>
       )}
     </div>

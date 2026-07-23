@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { X, Search } from "lucide-react";
 import api from "../../services/apiAdmin";
 
@@ -7,6 +8,7 @@ export default function QuestionBankModal({
   onAddQuestions,
   surveyId,
 }) {
+  const { t } = useTranslation();
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [selectedQuestions, setSelectedQuestions] = useState({});
@@ -103,7 +105,7 @@ export default function QuestionBankModal({
       false,
     );
     if (!isAtLeastOneSelected) {
-      alert("Please select at least one question");
+      alert(t("questionBankModal.selectAtLeastOne"));
       return;
     }
     const questionsToAdd = filteredQuestions.filter(
@@ -131,9 +133,11 @@ export default function QuestionBankModal({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Question Bank</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              {t("questionBankModal.title")}
+            </h2>
             <p className="text-sm text-gray-500 mt-1">
-              Select questions to add to your survey
+              {t("questionBankModal.subtitle")}
             </p>
           </div>
           <button
@@ -156,7 +160,7 @@ export default function QuestionBankModal({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search questions by description or code..."
+              placeholder={t("questionBankModal.searchPlaceholder")}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
           </div>
@@ -165,7 +169,7 @@ export default function QuestionBankModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Filter by Category
+                {t("questionBankModal.filterByCategory")}
               </label>
               <select
                 value={filterCategory}
@@ -175,7 +179,7 @@ export default function QuestionBankModal({
                 }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               >
-                <option value="">All Categories</option>
+                <option value="">{t("questionBankModal.allCategories")}</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -186,7 +190,7 @@ export default function QuestionBankModal({
 
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Filter by Subcategory
+                {t("questionBankModal.filterBySubcategory")}
               </label>
               <select
                 value={filterSubcategory}
@@ -194,7 +198,9 @@ export default function QuestionBankModal({
                 disabled={!filterCategory}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent disabled:bg-gray-100"
               >
-                <option value="">All Subcategories</option>
+                <option value="">
+                  {t("questionBankModal.allSubcategories")}
+                </option>
                 {filterCategory &&
                   getSubcategoriesForCategory(filterCategory).map(
                     (subcategory) => (
@@ -213,11 +219,13 @@ export default function QuestionBankModal({
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-700 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading questions...</p>
+              <p className="text-gray-600">{t("questionBankModal.loading")}</p>
             </div>
           ) : filteredQuestions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">No questions found</p>
+              <p className="text-gray-500">
+                {t("questionBankModal.noQuestions")}
+              </p>
             </div>
           ) : (
             <div>
@@ -228,7 +236,7 @@ export default function QuestionBankModal({
                   className="w-4 h-4 text-red-700 border-gray-300 rounded focus:ring-red-500"
                 />
 
-                <span>All</span>
+                <span>{t("questionBankModal.all")}</span>
               </div>
 
               <div className="space-y-3">
@@ -260,8 +268,8 @@ export default function QuestionBankModal({
                             </span>
                             <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
                               {question.question_type === "unique_response"
-                                ? "Unique"
-                                : "Matrix"}
+                                ? t("questionBankModal.uniqueType")
+                                : t("questionBankModal.matrixType")}
                             </span>
                           </div>
                           <p className="text-sm text-gray-900">
@@ -270,7 +278,9 @@ export default function QuestionBankModal({
                           {question.sub_questions &&
                             question.sub_questions.length > 0 && (
                               <p className="text-xs text-gray-500 mt-1">
-                                {question.sub_questions.length} subquestion(s)
+                                {t("questionBankModal.subquestionCount", {
+                                  count: question.sub_questions.length,
+                                })}
                               </p>
                             )}
                         </div>
@@ -286,14 +296,16 @@ export default function QuestionBankModal({
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
           <p className="text-sm text-gray-600">
-            {Object.values(selectedQuestions).length} question(s) selected
+            {t("questionBankModal.selectedCount", {
+              count: Object.values(selectedQuestions).length,
+            })}
           </p>
           <div className="flex gap-3">
             <button
               onClick={onClose}
               className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               onClick={handleAddSelected}
@@ -305,7 +317,7 @@ export default function QuestionBankModal({
               }
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              Add Selected Questions
+              {t("questionBankModal.addSelected")}
             </button>
           </div>
         </div>
