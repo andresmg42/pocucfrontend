@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
+import { Languages } from "lucide-react";
 function Dropdown({ options, onSelect, placeholder = "" }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -22,45 +22,27 @@ function Dropdown({ options, onSelect, placeholder = "" }) {
   }
 
   return (
-    <div ref={ref} style={{ position: "relative", display: "inline-block" }}>
+    <div ref={ref} className="relative inline-block cursor-pointer">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        style={{ minWidth: "20px", textAlign: "left" }}
+        className="min-w-[20px] text-left flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100"
       >
-        {selected ? (selected.label ?? selected) : placeholder}{" "}
-        {isOpen ? "▲" : "▼"}
+        <Languages />
+        <span>{selected ? (selected.label ?? selected) : placeholder}</span>
       </button>
 
       {isOpen && (
         <ul
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            background: "white",
-            border: "1px solid #ccc",
-            listStyle: "none",
-            padding: "4px 0",
-            margin: 0,
-            minWidth: "160px",
-            zIndex: 10,
-            maxHeight: "240px",
-            overflowY: "auto",
-          }}
+          className="absolute top-full right-0 min-w-[160px] max-h-60 overflow-y-auto
+                     bg-white border border-gray-300 rounded-md shadow-lg
+                     list-none p-1 m-0 z-10"
         >
           {options.map((option, index) => (
             <li key={option.value ?? option.id ?? index}>
               <button
                 onClick={() => handleSelect(option)}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  textAlign: "left",
-                  padding: "8px 12px",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
+                className="block w-full text-left px-3 py-2 rounded bg-transparent
+                           border-none cursor-pointer hover:bg-gray-100"
               >
                 {option.label ?? option}
               </button>

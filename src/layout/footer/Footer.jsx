@@ -1,69 +1,109 @@
-import React from 'react'
-import { NavLink } from 'react-router';
-import { SiYoutube, SiFacebook, SiInstagram } from "react-icons/si";
+import React from "react";
+import { NavLink } from "react-router";
+import { SiYoutube, SiFacebook, SiInstagram, SiX } from "react-icons/si";
+import { HiGlobeAlt, HiPhone, HiMail, HiOfficeBuilding } from "react-icons/hi";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
-    <footer className=" text-black bg-black/2  bottom-0 left-0 right-0 w-full">
-        <div className="flex justify-end pr-8 pt-2 text-sm">
-        <NavLink to="/politica-de-privacidad" className="hover:underline text-xs md:text-sm">
-          Política de privacidad
+    <footer className="bg-red-700 text-white w-full">
+      {/* Top row: privacy policy link */}
+      <div className="flex justify-end px-6 pt-1.5">
+        <NavLink
+          to="/politica-de-privacidad"
+          className="hover:underline text-xs"
+        >
+          {t("footer.privacyPolicies")}
         </NavLink>
       </div>
 
-      {/* Main content container for alignment */}
-      <div className=" mx-auto px-5 py-4  flex  flex-col md:flex-row justify-start items-start md:items-end">
-        {/* Left Section: Contact Information */}
-        <div className="flex flex-col mb-4 md:mb-0 text-sm">
-          <h3 className="font-bold text-sm md:text-lg mb-2">Vicerrectoría de Bienestar Universitario</h3>
-          <p className="font-semibold text-xs md:text-base mb-2">Política Institucional Universidad Saludable</p>
-          <p className="font-semibold text-xs md:text-base mb-2">Linea de Conocimiento saberes y prácticas en promoción de la salud </p>
-          <p className="font-semibold text-xs md:text-base mb-2">Prioridades: Salud Ambiental y Salud Social</p>
-          <p className="flex items-center mt-1">
-            <span className="mr-2">📧</span>
-            <a href="mailto:dintev@univalle.edu.co" className="hover:underline text-xs md:text-base break-all">programa.universidadsaludable@correounivalle.edu.co</a>
+      {/* Main content container */}
+      <div className="px-6 pt-1 pb-3 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
+        {/* Left Section: Institutional + contact info */}
+        <div className="flex flex-col text-sm leading-tight">
+          <h3 className="font-extrabold text-base md:text-lg leading-tight mb-0.5">
+            {t("footer.wellBeingVR")}
+          </h3>
+          <p className="font-bold text-xs md:text-sm mb-1.5">
+            {t("footer.institutionalPolicie")}
           </p>
-          <p className="flex items-center mt-1">
-            <span className="mr-2 text-xs md:text-base">📍</span>
-            Edificio D7, Tercer piso,Campus Meléndez
+
+          <p className="flex items-center gap-2 leading-tight">
+            <HiGlobeAlt className="shrink-0" size={14} />
+            <a
+              href="http://dintev.univalle.edu.co"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline text-xs"
+            >
+              {t("footer.website")}
+            </a>
+          </p>
+
+          <p className="flex items-center gap-2 leading-tight">
+            <HiPhone className="shrink-0" size={14} />
+            <span className="text-xs">{t("footer.phone")}</span>
+          </p>
+
+          <p className="flex items-center gap-2 leading-tight">
+            <HiMail className="shrink-0" size={14} />
+            <a
+              href="mailto:campusvirtual@correounivalle.edu.co"
+              className="hover:underline text-xs break-all"
+            >
+              {t("footer.email")}
+            </a>
+          </p>
+
+          <p className="flex items-center gap-2 leading-tight">
+            <HiOfficeBuilding className="shrink-0" size={14} />
+            <span className="text-xs">{t("footer.adress")}</span>
           </p>
         </div>
 
         {/* Right Section: Social Media Icons */}
-        <div className="flex   gap-5 ml-auto  mb-4 md:mb-0 text-4xl">
-          <a 
-            href="https://www.youtube.com/user/univallecol" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="hover:text-gray-300"
+        <div className="flex gap-2">
+          <a
+            href="https://www.youtube.com/user/univallecol"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
           >
             <span className="sr-only">YouTube</span>
-            <SiYoutube /> {/* Use the component here */}
+            <SiYoutube size={14} />
           </a>
-          <a 
-            href="https://www.facebook.com/universidadunivalle" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="hover:text-gray-300"
+          <a
+            href="https://www.facebook.com/universidadunivalle"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
           >
             <span className="sr-only">Facebook</span>
-            <SiFacebook /> {/* Use the component here */}
+            <SiFacebook size={14} />
           </a>
-          <a 
-            href="https://www.instagram.com/univalleoficial/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="hover:text-gray-300"
+          <a
+            href="https://twitter.com/univalleoficial"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
+          >
+            <span className="sr-only">Twitter</span>
+            <SiX size={13} />
+          </a>
+          <a
+            href="https://www.instagram.com/univalleoficial/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
           >
             <span className="sr-only">Instagram</span>
-            <SiInstagram /> {/* Use the component here */}
+            <SiInstagram size={14} />
           </a>
         </div>
       </div>
-
-
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

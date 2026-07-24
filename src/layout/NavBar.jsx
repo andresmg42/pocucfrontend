@@ -3,11 +3,13 @@ import { useState } from "react";
 import { NavLink } from "react-router";
 import useAuthStore from "../stores/use-auth-store";
 import { useNavigate } from "react-router";
-import { Languages } from "lucide-react";
+
 import Dropdown from "../components/auxiliarcomponents/Dropdown";
 import i18n from "../i18n";
+import { useTranslation } from "react-i18next";
 
 function NavBar() {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { userLogged, logout, role } = useAuthStore();
   const menuRef = useRef(null);
@@ -98,12 +100,12 @@ function NavBar() {
                 end
                 className={({ isActive }) =>
                   `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
-                    isActive ? "text-blue-500" : ""
+                    isActive ? "text-red-700" : ""
                   }`
                 }
                 onClick={closeMenu}
               >
-                Panel Administrativo
+                {t("navBar.adminPanel")}
               </NavLink>
             </li>
             <li>
@@ -111,12 +113,12 @@ function NavBar() {
                 to="report-panel-surveys/"
                 className={({ isActive }) =>
                   `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
-                    isActive ? "text-blue-500" : ""
+                    isActive ? "text-red-700" : ""
                   }`
                 }
                 onClick={closeMenu}
               >
-                Reportes
+                {t("navBar.reports")}
               </NavLink>
             </li>
           </>
@@ -127,12 +129,12 @@ function NavBar() {
             end
             className={({ isActive }) =>
               `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
-                isActive ? "text-blue-500" : ""
+                isActive ? "text-red-700" : ""
               }`
             }
             onClick={closeMenu}
           >
-            Formularios
+            {t("navBar.forms")}
           </NavLink>
         </li>
 
@@ -141,48 +143,47 @@ function NavBar() {
             to="/about"
             className={({ isActive }) =>
               `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
-                isActive ? "text-blue-500" : ""
+                isActive ? "text-red-700" : ""
               }`
             }
             onClick={closeMenu}
           >
-            Sobre nosotros
+            {t("navBar.aboutUs")}
           </NavLink>
         </li>
+
+        {!userLogged ? (
+          <li>
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                  isActive ? "text-red-700" : ""
+                }`
+              }
+              onClick={closeMenu}
+            >
+              {t("navBar.logIn")}
+            </NavLink>
+          </li>
+        ) : (
+          <li>
+            <button
+              onClick={handleLogout}
+              className="hover:text-[#797777] block md:inline-block py-2 md:py-0 cursor-pointer"
+            >
+              {t("navBar.logOut")}
+            </button>
+          </li>
+        )}
         <li>
-          <div className="flex">
-            <Languages />
+          <div className="hover:text-[#797777] cursor-pointer">
             <Dropdown
               options={["en", "es"]}
               onSelect={(option) => i18n.changeLanguage(option)}
             />
           </div>
         </li>
-        {!userLogged && (
-          <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
-                  isActive ? "text-blue-500" : ""
-                }`
-              }
-              onClick={closeMenu}
-            >
-              Iniciar Sesión
-            </NavLink>
-          </li>
-        )}
-        {userLogged && (
-          <li>
-            <button
-              onClick={handleLogout}
-              className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-            >
-              Cerrar Sesión
-            </button>
-          </li>
-        )}
       </ul>
     </nav>
   );
