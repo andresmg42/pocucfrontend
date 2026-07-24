@@ -89,6 +89,7 @@
       "finished":"Finished"
     },
     "filters":{
+      "observer":"Observer",
       "stateLabel":"State (0: Not Started, 1: In Progress, 2: Finished)",
       "surveyLabel":"Survey",
       "campusLabel":"Campus",
@@ -251,6 +252,25 @@
     "selectSessionPlaceholder":"Select a session",
     "session":"Session"
     
+  },
+  "responsePage": {
+    "title":"Responses",
+    "parentQuestion": "Parent Question",
+    "questionID": "Question ID",
+    "questionCode": "Question Code",
+    "questionDescription": "Description",
+    "optionID": "Option ID",
+    "numericValue": "Numeric Value",
+    "textValue": "Text Value",
+    "subcategory": "Subcategory",
+    "category": "Category",
+    "observer": "Observer",
+    "email": "Email",
+    "survey": "Survey",
+    "zone": "Zone",
+    "sessionID": "Session ID",
+    "visitID": "Visit ID"
+
   }
   
 }

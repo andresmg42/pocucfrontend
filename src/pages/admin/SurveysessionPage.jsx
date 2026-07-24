@@ -244,7 +244,7 @@ export default function SurveysessionPage() {
         data={data}
         setFilteredData={setFilteredData}
         criteria={[
-          "observer",
+          { key: "observer", label: t("surveysessionPage.filters.observer") },
           {
             key: "state",
             label: t("surveysessionPage.filters.stateLabel"),

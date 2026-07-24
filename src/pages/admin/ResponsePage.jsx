@@ -5,8 +5,10 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function ResponsePage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
@@ -33,28 +35,35 @@ export default function ResponsePage() {
     { key: "id", label: "ID" },
     {
       key: "parent_question",
-      label: "Parent Question",
+      label: t("responsePage.parentQuestion"),
       render: (val) => (val ? val : "-"),
     },
-    { key: "question", label: "Question ID" },
-    { key: "question_code", label: "Question Code" },
-    { key: "question_description", label: "Q description" },
-    { key: "option", label: "Option ID" },
-    { key: "numeric_value", label: "Numeric Value" },
+    { key: "question", label: t("responsePage.questionID") },
+    { key: "question_code", label: t("responsePage.questionCode") },
+    {
+      key: "question_description",
+      label: t("responsePage.questionDescription"),
+    },
+    { key: "option", label: t("responsePage.optionID") },
+    { key: "numeric_value", label: t("responsePage.numericValue") },
     {
       key: "text_value",
-      label: "Text Value",
+      label: t("responsePage.textValue"),
       render: (val) => (val ? val : "-"),
     },
-    { key: "subcategory", label: "Subcategory" },
-    { key: "category", label: "category" },
-    { key: "observer", label: "Observer" },
-    { key: "observer_email", label: "Email" },
-    { key: "survey", label: "Survey" },
+    { key: "subcategory", label: t("responsePage.subcategory") },
+    { key: "category", label: t("responsePage.category") },
+    { key: "observer", label: t("responsePage.observer") },
+    { key: "observer_email", label: t("responsePage.email") },
+    { key: "survey", label: t("responsePage.survey") },
     { key: "campus", label: "Campus" },
-    { key: "zone", label: "Zone", render: (val) => val.slice(0, 20) + "..." },
-    { key: "surveysession_id", label: "Session Id" },
-    { key: "visita", label: "Visit ID" },
+    {
+      key: "zone",
+      label: t("responsePage.zone"),
+      render: (val) => val.slice(0, 20) + "...",
+    },
+    { key: "surveysession_id", label: t("responsePage.sessionID") },
+    { key: "visita", label: t("responsePage.visitID") },
   ];
 
   if (loading) {
@@ -63,19 +72,22 @@ export default function ResponsePage() {
 
   return (
     <div className="p-8">
+      <h1 className="text-3xl font-bold text-gray-900 mb-10">
+        {t("responsePage.title")}
+      </h1>
       <Filters
         data={data}
         setFilteredData={setFilteredData}
         criteria={[
-          { key: "question_code", label: "Quetion Code" },
-          { key: "observer_email", label: "Observer Email" },
-          { key: "parent_question", label: "Parent Question Description" },
-          "category",
-          "subcategory",
-          "observer",
+          { key: "question_code", label: t("responsePage.questionCode") },
+          { key: "observer_email", label: t("responsePage.email") },
+          { key: "parent_question", label: t("responsePage.parentQuestion") },
+          { key: "category", label: t("responsePage.category") },
+          { key: "subcategory", label: t("responsePage.subcategory") },
+          { key: "observer", label: t("responsePage.observer") },
           "campus",
-          "zone",
-          "survey",
+          { key: "zone", label: t("responsePage.zone") },
+          { key: "survey", label: t("responsePage.survey") },
         ]}
       />
 
