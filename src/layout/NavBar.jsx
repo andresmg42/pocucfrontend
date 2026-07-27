@@ -140,7 +140,7 @@ function NavBar() {
 
         <li>
           <NavLink
-            to="/about"
+            to="/aboutus"
             className={({ isActive }) =>
               `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
                 isActive ? "text-red-700" : ""
