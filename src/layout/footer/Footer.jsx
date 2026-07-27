@@ -37,13 +37,13 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="hover:underline text-xs"
             >
-              {t("footer.website")}
+              https://vicebienestar.univalle.edu.co/proyecto-universidad-saludable
             </a>
           </p>
 
           <p className="flex items-center gap-2 leading-tight">
             <HiPhone className="shrink-0" size={14} />
-            <span className="text-xs">{t("footer.phone")}</span>
+            <span className="text-xs">+57 602 3212100</span>
           </p>
 
           <p className="flex items-center gap-2 leading-tight">
@@ -52,7 +52,7 @@ const Footer = () => {
               href="mailto:campusvirtual@correounivalle.edu.co"
               className="hover:underline text-xs break-all"
             >
-              {t("footer.email")}
+              politica.universidadsaludable@correounivalle.edu.co
             </a>
           </p>
 
@@ -65,7 +65,7 @@ const Footer = () => {
         {/* Right Section: Social Media Icons */}
         <div className="flex gap-2">
           <a
-            href="https://www.youtube.com/user/univallecol"
+            href="https://www.youtube.com/@unisaludaleuv"
             target="_blank"
             rel="noopener noreferrer"
             className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
@@ -74,7 +74,7 @@ const Footer = () => {
             <SiYoutube size={14} />
           </a>
           <a
-            href="https://www.facebook.com/universidadunivalle"
+            href="https://www.facebook.com/unisaludableuv"
             target="_blank"
             rel="noopener noreferrer"
             className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
@@ -83,16 +83,7 @@ const Footer = () => {
             <SiFacebook size={14} />
           </a>
           <a
-            href="https://twitter.com/univalleoficial"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
-          >
-            <span className="sr-only">Twitter</span>
-            <SiX size={13} />
-          </a>
-          <a
-            href="https://www.instagram.com/univalleoficial/"
+            href="https://www.instagram.com/unisaludableuv"
             target="_blank"
             rel="noopener noreferrer"
             className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
