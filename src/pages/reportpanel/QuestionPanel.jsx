@@ -22,7 +22,7 @@ const QuestionPanel = () => {
         const res = await api.get(
           `question/get_questions_by_survey?survey_id=${survey_id}`,
         );
-        console.log("data en questionsTable", res.data);
+
         setTData(res.data);
       } catch (error) {
         console.error("error", error);

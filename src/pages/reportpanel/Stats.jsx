@@ -49,12 +49,10 @@ const Stats = () => {
           res = await api.get(
             `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&survey_id=${survey_id}`,
           );
-          console.log("respuesta en la zona 0", res.data);
         } else {
           res = await api.get(
             `pocucstats/descriptive_analisis_by_question?question_id=${question_id}&zone_id=${idZone}&survey_id=${survey_id}`,
           );
-          console.log("respueta en la zona diferente de 0", res.data);
         }
 
         setQuestion(res.data);
@@ -103,11 +101,8 @@ const Stats = () => {
       setBarChartDataMRText(question.data_text);
       setCharTriggerUR(false);
     } else {
-      console.log("question_bar_chart", question.data_numeric);
-
       setBarChartDataUR(question.data_numeric);
       setBarChartDataURText(question.data_text);
-      console.log("barchar_data_UR", BarChartDataUR);
 
       setCharTriggerUR(true);
     }
@@ -127,7 +122,6 @@ const Stats = () => {
     );
 
   if (noData) {
-    console.log("aggregate data into if");
     return (
       <div className="flex flex-1 items-center justify-center">
         <NoDataPlaceholder />

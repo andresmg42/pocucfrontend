@@ -6,12 +6,14 @@ import toast from "react-hot-toast";
 import {
   getInitialState,
   saveStorageState,
-  deleteCategoryDataFromVisit
+  deleteCategoryDataFromVisit,
 } from "../../utils/storage_functions";
 import UniqueResponseForm from "./UniqueResponseForm";
 import MatrixParentForm from "./MatrixParentForm";
+import useAuthStore from "../../stores/use-auth-store";
 
 const Form2 = () => {
+  const { token, isLoading } = useAuthStore();
   const {
     category_id,
     surveysession_id,
@@ -26,10 +28,10 @@ const Form2 = () => {
   const [commentTrigger, setCommentTrigger] = useState({});
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState(() =>
-    getInitialState(ANSWERS_STORAGE_KEY, visit_id,category_id, "answer"),
+    getInitialState(ANSWERS_STORAGE_KEY, visit_id, category_id, "answer"),
   );
   const [comments, setComments] = useState(() =>
-    getInitialState(ANSWERS_STORAGE_KEY, visit_id,category_id, "comment"),
+    getInitialState(ANSWERS_STORAGE_KEY, visit_id, category_id, "comment"),
   );
   const [openTextFields, setOpenTextFields] = useState({});
   const [isCompleted, setIsCompleted] = useState();
@@ -46,8 +48,20 @@ const Form2 = () => {
   }
 
   useEffect(() => {
-    saveStorageState(ANSWERS_STORAGE_KEY, visit_id,category_id, "answer", answers);
-    saveStorageState(ANSWERS_STORAGE_KEY, visit_id,category_id, "comment", comments);
+    saveStorageState(
+      ANSWERS_STORAGE_KEY,
+      visit_id,
+      category_id,
+      "answer",
+      answers,
+    );
+    saveStorageState(
+      ANSWERS_STORAGE_KEY,
+      visit_id,
+      category_id,
+      "comment",
+      comments,
+    );
   }, [answers, comments]);
 
   useEffect(() => {
@@ -74,8 +88,6 @@ const Form2 = () => {
             parent_questions.map((q) => (triggers[q.id] = false));
             return triggers;
           });
-
-          console.log("questions in form", questionsResponse.data);
         }
       } catch (error) {
         console.error(
@@ -85,8 +97,10 @@ const Form2 = () => {
       }
     }
 
+    if (isLoading || !token) return;
+
     initializeForm();
-  }, []);
+  }, [isLoading, token]);
 
   const handleRadioChange = (questionId, questionV, optionId) => {
     if (questionV == "other") {
@@ -162,18 +176,9 @@ const Form2 = () => {
           !(q.id in answers),
       );
       if (problemQuestions.length === 0) {
-        console.log("answers", answers);
-
         setLoading(true);
 
-       
-
         // Filter answers to only include questions from the current category
-       
-
-        
-
-        
 
         const payLoad = {
           answers: answers,
@@ -182,11 +187,6 @@ const Form2 = () => {
 
         const res = await api.post("response/create/", payLoad);
 
-        console.log("respuesta en el form", res);
-
-        // setAnswers({});
-
-        // setComments({});
         deleteCategoryDataFromVisit(ANSWERS_STORAGE_KEY, visit_id, category_id);
 
         toast.success("Survey saved successfully");
@@ -262,6 +262,7 @@ const Form2 = () => {
               case "unique_response":
                 return (
                   <UniqueResponseForm
+                    key={q.id}
                     q={q}
                     comments={comments}
                     answers={answers}
@@ -278,6 +279,7 @@ const Form2 = () => {
               case "matrix_parent":
                 return (
                   <MatrixParentForm
+                    key={q.id}
                     q={q}
                     comments={comments}
                     answers={answers}

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import api from "../api/user.api";
 import {
   onAuthStateChanged,
+  onIdTokenChanged,
   signInWithPopup,
   signOut,
   GoogleAuthProvider,
@@ -11,7 +12,7 @@ import { Header } from "@table-library/react-table-library";
 
 const useAuthStore = create((set) => {
   const observeAuthState = () => {
-    return onAuthStateChanged(auth, async (user) => {
+    return onIdTokenChanged(auth, async (user) => {
       if (user) {
         try {
           const token = await user.getIdToken();

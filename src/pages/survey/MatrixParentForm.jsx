@@ -1,6 +1,17 @@
 import React from "react";
 
-const MatrixParentForm = ({q,comments,commentTrigger,answers,handleRadioChange,handleOtherTextChange,handleOtherNumericChange,setCommentTrigger,handleCommentChange,openTextFields}) => {
+const MatrixParentForm = ({
+  q,
+  comments,
+  commentTrigger,
+  answers,
+  handleRadioChange,
+  handleOtherTextChange,
+  handleOtherNumericChange,
+  setCommentTrigger,
+  handleCommentChange,
+  openTextFields,
+}) => {
   return (
     <fieldset
       key={q.id}
@@ -19,14 +30,15 @@ const MatrixParentForm = ({q,comments,commentTrigger,answers,handleRadioChange,h
       {q.sub_questions.map((sub_q) => {
         // Logic remains unchanged
         const isOtherOpen = openTextFields[sub_q.id];
-        const isOtherSelected =
+        const isOtherSelected = !!(
           isOtherOpen ||
           (answers[sub_q.id] &&
             !q.options.some(
               (opt) =>
                 opt.description === answers[sub_q.id]?.numeric_value ||
                 opt.description === answers[sub_q.id]?.textValue,
-            ));
+            ))
+        );
 
         return (
           // Sub-question fieldset

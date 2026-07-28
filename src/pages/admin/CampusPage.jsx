@@ -25,7 +25,7 @@ export default function CampusPage() {
     try {
       setLoading(true);
       const result = await api.campus.list();
-      console.log("campus data", result.data);
+
       setData(result.data);
     } catch (error) {
       console.error("Error loading data:", error);

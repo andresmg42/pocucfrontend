@@ -31,7 +31,6 @@ export default function ZonePage() {
       setLoading(true);
       const result = await api.zone.list();
       setData(result.data);
-      console.log("zone data", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading zones");
@@ -43,7 +42,7 @@ export default function ZonePage() {
   const loadCampuses = async () => {
     try {
       const result = await api.campus.list();
-      // console.log("campuses in zonepage", result.data);
+
       setCampuses(result.data);
     } catch (error) {
       console.error("Error loading campuses:", error);

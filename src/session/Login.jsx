@@ -19,7 +19,6 @@ function Login() {
   const handleGoogleLogin = async () => {
     try {
       await loginGooglePopUp();
-      console.log("this is the user loggin", res.user);
     } catch (error) {
       console.log(error);
     }

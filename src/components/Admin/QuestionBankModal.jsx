@@ -43,13 +43,11 @@ export default function QuestionBankModal({
         resSubcategoriesData.data,
       ];
 
-      console.log("this is the question data:", questionsData);
       // Filter out questions that are already in this survey
       const availableQuestions = questionsData.filter(
         (q) => !q.survey || !q.survey.includes(surveyId),
       );
 
-      console.log("available questions", availableQuestions);
       setQuestions(availableQuestions);
       setCategories(categoriesData);
       setSubcategories(subcategoriesData);

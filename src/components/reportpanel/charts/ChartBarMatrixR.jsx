@@ -19,8 +19,6 @@ const getRandomColor = () =>
     .padStart(6, "0");
 
 const ChartBarMatrixR = ({ data, colors }) => {
-  console.log("data in chartBarMatrix: ", data);
-
   // 1. Get the keys for the bars from the first data object.
   // We filter out 'name' because it's used for the X-axis label, not a bar.
   if (!data || data.length === 0) {
@@ -33,8 +31,6 @@ const ChartBarMatrixR = ({ data, colors }) => {
   // const barKeys = Object.keys(data[0]).filter(key => key !== 'name');
 
   const barKeys = data;
-
-  console.log("Bar Keys", barKeys);
 
   return (
     <ResponsiveContainer width="100%" height={400}>

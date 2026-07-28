@@ -17,27 +17,22 @@ const IDS = {
 function createAPI(name) {
   return {
     list: () => {
-      console.log(`📋 ${name}.list() called`);
       return api.get(`/${name}/`);
     },
 
     get: (id) => {
-      console.log(`🔍 ${name}.get(${id}) called`);
       return api.get(`/${name}/${id}/`);
     },
 
     create: (data) => {
-      console.log(`➕ ${name}.create() called`, data);
       return api.post(`/${name}/`, data);
     },
 
     update: (id, data) => {
-      console.log(`✏️ ${name}.update(${id}) called`, data);
       return api.patch(`/${name}/${id}/`, data);
     },
 
     delete: (id) => {
-      console.log(`🗑️ ${name}.delete(${id}) called`);
       return api.delete(`/${name}/${id}/`);
     },
   };
@@ -86,12 +81,9 @@ const apiAdmin = {
     },
     // Get all questions (including those not linked to any survey) - for question bank
     getBank: () => {
-      console.log(`📋 question.getBank() called`);
       return api.get("/question/get_questions_bank");
     },
   },
 };
-
-console.log("🟢 Mock API Ready:", Object.keys(api));
 
 export default apiAdmin;
