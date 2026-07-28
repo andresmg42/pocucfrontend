@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t } = useTranslation();
   return (
-    <footer className="bg-red-700 text-white w-full">
+    <footer className="bg-white text-black w-full">
       {/* Top row: privacy policy link */}
       <div className="flex justify-end px-6 pt-1.5">
         <NavLink
@@ -22,7 +22,7 @@ const Footer = () => {
       <div className="px-6 pt-1 pb-3 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
         {/* Left Section: Institutional + contact info */}
         <div className="flex flex-col text-sm leading-tight">
-          <h3 className="font-extrabold text-base md:text-lg leading-tight mb-0.5">
+          <h3 className="font-bold md:text-lg leading-tight mb-0.5">
             {t("footer.wellBeingVR")}
           </h3>
           <p className="font-bold text-xs md:text-sm mb-1.5">
@@ -30,7 +30,7 @@ const Footer = () => {
           </p>
 
           <p className="flex items-center gap-2 leading-tight">
-            <HiGlobeAlt className="shrink-0" size={14} />
+            <HiGlobeAlt className="shrink-0 text-red-700" size={14} />
             <a
               href="http://dintev.univalle.edu.co"
               target="_blank"
@@ -42,12 +42,12 @@ const Footer = () => {
           </p>
 
           <p className="flex items-center gap-2 leading-tight">
-            <HiPhone className="shrink-0" size={14} />
+            <HiPhone className="shrink-0 text-red-700" size={14} />
             <span className="text-xs">+57 602 3212100</span>
           </p>
 
           <p className="flex items-center gap-2 leading-tight">
-            <HiMail className="shrink-0" size={14} />
+            <HiMail className="shrink-0 text-red-700" size={14} />
             <a
               href="mailto:campusvirtual@correounivalle.edu.co"
               className="hover:underline text-xs break-all"
@@ -57,7 +57,7 @@ const Footer = () => {
           </p>
 
           <p className="flex items-center gap-2 leading-tight">
-            <HiOfficeBuilding className="shrink-0" size={14} />
+            <HiOfficeBuilding className="shrink-0 text-red-700" size={14} />
             <span className="text-xs">{t("footer.adress")}</span>
           </p>
         </div>
@@ -68,7 +68,7 @@ const Footer = () => {
             href="https://www.youtube.com/@unisaludaleuv"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
+            className="w-7 h-7 rounded-md bg-red-700 text-white flex items-center justify-center hover:opacity-80 transition"
           >
             <span className="sr-only">YouTube</span>
             <SiYoutube size={14} />
@@ -77,7 +77,7 @@ const Footer = () => {
             href="https://www.facebook.com/unisaludableuv"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
+            className="w-7 h-7 rounded-md bg-red-700 text-white flex items-center justify-center hover:opacity-80 transition"
           >
             <span className="sr-only">Facebook</span>
             <SiFacebook size={14} />
@@ -86,7 +86,7 @@ const Footer = () => {
             href="https://www.instagram.com/unisaludableuv"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-7 h-7 rounded-md bg-white text-[#C8102E] flex items-center justify-center hover:opacity-80 transition"
+            className="w-7 h-7 rounded-md bg-red-700 text-white flex items-center justify-center hover:opacity-80 transition"
           >
             <span className="sr-only">Instagram</span>
             <SiInstagram size={14} />
