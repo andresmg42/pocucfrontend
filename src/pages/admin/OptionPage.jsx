@@ -5,8 +5,10 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function OptionPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,8 +81,8 @@ export default function OptionPage() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "type", label: "Type" },
-    { key: "description", label: "Description" },
+    { key: "type", label: t("optionPage.type") },
+    { key: "description", label: t("optionPage.description") },
   ];
 
   if (loading) {
@@ -90,20 +92,25 @@ export default function OptionPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Options</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("optionPage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
       <Filters
         data={data}
         setFilteredData={setFilteredData}
-        criteria={["description", "type"]}
+        criteria={[
+          { key: "description", label: t("optionPage.description") },
+          { key: "type", label: t("optionPage.type") },
+        ]}
       />
 
       <DataTable
@@ -116,12 +123,16 @@ export default function OptionPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Option" : "Create Option"}
+        title={
+          editingItem
+            ? t("optionPage.editOption")
+            : t("optionPage.createOption")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
+              {t("optionPage.description")}
             </label>
             <input
               type="text"
@@ -134,7 +145,7 @@ export default function OptionPage() {
               maxLength={30}
             />
             <label className="block mb-2 mt-4 text-sm font-medium text-gray-700 mb-2">
-              Type
+              {t("optionPage.type")}
             </label>
             <select
               value={formData.type}
@@ -143,8 +154,8 @@ export default function OptionPage() {
               }
               className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
-              <option value="NUM">Numeric</option>
-              <option value="STR">Text</option>
+              <option value="NUM">{t("optionPage.numeric")}</option>
+              <option value="STR">{t("optionPage.text")}</option>
             </select>
           </div>
 
@@ -154,13 +165,13 @@ export default function OptionPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

@@ -19,14 +19,11 @@ const CreateSession = ({ survey_id }) => {
     visit_number: "",
     observational_distance: "",
     url: "",
-    observer: userLogged.email,
+    // observer: userLogged.email,
     survey: survey_id,
   });
 
-  
   useEffect(() => {
-    
-
     if (session && update && availableCampuss) {
       const currentCampus = availableCampuss.find(
         (campus) => campus.name === session.campus_name,
@@ -53,7 +50,7 @@ const CreateSession = ({ survey_id }) => {
         survey: survey_id,
       });
     }
-  }, [availableZones, session, update,userLogged.email, survey_id]);
+  }, [availableZones, session, update, userLogged.email, survey_id]);
 
   const [loading, setLoading] = useState(false);
 
@@ -66,13 +63,13 @@ const CreateSession = ({ survey_id }) => {
   const handleSelectCampus = (campus) => {
     setSelectedCampus(campus);
     setSelectedZone(null);
-    setCampusIsOpen(false); 
+    setCampusIsOpen(false);
   };
 
   const handleSelectZone = (zone) => {
     setSelectedZone(zone);
     setFormData((prev) => ({ ...prev, zone: zone.id }));
-    setZoneIsOpen(false); 
+    setZoneIsOpen(false);
   };
 
   useEffect(() => {
@@ -86,7 +83,7 @@ const CreateSession = ({ survey_id }) => {
         const res = await api.get(
           `/zone/get_zones_by_campus/?campus_id=${selectedCampus.id}`,
         );
-        
+
         setAvailableZones(res.data);
       } catch (error) {
         console.error("Zone request error", error);
@@ -100,7 +97,7 @@ const CreateSession = ({ survey_id }) => {
     async function getAvailableCampuss() {
       try {
         const res = await api.get("/campus");
-        
+
         setAvailableCampuss(res.data);
       } catch (error) {}
     }
@@ -134,8 +131,6 @@ const CreateSession = ({ survey_id }) => {
       } else {
         res = await api.post("surveysession/", formData);
       }
-
-      
 
       if (res.status === 200 || res.status === 201) {
         setAddTrigger(!addTrigger);

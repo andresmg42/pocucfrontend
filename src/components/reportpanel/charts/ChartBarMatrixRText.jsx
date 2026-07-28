@@ -10,11 +10,17 @@ import {
 } from "recharts";
 
 export default function ChartBarMatrixRText({ data, colors }) {
-  console.log("data in CharBarMatrixRText", data);
-  const COLORS = colors;
-  const { name, ...remain } = data[0];
-  const keys = Object.keys(remain);
-  console.log(keys);
+  if (!Array.isArray(data) || data.length === 0) {
+    return null;
+  }
+
+  const COLORS = colors ?? [];
+  const keys = Array.from(
+    new Set(
+      data.flatMap((item) => Object.keys(item).filter((key) => key !== "name")),
+    ),
+  );
+
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data} width={400} height={300} maxBarSize={150}>
@@ -27,7 +33,6 @@ export default function ChartBarMatrixRText({ data, colors }) {
           <Bar
             key={index}
             dataKey={item}
-            stackId="a" // same stackId groups bars together
             fill={COLORS[index % COLORS.length]}
           />
         ))}

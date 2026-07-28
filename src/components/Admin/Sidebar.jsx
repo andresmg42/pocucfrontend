@@ -10,24 +10,28 @@ import {
   UserCircle,
 } from "lucide-react";
 
+import { useTranslation } from "react-i18next";
+
 export default function Sidebar({ currentPage, onNavigate }) {
+  const { t } = useTranslation();
+
   const menuItems = [
-    { id: "campus", label: "Campus", icon: Building },
-    { id: "zone", label: "Zones", icon: MapPin },
-    { id: "category", label: "Categories", icon: Tag },
-    { id: "subcategory", label: "Subcategories", icon: FileText },
-    { id: "option", label: "Options", icon: ClipboardList },
-    { id: "observer", label: "Observers", icon: UserCircle },
-    { id: "survey", label: "Surveys", icon: Database },
-    { id: "surveysession", label: "Survey Sessions", icon: Users },
-    { id: "visit", label: "Visits", icon: Calendar },
-    { id: "response", label: "Responses", icon: FileText },
+    { id: "campus", labelKey: "menu.campus", icon: Building },
+    { id: "zone", labelKey: "menu.zone", icon: MapPin },
+    { id: "category", labelKey: "menu.category", icon: Tag },
+    { id: "subcategory", labelKey: "menu.subcategory", icon: FileText },
+    { id: "option", labelKey: "menu.option", icon: ClipboardList },
+    { id: "observer", labelKey: "menu.observer", icon: UserCircle },
+    { id: "survey", labelKey: "menu.survey", icon: Database },
+    { id: "surveysession", labelKey: "menu.surveysession", icon: Users },
+    { id: "visit", labelKey: "menu.visit", icon: Calendar },
+    { id: "response", labelKey: "menu.response", icon: FileText },
   ];
 
   return (
     <aside className="w-64 bg-red-700 text-white min-h-screen flex flex-col">
       <div className="p-6 border-b border-red-600">
-        <h1 className="text-2xl font-bold">Admin Panel</h1>
+        <h1 className="text-2xl font-bold">{t("menu.AdminPanel")}</h1>
         <p className="text-red-100 text-sm mt-1">Universidad del Valle</p>
       </div>
 
@@ -48,7 +52,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
                   }`}
                 >
                   <Icon size={20} />
-                  <span>{item.label}</span>
+                  <span>{t(item.labelKey)}</span>
                 </button>
               </li>
             );

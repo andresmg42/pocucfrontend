@@ -115,11 +115,13 @@ const Stats = () => {
 
   if (loading)
     return (
-      <div class="flex items-center justify-center p-12">
-        <div class="flex flex-col items-center gap-4">
-          <div class="h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
+      <div className="flex items-center justify-center p-12">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
 
-          <p class="text-lg font-medium text-gray-600">Loading your data...</p>
+          <p className="text-lg font-medium text-gray-600">
+            Loading your data...
+          </p>
         </div>
       </div>
     );

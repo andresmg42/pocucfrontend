@@ -1,0 +1,298 @@
+{
+  "menu": {
+    "AdminPanel":"Sección de Administración",
+    "campus": "Campus",
+    "zone": "Zonas",
+    "category": "Categorías",
+    "subcategory": "Subcategorías",
+    "option": "Opciones",
+    "observer": "Observadores",
+    "survey": "Encuestas",
+    "surveysession": "Sesiones de Encuesta",
+    "visit": "Visitas",
+    "response": "Respuestas"
+  },
+  "dataTable":{
+    "actions":"Acciones",
+    "noData":"No hay datos disponibles."
+  },
+  "addNewButton":"Agregar Nuevo",
+  "cancelButton":"Cancelar",
+  "updateButton":"Actualizar",
+  "createButton":"Crear",
+  "nonePlaceholder":"Seleccione un Item",
+  "zonePage":{
+    "title":"Zonas",
+    "name":"Nombre",
+    "number":"Numero de Zona",
+    "zoneType":"Tipo de Zona",
+    "openSpace":"Espacio Abierto",
+    "closedSpace":"Espacio Cerrado",
+    "mixedSpace":"Espacio Mixto"
+    
+    
+  },
+  "campusPage":{
+    "name":"Nombre",
+    "editCampus":"Editar Campus",
+    "createCampus":"Crear Campus"
+    
+  },
+  "surveyPage":{
+    "title":"Encuestas",
+    "subtitle":"Haz clic en cualquier encuesta para abrir el constructor de formularios",
+    "name":"Nombre",
+    "topic":"Tema",
+    "version":"Versión",
+    "description":"Descripción",
+    "imageUrl":"URL de la imagen",
+    "loading":"Cargando...",
+    "editSurvey":"Editar Encuesta",
+    "createSurvey":"Crear Encuesta",
+    "deleteConfirm":"¿Estás seguro de que deseas eliminar \"{{name}}\"?",
+    "deleteSuccess":"Encuesta eliminada correctamente",
+    "deleteError":"Error al eliminar la encuesta",
+    "loadError":"Error al cargar las encuestas",
+    "saveError":"Error al guardar la encuesta",
+    "createSuccess":"Encuesta creada correctamente",
+    "updateSuccess":"Encuesta actualizada correctamente"
+  },
+  "surveysessionPage":{
+    "title":"Sesiones de encuesta",
+    "loading":"Cargando...",
+    "addNew":"Agregar nuevo",
+    "deleteConfirm":"¿Estás seguro de que deseas eliminar la sesión #{{id}}?",
+    "deleteSuccess":"Sesión de encuesta eliminada correctamente",
+    "deleteError":"Error al eliminar la sesión de encuesta",
+    "loadError":"Error al cargar las sesiones de encuesta",
+    "loadCampusesError":"Error al cargar el campus",
+    "loadSurveysError":"Error al cargar las encuestas",
+    "loadObserversError":"Error al cargar los observadores",
+    "createSuccess":"Sesión de encuesta creada correctamente",
+    "updateSuccess":"Sesión de encuesta actualizada correctamente",
+    "saveError":"Error al guardar la sesión de encuesta",
+    "columns":{
+      "id":"ID",
+      "numberSession":"# Sesión",
+      "observer":"Observador",
+      "survey":"Encuesta",
+      "campus":"Campus",
+      "zone":"Zona",
+      "state":"Estado",
+      "visits":"Visitas",
+      "startDate":"Fecha de inicio",
+      "endDate":"Fecha de finalización",
+      "uploadedAt":"Subida el"
+    },
+    "stateValues":{
+      "notStarted":"Sin iniciar",
+      "inProgress":"En proceso",
+      "finished":"Finalizada"
+    },
+    "filters":{
+      "observer":"Observador",
+      "stateLabel":"Estado (0: Sin iniciar, 1: En proceso, 2: Finalizada)",
+      "surveyLabel":"Encuesta",
+      "campusLabel":"Campus",
+      "zoneLabel":"Zona",
+      "startDate":"Fecha de inicio",
+      "endDate":"Fecha de finalización",
+      "uploadedAt":"Subida el"
+    },
+    "modal":{
+      "createTitle":"Crear sesión de encuesta",
+      "editTitle":"Editar sesión de encuesta",
+      "campusLabel":"Campus",
+      "selectCampus":"Selecciona un campus",
+      "zoneLabel":"Zona",
+      "selectZone":"Selecciona una zona",
+      "observerLabel":"Observador",
+      "selectObserver":"Selecciona un observador",
+      "surveyLabel":"Encuesta",
+      "selectSurvey":"Selecciona una encuesta",
+      "distanceLabel":"Distancia observacional (m)",
+      "urlLabel":"URL",
+      "visitsLabel":"Número de visitas"
+    }
+  },
+  "formBuilder":{
+    "backToSurveys":"Volver a las encuestas",
+    "title":"Constructor de formularios",
+    "loading":"Cargando constructor de formularios...",
+    "addFromBank":"Agregar desde banco",
+    "filterWarning":"Selecciona una categoría y una subcategoría antes de agregar preguntas",
+    "noQuestions":"Aún no hay preguntas. ¡Comienza a construir tu formulario!",
+    "addUniqueResponse":"Agregar pregunta con respuesta única",
+    "addMatrixQuestion":"Agregar pregunta de matriz",
+    "questionCreated":"Pregunta creada correctamente",
+    "questionUpdated":"Pregunta actualizada correctamente",
+    "questionDeleted":"Pregunta eliminada correctamente",
+    "addedFromBank":"Se agregaron {{count}} pregunta(s) desde el banco",
+    "deleteQuestionConfirm":"¿Estás seguro de que deseas eliminar esta pregunta?",
+    "loadError":"Error al cargar las preguntas",
+    "deleteError":"Error al eliminar la pregunta",
+    "saveError":"Error al guardar la pregunta",
+    "networkError":"Error de red, revisa tu conexión."
+  },
+  "categorySubcategoryFilter":{
+    "loading":"Cargando filtros...",
+    "helperText":"Selecciona la categoría y la subcategoría para las nuevas preguntas:",
+    "categoryLabel":"Categoría *",
+    "categoryPlaceholder":"-- Seleccionar categoría --",
+    "subcategoryLabel":"Subcategoría *",
+    "subcategoryPlaceholder":"-- Seleccionar subcategoría --",
+    "selectionSummary":"✓ Las nuevas preguntas se crearán en: {{category}} → {{subcategory}}"
+  },
+  "questionCard":{
+    "codeAutoGenerated":"El código se genera automáticamente según el orden",
+    "subquestionPlaceholder":"Descripción de la subpregunta",
+    "optionNameRequired":"Ingresa un nombre para la opción",
+    "optionTypeMismatch":"Asegúrate de que el tipo de opción coincida con el tipo de entrada de la pregunta",
+    "optionCreated":"Opción creada correctamente",
+    "unexpectedError":"Ocurrió un error inesperado",
+    "optionCreateError":"Error al crear la opción",
+    "questionCodeRequired":"Ingresa un código para la pregunta",
+    "questionDescriptionRequired":"Ingresa una descripción para la pregunta",
+    "questionCodeUnique":"Elige un código de pregunta diferente",
+    "questionTypeUniqueResponse":"Respuesta única",
+    "questionTypeMatrixParent":"Matriz (con subpreguntas)",
+    "questionTypeMatrixChild":"Subpregunta de matriz",
+    "questionNumber":"Pregunta {{number}}",
+    "codeLabel":"Código *",
+    "codePlaceholder":"p. ej., A, B, C.1",
+    "questionLabel":"Pregunta *",
+    "questionPlaceholder":"Escribe tu pregunta aquí...",
+    "inputTypeLabel":"Tipo de entrada",
+    "numericOption":"Numérico",
+    "textOption":"Texto",
+    "optionsLabel":"Opciones",
+    "loadingOptions":"Cargando opciones...",
+    "addNewOption":"Agregar nueva opción",
+    "noOptionsSelected":"No hay opciones seleccionadas",
+    "subquestionsLabel":"Subpreguntas",
+    "addSubquestion":"Agregar subpregunta",
+    "noSubquestions":"Aún no hay subpreguntas",
+    "required":"Obligatoria",
+    "createNewOption":"Crear nueva opción",
+    "optionNameLabel":"Nombre de la opción *",
+    "optionNamePlaceholder":"p. ej., Excelente, Bueno, Promedio",
+    "creatingOption":"Creando...",
+    "createOption":"Crear opción"
+  },
+  "questionBankModal":{
+    "title":"Banco de preguntas",
+    "subtitle":"Selecciona preguntas para agregar a tu encuesta",
+    "searchPlaceholder":"Busca preguntas por descripción o código...",
+    "filterByCategory":"Filtrar por categoría",
+    "allCategories":"Todas las categorías",
+    "filterBySubcategory":"Filtrar por subcategoría",
+    "allSubcategories":"Todas las subcategorías",
+    "loading":"Cargando preguntas...",
+    "noQuestions":"No se encontraron preguntas",
+    "all":"Todo",
+    "uniqueType":"Única",
+    "matrixType":"Matriz",
+    "subquestionCount":"{{count}} subpregunta(s)",
+    "selectedCount":"{{count}} pregunta(s) seleccionada(s)",
+    "selectAtLeastOne":"Selecciona al menos una pregunta",
+    "addSelected":"Agregar preguntas"
+  },
+
+  "filtersComponent":{
+    "title":"Filtros",
+    "searchPlacehoder":"Buscar por"
+  },
+  "categoryPage":{
+    "title":"Categorías",
+    "name":"Nombre",
+    "targetZoneType":"Tipo de zona",
+    "image":"Imagen",
+    "imageURL":"URL Imagen",
+    "anyZoneType":"Cualquier zona",
+    "editCategory":"Editar Categoría",
+    "createCategory":"Crear Categoría"
+    
+  },
+  "subcategoryPage":{
+    "title":"Subcategorías",
+    "name":"Nombre",
+    "categoryID":"ID de Categoría",
+    "category":"Categoría",
+    "selectCategoryPlaceholder":"Seleccionar una categoría",
+    "editSubcategory":"Editar subcategoría",
+    "createSubcategory":"Crear subcategoría"
+  },
+
+  "optionPage":{
+    "title":"Opciones",
+    "description":"Descripción",
+    "type":"Tipo",
+    "numeric":"Numérico",
+    "text":"Textual",
+    "editOption":"Editar Opción",
+    "createOption":"Crear Opción"
+  },
+  "observerPage":{
+    "title":"Observadores",
+    "name":"Nombre",
+    "email":"Correo Electrónico",
+    "editObserver":"Editar Observador",
+    "createObserver":"Crear Observador"
+  },
+  "visitPage":{
+    "title":"Visitas",
+    "observer":"Observador",
+    "survey":"Encuesta",
+    "surveySession":"ID Sesíon",
+    "visitNumber":"# Visita",
+    "startDate":"Fecha de inicio",
+    "endDate":"Fecha de finalización",
+    "state":"Estado",
+    "filterState":"Estado(0:Sin Iniciar,1:En Proceso,2:Finalizada)",
+    "editVisit":"Editar Visita",
+    "createVisit":"Crear Visita",
+    "selectSessionPlaceholder":"Seleccione una sesión",
+    "session":"Sesión"
+    
+  },
+  "responsePage":{
+    "title":"Respuestas",
+    "parentQuestion":"Pregunta Padre",
+    "questionID":"ID Pregunta",
+    "questionCode":"Codigo Pregunta",
+    "questionDescription":"Descripción",
+    "optionID":"ID Opción",
+    "numericValue":"Valor Numérico",
+    "textValue":"Valor Textual",
+    "subcategory":"Subcategoría",
+    "category":"Categoría",
+    "observer":"Observador",
+    "email":"Correo Electrónico",
+    "survey":"Encuesta",
+    "zone":"Zona",
+    "sessionID":"ID Sesión",
+    "visitID":"ID visita"
+
+  },
+  "navBar":{
+    "adminPanel":"Administración",
+    "reports":"Reportes",
+    "forms":"Formularios",
+    "aboutUs":"Sobre Nosotros",
+    "logIn":"Iniciar Sesión",
+    "logOut":"Cerrar Sesión"
+
+
+  },
+  "footer":{
+    "privacyPolicies":"Política de privacidad",
+    "wellBeingVR":"Vicerrectoría de Bienestar Universitario",
+    "institutionalPolicie":"Política Institucional Universidad Saludable",
+    "lineOfKnown":"Linea de Conocimiento saberes y prácticas en promoción de la salud",
+    "priorities":"Prioridades: Salud Ambiental y Salud Social",
+    "adress":"Edificio D7, Tercer piso,Campus Meléndez"
+
+
+
+  }
+}

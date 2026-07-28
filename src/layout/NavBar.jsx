@@ -4,7 +4,12 @@ import { NavLink } from "react-router";
 import useAuthStore from "../stores/use-auth-store";
 import { useNavigate } from "react-router";
 
+import Dropdown from "../components/auxiliarcomponents/Dropdown";
+import i18n from "../i18n";
+import { useTranslation } from "react-i18next";
+
 function NavBar() {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { userLogged, logout, role } = useAuthStore();
   const menuRef = useRef(null);
@@ -87,27 +92,33 @@ function NavBar() {
           isMenuOpen ? "block" : "hidden"
         } md:flex md:space-x-6 absolute md:relative bg-white/70 md:bg-transparent w-full md:w-auto left-0 md:left-auto top-16 md:top-0 p-4 md:p-0 z-10`}
       >
-        {role?.is_admin && (
+        {(role?.is_admin || role?.is_staff) && (
           <>
             <li>
               <NavLink
                 to="/admin"
-                exact
-                className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-                activeClassName="text-blue-500"
+                end
+                className={({ isActive }) =>
+                  `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                    isActive ? "text-red-700" : ""
+                  }`
+                }
                 onClick={closeMenu}
               >
-                Panel Administrativo
+                {t("navBar.adminPanel")}
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="report-panel-surveys/"
-                className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-                activeClassName="text-blue-500"
+                className={({ isActive }) =>
+                  `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                    isActive ? "text-red-700" : ""
+                  }`
+                }
                 onClick={closeMenu}
               >
-                Reportes
+                {t("navBar.reports")}
               </NavLink>
             </li>
           </>
@@ -115,47 +126,64 @@ function NavBar() {
         <li>
           <NavLink
             to="/"
-            exact
-            className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-            activeClassName="text-blue-500"
+            end
+            className={({ isActive }) =>
+              `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                isActive ? "text-red-700" : ""
+              }`
+            }
             onClick={closeMenu}
           >
-            Encuestas
+            {t("navBar.forms")}
           </NavLink>
         </li>
 
         <li>
           <NavLink
-            to="/about"
-            className="hover:text-[#797777] block md:inline-block py-2 md:py-0 "
-            activeClassName="text-blue-500"
+            to="/aboutus"
+            className={({ isActive }) =>
+              `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                isActive ? "text-red-700" : ""
+              }`
+            }
             onClick={closeMenu}
           >
-            Sobre nosotros
+            {t("navBar.aboutUs")}
           </NavLink>
         </li>
-        {!userLogged && (
+
+        {!userLogged ? (
           <li>
             <NavLink
               to="/login"
-              className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
-              activeClassName="text-blue-500"
+              className={({ isActive }) =>
+                `hover:text-[#797777] block md:inline-block py-2 md:py-0 ${
+                  isActive ? "text-red-700" : ""
+                }`
+              }
               onClick={closeMenu}
             >
-              Iniciar Sesión
+              {t("navBar.logIn")}
             </NavLink>
           </li>
-        )}
-        {userLogged && (
+        ) : (
           <li>
             <button
               onClick={handleLogout}
-              className="hover:text-[#797777] block md:inline-block py-2 md:py-0"
+              className="hover:text-[#797777] block md:inline-block py-2 md:py-0 cursor-pointer"
             >
-              Cerrar Sesión
+              {t("navBar.logOut")}
             </button>
           </li>
         )}
+        <li>
+          <div className="hover:text-[#797777] cursor-pointer">
+            <Dropdown
+              options={["en", "es"]}
+              onSelect={(option) => i18n.changeLanguage(option)}
+            />
+          </div>
+        </li>
       </ul>
     </nav>
   );

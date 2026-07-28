@@ -5,8 +5,10 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function SubcategoryPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,9 +96,9 @@ export default function SubcategoryPage() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "name", label: "Name" },
-    { key: "category", label: "Category ID" },
-    { key: "category_name", label: "Category" },
+    { key: "name", label: t("subcategoryPage.name") },
+    { key: "category", label: t("subcategoryPage.categoryID") },
+    { key: "category_name", label: t("subcategoryPage.category") },
   ];
 
   if (loading) {
@@ -106,20 +108,25 @@ export default function SubcategoryPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Subcategories</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("subcategoryPage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
       <Filters
         data={data}
         setFilteredData={setFilteredData}
-        criteria={["name", { key: "category_name", label: "category" }]}
+        criteria={[
+          { key: "name", label: t("subcategoryPage.name") },
+          { key: "category_name", label: t("subcategoryPage.category") },
+        ]}
       />
 
       <DataTable
@@ -132,12 +139,16 @@ export default function SubcategoryPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Subcategory" : "Create Subcategory"}
+        title={
+          editingItem
+            ? t("subcategoryPage.editSubcategory")
+            : t("subcategoryPage.createSubcategory")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
+              {t("subcategoryPage.name")}
             </label>
             <input
               type="text"
@@ -153,7 +164,7 @@ export default function SubcategoryPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Category
+              {t("subcategoryPage.category")}
             </label>
             <select
               value={formData.category}
@@ -163,7 +174,9 @@ export default function SubcategoryPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               required
             >
-              <option value="">Select a category</option>
+              <option value="">
+                {t("subcategoryPage.selectCategoryPlaceholder")}
+              </option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -178,13 +191,13 @@ export default function SubcategoryPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

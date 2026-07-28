@@ -19,7 +19,17 @@ import ManageSurvey from "./pages/admin/survey/ManageSurvey.jsx";
 import QuestionsSurvey from "./pages/admin/survey/QuestionsSurvey.jsx";
 import AdminLayout from "./pages/admin/AdminLayout.jsx";
 import ProtectedRoute from "./components/helpers/ProtectedRoute.jsx";
+import useAuthStore from "./stores/use-auth-store.js";
+import { useEffect } from "react";
+import AboutUs from "./home/AboutUs.jsx";
 function App() {
+  const observeAuthState = useAuthStore((state) => state.observeAuthState);
+
+  useEffect(() => {
+    const unsubscribe = observeAuthState();
+
+    return () => unsubscribe();
+  }, []);
   return (
     <BrowserRouter>
       <Toaster />
@@ -43,6 +53,8 @@ function App() {
             path="surveysession/:survey_id/visits/:surveysession_id/:visit_number/categories/:visit_id/form/:category_id/:category_name/"
             element={<Form2 />}
           ></Route>
+
+          <Route path="aboutus" element={<AboutUs />}></Route>
 
           <Route element={<ProtectedRoute />}>
             <Route

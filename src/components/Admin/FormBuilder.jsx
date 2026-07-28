@@ -7,6 +7,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import QuestionCard from "./QuestionCard";
@@ -15,8 +16,8 @@ import CategorySubcategoryFilter from "./CategorySubcategoryFilter";
 import api from "../../services/apiAdmin";
 
 export default function FormBuilder({ survey, onClose }) {
+  const { t } = useTranslation();
   const [questions, setQuestions] = useState([]);
-  // const [loading, setLoading] = useState(true);
   const [showBankModal, setShowBankModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -28,7 +29,6 @@ export default function FormBuilder({ survey, onClose }) {
   const [actionLoading, setActionLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [options, setOptions] = useState([]);
-  // const [loadingOptions, setLoadingOptions] = useState(true);
 
   useEffect(() => {
     loadQuestions(true);
@@ -45,7 +45,7 @@ export default function FormBuilder({ survey, onClose }) {
       if (questions.length === 0) return;
 
       try {
-        const res = await api.question.reorderQuestions(questions);
+        await api.question.reorderQuestions(questions);
       } catch (error) {
         console.error(
           "an unexpected error ocurred in questions reordering ",
@@ -76,7 +76,7 @@ export default function FormBuilder({ survey, onClose }) {
       setQuestions(result.data);
     } catch (error) {
       console.error("Error loading questions:", error);
-      toast.error("Error loading questions");
+      toast.error(t("formBuilder.loadError"));
     } finally {
       isInitial ? setInitialLoading(false) : setActionLoading(false);
     }
@@ -85,12 +85,11 @@ export default function FormBuilder({ survey, onClose }) {
   const handleAddMatrixQuestion = () => {
     if (!selectedCategory || !selectedSubcategory) {
       setShowFilterWarning(true);
-      toast.error("Please select a category and subcategory first");
+      toast.error(t("formBuilder.filterWarning"));
       return;
     }
 
     setShowFilterWarning(false);
-    // Calculate next position
     const maxPosition =
       questions.length > 0 ? Math.max(...questions.map((q) => q.position)) : 0;
 
@@ -116,12 +115,11 @@ export default function FormBuilder({ survey, onClose }) {
   const handleAddUniqueResponseQuestion = () => {
     if (!selectedCategory || !selectedSubcategory) {
       setShowFilterWarning(true);
-      toast.error("Please select a category and subcategory first");
+      toast.error(t("formBuilder.filterWarning"));
       return;
     }
 
     setShowFilterWarning(false);
-    // Calculate next position
     const maxPosition =
       questions.length > 0 ? Math.max(...questions.map((q) => q.position)) : 0;
 
@@ -157,11 +155,8 @@ export default function FormBuilder({ survey, onClose }) {
 
     try {
       if (question.isNew || typeof question.id === "string") {
-        // Create new question
-
         const { data: savedQuestion } = await api.question.create(questionData);
 
-        // Create subquestions if any
         if (question.sub_questions && question.sub_questions.length > 0) {
           for (const subQ of question.sub_questions) {
             const { isNew: subIsNew, id, ...subQData } = subQ;
@@ -184,9 +179,8 @@ export default function FormBuilder({ survey, onClose }) {
           prev.map((q) => (q.id === question.id ? newQuestion : q)),
         );
 
-        toast.success("Question created successfully");
+        toast.success(t("formBuilder.questionCreated"));
       } else {
-        // Delete subquestions before update or create new ones
         const subQuestionsForThisOne = subQuestionsToDelete[id] || [];
 
         for (const subQuestionId of subQuestionsForThisOne) {
@@ -196,8 +190,6 @@ export default function FormBuilder({ survey, onClose }) {
         }
 
         setSubQuestionsToDelete((prev) => ({ ...prev, [id]: [] }));
-
-        // Update existing question
 
         const { data: updatedQuestion } = await api.question.update(
           id,
@@ -227,47 +219,45 @@ export default function FormBuilder({ survey, onClose }) {
           prev.map((q) => (q.id === updatedQuestion.id ? newQuestion : q)),
         );
 
-        toast.success("Question updated successfully");
+        toast.success(t("formBuilder.questionUpdated"));
       }
     } catch (error) {
       console.error("Error saving question:", error);
 
       if (error.response?.data?.non_field_errors) {
         const message = error.response.data.non_field_errors[0];
-        toast.error(`Error saving question: ${message}`);
+        toast.error(`${t("formBuilder.saveError")}: ${message}`);
         return;
       }
 
       if (!error.response) {
-        toast.error("Network error, please check your connection.");
+        toast.error(t("formBuilder.networkError"));
         return;
       }
 
-      toast.error("Error saving question");
+      toast.error(t("formBuilder.saveError"));
     }
   };
 
   const handleDeleteQuestion = async (questionId) => {
     if (typeof questionId === "string" && questionId.startsWith("temp-")) {
-      // Delete unsaved question
       setQuestions(questions.filter((q) => q.id !== questionId));
       return;
     }
 
-    if (window.confirm("Are you sure you want to delete this question?")) {
+    if (window.confirm(t("formBuilder.deleteQuestionConfirm"))) {
       try {
         await api.question.delete(questionId);
-        toast.success("Question deleted successfully");
+        toast.success(t("formBuilder.questionDeleted"));
         await loadQuestions();
       } catch (error) {
         console.error("Error deleting question:", error);
-        toast.error("Error deleting question");
+        toast.error(t("formBuilder.deleteError"));
       }
     }
   };
 
   const handleAddFromBank = (selectedQuestions) => {
-    // Calculate the next position
     const maxPosition =
       questions.length > 0 ? Math.max(...questions.map((q) => q.position)) : 0;
 
@@ -289,7 +279,9 @@ export default function FormBuilder({ survey, onClose }) {
 
     setQuestions((prev) => [...prev, ...questionsToAdd]);
     setShowBankModal(false);
-    toast.success(`Added ${selectedQuestions.length} question(s) from bank`);
+    toast.success(
+      t("formBuilder.addedFromBank", { count: selectedQuestions.length }),
+    );
   };
 
   const selectedCategoryId = selectedCategory?.id ?? null;
@@ -376,7 +368,7 @@ export default function FormBuilder({ survey, onClose }) {
       <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-700 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading form builder...</p>
+          <p className="text-gray-600">{t("formBuilder.loading")}</p>
         </div>
       </div>
     );
@@ -384,7 +376,6 @@ export default function FormBuilder({ survey, onClose }) {
 
   return (
     <div className="flex h-screen">
-      {/* Category/Subcategory Filter */}
       <div
         className={`bg-white w-80 border-b border-gray-200 px-6 py-4 ${showFilterWarning ? "ring-2 ring-red-500" : ""}`}
       >
@@ -397,14 +388,12 @@ export default function FormBuilder({ survey, onClose }) {
 
         {showFilterWarning && (
           <p className="text-red-600 text-sm mt-2">
-            ⚠️ Please select a category and subcategory before adding questions
+            ⚠️ {t("formBuilder.filterWarning")}
           </p>
         )}
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 bg-gray-50  overflow-hidden flex flex-col">
-        {/* Header */}
+      <div className="flex-1 bg-gray-50 overflow-hidden flex flex-col">
         <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -412,12 +401,12 @@ export default function FormBuilder({ survey, onClose }) {
               className="flex cursor-pointer items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft size={20} />
-              Back to Surveys
+              {t("formBuilder.backToSurveys")}
             </button>
             <div className="h-6 w-px bg-gray-300"></div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">{survey.name}</h1>
-              <p className="text-sm text-gray-500">Form Builder</p>
+              <p className="text-sm text-gray-500">{t("formBuilder.title")}</p>
             </div>
           </div>
 
@@ -433,12 +422,11 @@ export default function FormBuilder({ survey, onClose }) {
               onClick={() => setShowBankModal(true)}
               className="flex cursor-pointer items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
             >
-              <Database size={20} />+ Add from Bank
+              <Database size={20} /> {t("formBuilder.addFromBank")}
             </button>
           </div>
         </div>
 
-        {/* Questions List */}
         <DndProvider backend={HTML5Backend}>
           <div className="flex-1 overflow-y-auto px-6 py-6 relative">
             {actionLoading && (
@@ -450,7 +438,7 @@ export default function FormBuilder({ survey, onClose }) {
               {filteredQuestions.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
                   <p className="text-gray-500 mb-4">
-                    No questions yet. Start building your form!
+                    {t("formBuilder.noQuestions")}
                   </p>
                   <div className="flex justify-center gap-4">
                     <button
@@ -458,14 +446,14 @@ export default function FormBuilder({ survey, onClose }) {
                       className="inline-flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
                     >
                       <ListChecks size={20} />
-                      Add Unique Response
+                      {t("formBuilder.addUniqueResponse")}
                     </button>
                     <button
                       onClick={handleAddMatrixQuestion}
                       className="inline-flex items-center gap-2 bg-white border-2 border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
                     >
                       <Grid3x3 size={20} />
-                      Add Matrix Question
+                      {t("formBuilder.addMatrixQuestion")}
                     </button>
                   </div>
                 </div>
@@ -489,19 +477,19 @@ export default function FormBuilder({ survey, onClose }) {
                     />
                   ))}
 
-                  {/* Add New Question Buttons */}
                   <div className="flex justify-center gap-4 py-4">
                     <button
                       onClick={handleAddUniqueResponseQuestion}
                       className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
                     >
-                      <ListChecks size={20} />+ Add Unique Response
+                      <ListChecks size={20} />{" "}
+                      {t("formBuilder.addUniqueResponse")}
                     </button>
                     <button
                       onClick={handleAddMatrixQuestion}
                       className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-red-700 hover:text-red-700 transition-colors"
                     >
-                      <Grid3x3 size={20} />+ Add Matrix Question
+                      <Grid3x3 size={20} /> {t("formBuilder.addMatrixQuestion")}
                     </button>
                   </div>
                   <div className="h-50"></div>
@@ -511,7 +499,6 @@ export default function FormBuilder({ survey, onClose }) {
           </div>
         </DndProvider>
 
-        {/* Question Bank Modal */}
         {showBankModal && (
           <QuestionBankModal
             onClose={() => setShowBankModal(false)}

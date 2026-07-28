@@ -5,8 +5,10 @@ import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
+import { useTranslation } from "react-i18next";
 
 export default function ObserverPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,8 +84,8 @@ export default function ObserverPage() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "name", label: "Name" },
-    { key: "email", label: "Email" },
+    { key: "name", label: t("observerPage.name") },
+    { key: "email", label: t("observerPage.email") },
   ];
 
   if (loading) {
@@ -93,20 +95,25 @@ export default function ObserverPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Observers</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("observerPage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
       <Filters
         data={data}
         setFilteredData={setFilteredData}
-        criteria={["name", "email"]}
+        criteria={[
+          { key: "name", label: t("observerPage.name") },
+          { key: "email", label: t("observerPage.email") },
+        ]}
       />
 
       <DataTable
@@ -119,12 +126,16 @@ export default function ObserverPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Observer" : "Create Observer"}
+        title={
+          editingItem
+            ? t("observerPage.editObserver")
+            : t("observerPage.createObserver")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
+              {t("observerPage.name")}
             </label>
             <input
               type="text"
@@ -139,7 +150,7 @@ export default function ObserverPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email
+              {t("observerPage.email")}
             </label>
             <input
               type="email"
@@ -158,13 +169,13 @@ export default function ObserverPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

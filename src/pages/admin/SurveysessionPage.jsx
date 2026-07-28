@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import DataTable from "../../components/Admin/DataTable";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
 import Filters from "../../components/Admin/Filters";
 
 export default function SurveysessionPage() {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [zones, setZones] = useState([]);
   const [surveys, setSurveys] = useState([]);
@@ -46,7 +48,7 @@ export default function SurveysessionPage() {
       setData(valid_data);
     } catch (error) {
       console.error("Error loading data:", error);
-      toast.error("Error loading survey sessions");
+      toast.error(t("surveysessionPage.loadError"));
     } finally {
       setLoading(false);
     }
@@ -66,7 +68,7 @@ export default function SurveysessionPage() {
       setCampuses(result.data);
     } catch (error) {
       console.error("Error loading campus", error);
-      toast.error("Error Loading campus");
+      toast.error(t("surveysessionPage.loadCampusesError"));
     }
   };
 
@@ -76,7 +78,7 @@ export default function SurveysessionPage() {
       setSurveys(result.data);
     } catch (error) {
       console.error("Error loading surveys:", error);
-      toast.error("Error loading surveys");
+      toast.error(t("surveysessionPage.loadSurveysError"));
     }
   };
 
@@ -87,7 +89,7 @@ export default function SurveysessionPage() {
       console.log("observers", result.data);
     } catch (error) {
       console.error("Error loading observers", error);
-      toast.error("Error Loading Observers");
+      toast.error(t("surveysessionPage.loadObserversError"));
     }
   };
 
@@ -118,16 +120,14 @@ export default function SurveysessionPage() {
   };
 
   const handleDelete = async (item) => {
-    if (
-      window.confirm(`Are you sure you want to delete session #${item.id}?`)
-    ) {
+    if (window.confirm(t("surveysessionPage.deleteConfirm", { id: item.id }))) {
       try {
         await api.surveysession.delete(item.id);
-        toast.success("Survey session deleted successfully");
+        toast.success(t("surveysessionPage.deleteSuccess"));
         loadData();
       } catch (error) {
         console.error("Error deleting:", error);
-        toast.error("Error deleting survey session");
+        toast.error(t("surveysessionPage.deleteError"));
       }
     }
   };
@@ -137,42 +137,51 @@ export default function SurveysessionPage() {
     try {
       if (editingItem) {
         await api.surveysession.update(editingItem.id, formData);
-        toast.success("Survey session updated successfully");
+        toast.success(t("surveysessionPage.updateSuccess"));
       } else {
         await api.surveysession.create(formData);
-        toast.success("Survey session created successfully");
+        toast.success(t("surveysessionPage.createSuccess"));
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
       const err = error?.response?.data;
       console.error("Error saving:", error);
-      toast.error(`Error saving survey session,error ${JSON.stringify(err)}`);
+      toast.error(
+        `${t("surveysessionPage.saveError")}: ${JSON.stringify(err)}`,
+      );
     }
   };
 
   const columns = [
-    { key: "id", label: "ID" },
-    { key: "number_session", label: "# Session" },
-    { key: "observer", label: "Observer" },
-    { key: "survey_name", label: "Survey" },
-    { key: "campus_name", label: "Campus" },
+    { key: "id", label: t("surveysessionPage.columns.id") },
+    {
+      key: "number_session",
+      label: t("surveysessionPage.columns.numberSession"),
+    },
+    { key: "observer", label: t("surveysessionPage.columns.observer") },
+    { key: "survey_name", label: t("surveysessionPage.columns.survey") },
+    { key: "campus_name", label: t("surveysessionPage.columns.campus") },
     {
       key: "zone_name",
-      label: "Zone",
+      label: t("surveysessionPage.columns.zone"),
       render: (val) => val.slice(0, 20) + "...",
     },
     {
       key: "state",
-      label: "State",
+      label: t("surveysessionPage.columns.state"),
       render: (val) =>
-        val === 0 ? "Sin Iniciar" : val === 1 ? "En Proceso" : "Finalizada",
+        val === 0
+          ? t("surveysessionPage.stateValues.notStarted")
+          : val === 1
+            ? t("surveysessionPage.stateValues.inProgress")
+            : t("surveysessionPage.stateValues.finished"),
     },
 
-    { key: "visit_number", label: "Visits" },
+    { key: "visit_number", label: t("surveysessionPage.columns.visits") },
     {
       key: "start_date",
-      label: "Start Date",
+      label: t("surveysessionPage.columns.startDate"),
       render: (val) =>
         val
           ? new Date(val).toLocaleString("en-US", {
@@ -187,7 +196,7 @@ export default function SurveysessionPage() {
     },
     {
       key: "end_date",
-      label: "End Date",
+      label: t("surveysessionPage.columns.endDate"),
       render: (val) =>
         val
           ? new Date(val).toLocaleString("en-US", {
@@ -202,7 +211,7 @@ export default function SurveysessionPage() {
     },
     {
       key: "uploaded_at",
-      label: "Uploaded at",
+      label: t("surveysessionPage.columns.uploadedAt"),
       render: (val) =>
         val
           ? new Date(val).toLocaleDateString("en-US", { timeZone: "UTC" })
@@ -211,19 +220,23 @@ export default function SurveysessionPage() {
   ];
 
   if (loading) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return (
+      <div className="p-8 text-center">{t("surveysessionPage.loading")}</div>
+    );
   }
 
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Survey Sessions</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("surveysessionPage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add New
+          {t("addNewButton")}
         </button>
       </div>
 
@@ -231,17 +244,35 @@ export default function SurveysessionPage() {
         data={data}
         setFilteredData={setFilteredData}
         criteria={[
-          "observer",
+          { key: "observer", label: t("surveysessionPage.filters.observer") },
           {
             key: "state",
-            label: "State(0:Sin Iniciar,1:En Proceso,2:Finalizada)",
+            label: t("surveysessionPage.filters.stateLabel"),
           },
-          { key: "survey_name", label: "survey" },
-          { key: "campus_name", label: "campus" },
-          { key: "zone_name", label: "zone" },
-          { key: "start_date", label: "start date", type: "date" },
-          { key: "end_date", label: "end date", type: "date" },
-          { key: "uploaded_at", label: "uploaded at", type: "date" },
+          {
+            key: "survey_name",
+            label: t("surveysessionPage.filters.surveyLabel"),
+          },
+          {
+            key: "campus_name",
+            label: t("surveysessionPage.filters.campusLabel"),
+          },
+          { key: "zone_name", label: t("surveysessionPage.filters.zoneLabel") },
+          {
+            key: "start_date",
+            label: t("surveysessionPage.filters.startDate"),
+            type: "date",
+          },
+          {
+            key: "end_date",
+            label: t("surveysessionPage.filters.endDate"),
+            type: "date",
+          },
+          {
+            key: "uploaded_at",
+            label: t("surveysessionPage.filters.uploadedAt"),
+            type: "date",
+          },
         ]}
       />
 
@@ -255,12 +286,16 @@ export default function SurveysessionPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit Survey Session" : "Create Survey Session"}
+        title={
+          editingItem
+            ? t("surveysessionPage.modal.editTitle")
+            : t("surveysessionPage.modal.createTitle")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Campus
+              {t("surveysessionPage.modal.campusLabel")}
             </label>
             <select
               value={selectedCampusId ? selectedCampusId : ""}
@@ -268,7 +303,9 @@ export default function SurveysessionPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               required
             >
-              <option value="">Select a Campus</option>
+              <option value="">
+                {t("surveysessionPage.modal.selectCampus")}
+              </option>
               {campuses?.map((campus) => (
                 <option key={campus.id} value={campus.id}>
                   {campus.name}
@@ -278,7 +315,7 @@ export default function SurveysessionPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Zone
+              {t("surveysessionPage.modal.zoneLabel")}
             </label>
             <select
               value={formData.zone}
@@ -288,7 +325,9 @@ export default function SurveysessionPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
               required
             >
-              <option value="">Select a zone</option>
+              <option value="">
+                {t("surveysessionPage.modal.selectZone")}
+              </option>
               {zones.map((zone) => (
                 <option key={zone.id} value={zone.id}>
                   {zone.name}
@@ -300,7 +339,7 @@ export default function SurveysessionPage() {
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Observer
+                  {t("surveysessionPage.modal.observerLabel")}
                 </label>
                 <select
                   value={formData.observer}
@@ -310,7 +349,9 @@ export default function SurveysessionPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   required
                 >
-                  <option value="">Select Observer</option>
+                  <option value="">
+                    {t("surveysessionPage.modal.selectObserver")}
+                  </option>
                   {observers?.map((observer) => (
                     <option key={observer.id} value={observer.email}>
                       {observer.name}
@@ -321,7 +362,7 @@ export default function SurveysessionPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Survey
+                  {t("surveysessionPage.modal.surveyLabel")}
                 </label>
                 <select
                   value={formData.survey}
@@ -334,7 +375,9 @@ export default function SurveysessionPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   required
                 >
-                  <option value="">Select a survey</option>
+                  <option value="">
+                    {t("surveysessionPage.modal.selectSurvey")}
+                  </option>
                   {surveys.map((survey) => (
                     <option key={survey.id} value={survey.id}>
                       {survey.name}
@@ -347,7 +390,7 @@ export default function SurveysessionPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observational Distance (m)
+              {t("surveysessionPage.modal.distanceLabel")}
             </label>
             <input
               min={3}
@@ -367,7 +410,7 @@ export default function SurveysessionPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              URL
+              {t("surveysessionPage.modal.urlLabel")}
             </label>
             <input
               type="text"
@@ -382,7 +425,7 @@ export default function SurveysessionPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Number of Visits
+              {t("surveysessionPage.modal.visitsLabel")}
             </label>
             <input
               min={1}
@@ -405,13 +448,13 @@ export default function SurveysessionPage() {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("cancelButton")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("updateButton") : t("createButton")}
             </button>
           </div>
         </form>

@@ -11,7 +11,7 @@
   </defs>
 
   <!-- red circular background with subtle shadow -->
-  <circle cx="24" cy="24" r="20" fill="#e53935" filter="url(#shadow)"/>
+  <circle cx="24" cy="24" r="20" fill="#b91c1c" filter="url(#shadow)"/>
 
   <!-- white plus sign -->
   <g transform="translate(24,24)">

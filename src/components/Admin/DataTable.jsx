@@ -1,5 +1,5 @@
 import { Edit, Trash2 } from "lucide-react";
-
+import { useTranslation } from "react-i18next";
 export default function DataTable({
   columns,
   data,
@@ -7,6 +7,7 @@ export default function DataTable({
   onDelete,
   onRowClick,
 }) {
+  const { t } = useTranslation();
   return (
     <div className="overflow-x-auto bg-white rounded-lg shadow">
       <table className="w-full">
@@ -21,7 +22,7 @@ export default function DataTable({
               </th>
             ))}
             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
+              {t("dataTable.actions")}
             </th>
           </tr>
         </thead>
@@ -32,7 +33,7 @@ export default function DataTable({
                 colSpan={columns.length + 1}
                 className="px-6 py-8 text-center text-gray-500"
               >
-                No data available
+                {t("dataTable.noData")}
               </td>
             </tr>
           ) : (

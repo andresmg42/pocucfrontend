@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Search, Calendar } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const normalize = (c) =>
   typeof c === "string"
@@ -10,6 +11,7 @@ const getInitialValue = (type) =>
   type === "dateRange" ? { from: "", to: "" } : "";
 
 const Filters = ({ criteria, data, setFilteredData }) => {
+  const { t } = useTranslation();
   const normalizedCriteria = useMemo(() => criteria.map(normalize), []);
 
   const [filterCriteria, setFilterCriteria] = useState(() =>
@@ -77,7 +79,9 @@ const Filters = ({ criteria, data, setFilteredData }) => {
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
       <div className="flex items-center gap-2 mb-4">
         <Search className="w-4 h-4 text-gray-400" />
-        <h3 className="text-sm font-semibold text-gray-700">Filters</h3>
+        <h3 className="text-sm font-semibold text-gray-700">
+          {t("filtersComponent.title")}
+        </h3>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -126,7 +130,7 @@ const Filters = ({ criteria, data, setFilteredData }) => {
                   onChange={handleTextOrDateChange(key)}
                   placeholder={
                     type === "text"
-                      ? `Search ${label.toLowerCase()}...`
+                      ? `${t("filtersComponent.searchPlacehoder")} ${label.toLowerCase()}...`
                       : undefined
                   }
                   className={`w-full ${
