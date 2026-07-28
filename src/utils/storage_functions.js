@@ -4,7 +4,7 @@
 export function deleteVisitDataFromSession(
   storageKey,
   surveysessionId,
-  visit_number
+  visit_number,
 ) {
   if (!surveysessionId || !visit_number) {
     console.error("Both surveysessionId and visitId are required.");
@@ -50,7 +50,7 @@ export function getInitialState(
   storageKey,
   visitNum,
   categoryId,
-  dataType // "answers" | "comments"
+  dataType, // "answers" | "comments"
 ) {
   const savedItem = localStorage.getItem(storageKey);
 
@@ -83,7 +83,7 @@ export function saveStorageState(
   visitNum,
   categoryId,
   dataType, // "answers" | "comments"
-  data
+  data,
 ) {
   let sessionData;
 
@@ -127,11 +127,7 @@ export function saveStorageState(
 /**
  * Delete ONLY a category inside a visit (NEW)
  */
-export function deleteCategoryDataFromVisit(
-  storageKey,
-  visitNum,
-  categoryId
-) {
+export function deleteCategoryDataFromVisit(storageKey, visitNum, categoryId) {
   const savedItem = localStorage.getItem(storageKey);
 
   if (!savedItem) return;
@@ -148,12 +144,8 @@ export function deleteCategoryDataFromVisit(
   const visitKey = `visit_${visitNum}`;
   const categoryKey = `category_${categoryId}`;
 
-  if (
-    sessionData[visitKey] &&
-    sessionData[visitKey][categoryKey]
-  ) {
+  if (sessionData[visitKey] && sessionData[visitKey][categoryKey]) {
     delete sessionData[visitKey][categoryKey];
-    console.log(`Deleted ${categoryKey} from ${visitKey}`);
   }
 
   try {

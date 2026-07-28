@@ -30,7 +30,6 @@ export default function VisitPage() {
       setLoading(true);
       const result = await api.visit.list();
       setData(result.data);
-      console.log("visit data,", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading visits");

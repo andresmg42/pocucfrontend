@@ -22,7 +22,6 @@ export default function ResponsePage() {
       setLoading(true);
       const result = await api.response.list();
       setData(result.data);
-      console.log("response data:", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading responses");

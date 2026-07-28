@@ -24,8 +24,6 @@ const SessionsReport = () => {
           `surveysession/get_table_session_info/?observer_id=${observer_id}&survey_id=${survey_id}`,
         );
 
-        console.log("data in table session:", res.data);
-
         if (res.data) {
           setData(res.data);
         }
@@ -110,7 +108,6 @@ const SessionsReport = () => {
     onChange: (action, state) => {
       const clickedItem = data.find((item) => item.id === state.id);
 
-      console.log("this is the state", state.id);
       if (clickedItem) {
         handleRowClick(clickedItem);
       }

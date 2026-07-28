@@ -14,17 +14,14 @@ const SurveyList = () => {
     async function getSurveys() {
       try {
         const surveys = await api.get("survey/list/");
-        console.log(surveys);
+
         setSurveys(surveys.data);
       } catch (error) {
-        console.log(error);
         setLoading(false);
       } finally {
         setLoading(false);
       }
     }
-
-    console.log("token", token);
 
     if (isLoading || !token) return;
 
@@ -32,7 +29,7 @@ const SurveyList = () => {
   }, [token, isLoading]);
 
   return (
-    <div className=" bg-[url('formulario/formulario.png')] bg-cover bg-center bg-no-repeat flex-1 flex flex-col">
+    <div className=" bg-[url('/formulario/formulario.png')] bg-cover bg-center bg-no-repeat flex-1 flex flex-col">
       {!loading ? (
         <div className="w-full p-4">
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full items-stretch">

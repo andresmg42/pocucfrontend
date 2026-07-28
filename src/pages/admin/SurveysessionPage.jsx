@@ -44,7 +44,7 @@ export default function SurveysessionPage() {
       setLoading(true);
       const result = await api.surveysession.list();
       const valid_data = result?.data || [];
-      console.log("surveysession data", valid_data);
+
       setData(valid_data);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -57,7 +57,7 @@ export default function SurveysessionPage() {
   const loadZones = async () => {
     if (selectedCampusId) {
       const result = await api.zone.getZoneByCampus(selectedCampusId);
-      console.log("zones", result.data);
+
       setZones(result.data);
     }
   };
@@ -86,7 +86,6 @@ export default function SurveysessionPage() {
     try {
       const result = await api.observer.list();
       setObservers(result.data);
-      console.log("observers", result.data);
     } catch (error) {
       console.error("Error loading observers", error);
       toast.error(t("surveysessionPage.loadObserversError"));

@@ -10,8 +10,7 @@ import ConfirmationModal from "../auxiliarcomponents/ConfirmationModal";
 import VisitsPlaceholderCard from "./VisitsPlaceholderCard";
 import { deleteVisitDataFromSession } from "../../utils/storage_functions";
 
-const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
-
+const VisitsList2 = ({ survey_id, surveysession_id, visit_number }) => {
   const ANSWERS_STORAGE_KEY = `mySurveySessionData_${surveysession_id}`;
 
   const [visits, setVisits] = useState([]);
@@ -39,27 +38,19 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
     async function getVisits() {
       try {
         const res = await api.get(
-          `visit/sessionvisits?surveysession_id=${surveysession_id}`
+          `visit/sessionvisits?surveysession_id=${surveysession_id}`,
         );
 
         if (res.data) {
           const sortedData = res.data;
           setVisits(sortedData);
-          console.log("numero de visitas: ", sortedData.length);
+
           if (sortedData.length === parseInt(visit_number)) {
-            console.log(
-              "entro al if the setVisitAddTriggerDisabled",
-              sortedData.length === parseInt(visit_number)
-            );
             setVisitAddTriggerDisabled({ [surveysession_id]: true });
           } else {
             setVisitAddTriggerDisabled({ [surveysession_id]: false });
           }
-
-          console.log();
         }
-
-        console.log("respuesta en visitas fetch", res.data);
       } catch (error) {
         console.log("error in SessionList", error);
         setLoading(false);
@@ -73,7 +64,7 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
   if (loading) {
     return (
       <div className="sm:p-6 flex-1  flex flex-col items-center">
-        <h2 class="text-4xl font-bold   text-black">Visitas</h2>
+        <h2 className="text-4xl font-bold   text-black">Visitas</h2>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-10">
           <VisitsPlaceholderCard />
@@ -96,13 +87,12 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
       console.error(error);
     }
 
-    console.log("este es el surveysession_id", surveysession_id);
     navigate(`categories/${visit_id}`);
   };
 
   const handleClickDelete = async (visit_id) => {
     const confirmed = window.confirm(
-      "Esta seguro de que desea eliminar esta visita?"
+      "Esta seguro de que desea eliminar esta visita?",
     );
 
     if (confirmed) {
@@ -115,7 +105,11 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
 
         // localStorage.removeItem(ANSWERS_STORAGE_KEY)
         // localStorage.removeItem(COMMENTS_STORAGE_KEY)
-        deleteVisitDataFromSession(ANSWERS_STORAGE_KEY,surveysession_id,visit_id)
+        deleteVisitDataFromSession(
+          ANSWERS_STORAGE_KEY,
+          surveysession_id,
+          visit_id,
+        );
 
         toast.success("Visita Eliminada Exitosamente");
       } catch (error) {
@@ -133,7 +127,7 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
   const handleClickPlaceholder = async () => {
     try {
       const res = await api.post("visit/", { surveysession: surveysession_id });
-      console.log("rep from placeholder visitList2", res.data);
+
       setAddTriggerVisit(!addTriggerVisit);
     } catch (error) {
       toast.success("Visita Creada Exitosamente");
@@ -155,20 +149,16 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
   return (
     <>
       <div className="sm:p-6  flex flex-col items-center">
-
         <div className=" w-full  flex items-center justify-center p-2">
-
-          <h2 class="md:text-4xl text-2xl font-bold text-black">Visitas</h2>
-
+          <h2 className="md:text-4xl text-2xl font-bold text-black">Visitas</h2>
         </div>
-        
 
         {/* Responsive grid layout that adjusts to screen size */}
         <div className="grid  grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10">
           {visits.map((visit) => {
             var localTimeStart = null;
             var localTimeEnd = null;
-            console.log("fecha de la visita:", visit.visit_start_date_time);
+
             if (visit.visit_start_date_time) {
               const dateObj = new Date(visit.visit_start_date_time);
               localTimeStart = dateObj.toLocaleString("es-CO", {
@@ -184,8 +174,6 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
                 timeStyle: "short",
               });
             }
-
-            console.log("localtime", localTimeStart);
 
             return (
               <div
@@ -228,16 +216,16 @@ const VisitsList2 = ({ survey_id,surveysession_id, visit_number }) => {
                   visit.state === 2
                     ? "bg-green-100 text-green-800"
                     : visit.state === 1
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-red-100 text-yellow-800"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-red-100 text-yellow-800"
                 }
               `}
                     >
                       {visit.state === 2
                         ? "Completa"
                         : visit.state == 1
-                        ? "En Proceso"
-                        : "Sin Iniciar"}
+                          ? "En Proceso"
+                          : "Sin Iniciar"}
                     </span>
                   </div>
 

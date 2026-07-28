@@ -22,15 +22,13 @@ const Visits = () => {
 
     if (!visitAddTriggerDisabled[surveysession_id]) {
       const res = await api.post("visit/", { surveysession: surveysession_id });
-      console.log("respuesta in create visit:", res.data);
+
       setAddTriggerVisit(!addTriggerVisit);
       toast.success("Visita creada exitosamente!");
     } else {
       toast.error("Ya no puedes crear mas visitas!");
     }
   };
-
-  console.log("visit add trigger state", visitAddTriggerDisabled);
 
   return (
     <div className="flex flex-1 bg-[url('/visitas/visitas.png')] bg-cover bg-center bg-no-repeat">

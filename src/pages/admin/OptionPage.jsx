@@ -25,7 +25,6 @@ export default function OptionPage() {
       setLoading(true);
       const result = await api.option.list();
       setData(result.data);
-      console.log("data:", result.data);
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Error loading options");

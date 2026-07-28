@@ -36,7 +36,7 @@ const SessionList2 = ({ survey_id }) => {
         const res = await api.get(
           `surveysession/get_survey_session_by_survey_id?survey_id=${survey_id}&email=${userLogged.email}`,
         );
-        console.log("esta es la respuesta en sessionlist", res);
+
         setSessions(res.data);
 
         if (res.data) {
@@ -60,7 +60,7 @@ const SessionList2 = ({ survey_id }) => {
   if (loading) {
     return (
       <div className=" sm:p-6  flex flex-1  flex-col  items-center">
-        <h2 class="text-4xl  font-bold  text-black ">Sesiones</h2>
+        <h2 className="text-4xl  font-bold  text-black ">Sesiones</h2>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-5 ">
           <SurveySessionPlaceholderCard />
@@ -129,18 +129,16 @@ const SessionList2 = ({ survey_id }) => {
       {addTrigger && (
         <div className=" sm:p-6  flex   flex-col items-center">
           <div className=" w-full  flex items-center justify-center p-2">
-            <h2 class="md:text-4xl text-2xl  font-bold  text-black ">
+            <h2 className="md:text-4xl text-2xl  font-bold  text-black ">
               Sesiones
             </h2>
           </div>
 
           <div className="grid  grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  m-10 ">
             {sessions.map((session) => {
-              console.log("session_id: ", session.id);
-              console.log("session_state: ", session.state);
               var localTimeStart = null;
               var localTimeEnd = null;
-              console.log("fecha de la visita:", session.start_date);
+
               if (session.start_date) {
                 const dateObj = new Date(session.start_date);
                 localTimeStart = dateObj.toLocaleString("es-CO", {
