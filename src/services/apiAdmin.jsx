@@ -1,19 +1,5 @@
 import api from "../api/user.api";
 
-const IDS = {
-  campus: 3,
-  zone: 3,
-  category: 3,
-  subcategory: 5,
-  option: 11,
-  observer: 3,
-  survey: 2,
-  surveysession: 2,
-  visit: 2,
-  response: 2,
-  question: 1,
-};
-
 function createAPI(name) {
   return {
     list: () => {

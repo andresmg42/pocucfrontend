@@ -5,6 +5,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 const getRandomColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
 
 export default function PiePlot({data,colors}) {
+  if (!data || data.length === 0) {
+    return <div>No hay datos para esta zona</div>;
+  }
+
   return (
     <PieChart width={1000} height={600}>
       <Pie

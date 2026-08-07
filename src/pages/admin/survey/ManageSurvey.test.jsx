@@ -19,8 +19,8 @@ describe("ManageSurvey", () => {
       screen.getByRole("heading", { name: "Usuarios" }),
     ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Campus Ver" }));
-    expect(screen.getByRole("heading", { name: "Campus" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "FormulariosVer" }));
+    expect(screen.getByRole("heading", { name: "Formularios" })).toBeInTheDocument();
     expect(screen.getByTestId("forms-table")).toBeInTheDocument();
   });
 });
