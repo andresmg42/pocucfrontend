@@ -6,7 +6,6 @@ import Layout from "./layout/Layout.jsx";
 import SurveySession from "./pages/survey_sessions/SurveySession.jsx";
 import { Toaster } from "react-hot-toast";
 import Visits from "./pages/visits/Visits.jsx";
-import Form from "./pages/survey/Form.jsx";
 import Category from "./pages/categories/Category.jsx";
 import ObserverReport from "./components/reportpanel/ObserverReport.jsx";
 import SessionsReport from "./components/reportpanel/SessionsReport.jsx";

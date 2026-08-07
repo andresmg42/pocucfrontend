@@ -10,7 +10,7 @@ const emptyForm = {
   image_url: "",
 };
 
-const Forms = ({ onBack, setCreated, edit, editPayload = {}, setEdit }) => {
+const Forms = ({ onBack, setCreated, edit, editPayload = null, setEdit }) => {
   const [formData, setFormData] = useState(emptyForm);
   const [createdSurveyId, setCreatedSurveyId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ const Forms = ({ onBack, setCreated, edit, editPayload = {}, setEdit }) => {
     } else {
       setFormData(emptyForm);
     }
-  }, [edit, editPayload]);
+  }, [edit, editPayload?.id]);
 
   const handleChange = (event) => {
     const { id, value } = event.target;
