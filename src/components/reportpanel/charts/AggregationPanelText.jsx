@@ -4,6 +4,8 @@ import { useEffect } from "react";
 const AggregationPanelText = ({ data }) => {
   //   const name_stats = ["average", "minimum", "maximum", "count", "mode"];
 
+  console.log("data", data);
+
   return (
     <div className="rounded-lg shadow-md overflow-hidden border border-gray-200 bg-white">
       <div className="px-6 py-4">
@@ -49,7 +51,7 @@ const AggregationPanelText = ({ data }) => {
                 </td>
 
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
-                  {obj.mode_text?.text_value}
+                  {obj.mode_text?.description}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-600">
                   {obj.mode_text?.count}
