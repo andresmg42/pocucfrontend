@@ -1,17 +1,16 @@
-import React from 'react';
-import { useNavigate } from 'react-router';
+import React from "react";
+import { useNavigate } from "react-router";
 
 /**
  * This is the main component that renders the empty dashboard placeholder.
  * It's designed to be centered on the page.
  */
 const NoDataPlaceholder = () => {
-
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const handleAddItem = () => {
     // This is a placeholder function.
     // In a real app, this might open a modal or navigate to a "create" page.
-    navigate(-1)
+    navigate(0);
   };
 
   return (
@@ -49,7 +48,7 @@ const NoDataPlaceholder = () => {
         <p className="text-gray-500 mb-8">
           Parece que no hay datos disponibles todavía.
           <br />
-         Vuelve atrás y sigue explorando otras opciones
+          Vuelve atrás y sigue explorando otras opciones
         </p>
 
         {/* Call-to-action Button */}
@@ -65,4 +64,3 @@ const NoDataPlaceholder = () => {
 };
 
 export default NoDataPlaceholder;
-
