@@ -70,6 +70,7 @@ const apiAdmin = {
       return api.get("/question/get_questions_bank");
     },
   },
+  roles: createAPI("users"),
 };
 
 export default apiAdmin;
