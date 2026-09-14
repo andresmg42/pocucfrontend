@@ -36,7 +36,17 @@ const RolesPage = () => {
     try {
       setLoading(true);
       const result = await api.roles.list();
-      setData(result.data);
+      const data = result.data;
+      setData(
+        data.map((item) => ({
+          ...item,
+          is_superuser: item.is_superuser
+            ? t("rolesPage.yes")
+            : t("rolesPage.no"),
+          is_staff: item.is_staff ? t("rolesPage.yes") : t("rolesPage.no"),
+          is_active: item.is_active ? t("rolesPage.yes") : t("rolesPage.no"),
+        })),
+      );
     } catch (error) {
       console.error("Error loading users:", error);
       toast.error(t("rolesPage.loadError"));
@@ -113,17 +123,14 @@ const RolesPage = () => {
     {
       key: "is_superuser",
       label: t("rolesPage.superuser"),
-      render: (value) => (value ? t("rolesPage.yes") : t("rolesPage.no")),
     },
     {
       key: "is_staff",
       label: t("rolesPage.staff"),
-      render: (value) => (value ? t("rolesPage.yes") : t("rolesPage.no")),
     },
     {
       key: "is_active",
       label: t("rolesPage.active"),
-      render: (value) => (value ? t("rolesPage.yes") : t("rolesPage.no")),
     },
     { key: "last_login", label: t("rolesPage.lastLogin"), render: formatDate },
     {
