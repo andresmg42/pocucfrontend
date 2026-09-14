@@ -5,6 +5,7 @@ import DataTable from "../../components/Admin/DataTable";
 import Filters from "../../components/Admin/Filters";
 import Modal from "../../components/Admin/Modal";
 import api from "../../services/apiAdmin";
+import { useTranslation } from "react-i18next";
 
 const emptyForm = {
   username: "",
@@ -19,6 +20,7 @@ const emptyForm = {
 const formatDate = (value) => (value ? new Date(value).toLocaleString() : "-");
 
 const RolesPage = () => {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ const RolesPage = () => {
       setData(result.data);
     } catch (error) {
       console.error("Error loading users:", error);
-      toast.error("Error loading users");
+      toast.error(t("rolesPage.loadError"));
     } finally {
       setLoading(false);
     }
@@ -64,14 +66,14 @@ const RolesPage = () => {
   };
 
   const handleDelete = async (item) => {
-    if (window.confirm(`Are you sure you want to delete "${item.username}"?`)) {
+    if (window.confirm(t("rolesPage.deleteConfirm", item))) {
       try {
         await api.roles.delete(item.id);
-        toast.success("User deleted successfully");
+        toast.success(t("rolesPage.deleteSuccess"));
         loadData();
       } catch (error) {
         console.error("Error deleting user:", error);
-        toast.error("Error deleting user");
+        toast.error(t("rolesPage.deleteError"));
       }
     }
   };
@@ -81,16 +83,16 @@ const RolesPage = () => {
     try {
       if (editingItem) {
         await api.roles.update(editingItem.id, formData);
-        toast.success("User updated successfully");
+        toast.success(t("rolesPage.updateSuccess"));
       } else {
         await api.roles.create(formData);
-        toast.success("User created successfully");
+        toast.success(t("rolesPage.createSuccess"));
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
       console.error("Error saving user:", error);
-      toast.error("Error saving user");
+      toast.error(t("rolesPage.saveError"));
     }
   };
 
@@ -104,43 +106,49 @@ const RolesPage = () => {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "username", label: "Username" },
-    { key: "email", label: "Email" },
-    { key: "first_name", label: "First name" },
-    { key: "last_name", label: "Last name" },
+    { key: "username", label: t("rolesPage.username") },
+    { key: "email", label: t("rolesPage.email") },
+    { key: "first_name", label: t("rolesPage.firstName") },
+    { key: "last_name", label: t("rolesPage.lastName") },
     {
       key: "is_superuser",
-      label: "Superuser",
-      render: (value) => (value ? "Yes" : "No"),
+      label: t("rolesPage.superuser"),
+      render: (value) => (value ? t("rolesPage.yes") : t("rolesPage.no")),
     },
     {
       key: "is_staff",
-      label: "Staff",
-      render: (value) => (value ? "Yes" : "No"),
+      label: t("rolesPage.staff"),
+      render: (value) => (value ? t("rolesPage.yes") : t("rolesPage.no")),
     },
     {
       key: "is_active",
-      label: "Active",
-      render: (value) => (value ? "Yes" : "No"),
+      label: t("rolesPage.active"),
+      render: (value) => (value ? t("rolesPage.yes") : t("rolesPage.no")),
     },
-    { key: "last_login", label: "Last login", render: formatDate },
-    { key: "date_joined", label: "Date joined", render: formatDate },
+    { key: "last_login", label: t("rolesPage.lastLogin"), render: formatDate },
+    {
+      key: "date_joined",
+      label: t("rolesPage.dateJoined"),
+      render: formatDate,
+    },
   ];
 
   if (loading) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return <div className="p-8 text-center">{t("rolesPage.loading")}</div>;
   }
 
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Users and roles</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {t("rolesPage.title")}
+        </h1>
         <button
           onClick={handleCreate}
           className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors"
         >
           <Plus size={20} />
-          Add new
+          {t("rolesPage.addNew")}
         </button>
       </div>
 
@@ -149,15 +157,23 @@ const RolesPage = () => {
         setFilteredData={setFilteredData}
         criteria={[
           { key: "id", label: "ID" },
-          { key: "username", label: "Username" },
-          { key: "email", label: "Email" },
-          { key: "first_name", label: "First name" },
-          { key: "last_name", label: "Last name" },
-          { key: "is_superuser", label: "Superuser" },
-          { key: "is_staff", label: "Staff" },
-          { key: "is_active", label: "Active" },
-          { key: "last_login", label: "Last login", type: "dateRange" },
-          { key: "date_joined", label: "Date joined", type: "dateRange" },
+          { key: "username", label: t("rolesPage.username") },
+          { key: "email", label: t("rolesPage.email") },
+          { key: "first_name", label: t("rolesPage.firstName") },
+          { key: "last_name", label: t("rolesPage.lastName") },
+          { key: "is_superuser", label: t("rolesPage.superuser") },
+          { key: "is_staff", label: t("rolesPage.staff") },
+          { key: "is_active", label: t("rolesPage.active") },
+          {
+            key: "last_login",
+            label: t("rolesPage.lastLogin"),
+            type: "dateRange",
+          },
+          {
+            key: "date_joined",
+            label: t("rolesPage.dateJoined"),
+            type: "dateRange",
+          },
         ]}
       />
 
@@ -171,14 +187,16 @@ const RolesPage = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? "Edit user" : "Create user"}
+        title={
+          editingItem ? t("rolesPage.editTitle") : t("rolesPage.createTitle")
+        }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           {[
-            ["username", "Username", "text"],
-            ["email", "Email", "email"],
-            ["first_name", "First name", "text"],
-            ["last_name", "Last name", "text"],
+            ["username", t("rolesPage.username"), "text"],
+            ["email", t("rolesPage.email"), "email"],
+            ["first_name", t("rolesPage.firstName"), "text"],
+            ["last_name", t("rolesPage.lastName"), "text"],
           ].map(([field, label, type]) => (
             <div key={field}>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -206,10 +224,10 @@ const RolesPage = () => {
                 className="h-4 w-4 rounded border-gray-300 text-red-700 focus:ring-red-500"
               />
               {field === "is_superuser"
-                ? "Superuser"
+                ? t("rolesPage.superuser")
                 : field === "is_staff"
-                  ? "Staff"
-                  : "Active"}
+                  ? t("rolesPage.staff")
+                  : t("rolesPage.active")}
             </label>
           ))}
 
@@ -219,13 +237,13 @@ const RolesPage = () => {
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t("rolesPage.cancel")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
             >
-              {editingItem ? "Update" : "Create"}
+              {editingItem ? t("rolesPage.update") : t("rolesPage.create")}
             </button>
           </div>
         </form>
