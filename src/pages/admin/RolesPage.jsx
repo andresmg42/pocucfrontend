@@ -12,8 +12,7 @@ const emptyForm = {
   email: "",
   first_name: "",
   last_name: "",
-  is_superuser: false,
-  is_staff: false,
+  role: "staff",
   is_active: true,
 };
 
@@ -37,6 +36,7 @@ const RolesPage = () => {
       setLoading(true);
       const result = await api.roles.list();
       const data = result.data;
+      console.log("user data:", data);
       setData(
         data.map((item) => ({
           ...item,
@@ -68,8 +68,8 @@ const RolesPage = () => {
       email: item.email || "",
       first_name: item.first_name || "",
       last_name: item.last_name || "",
-      is_superuser: Boolean(item.is_superuser),
-      is_staff: Boolean(item.is_staff),
+      role:
+        item.is_superuser === t("rolesPage.yes") ? "administrator" : "staff",
       is_active: Boolean(item.is_active),
     });
     setIsModalOpen(true);
@@ -91,11 +91,18 @@ const RolesPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      const payload = {
+        ...formData,
+        is_superuser: formData.role === "administrator",
+        is_staff: true,
+      };
+      delete payload.role;
+
       if (editingItem) {
-        await api.roles.update(editingItem.id, formData);
+        await api.roles.update(editingItem.id, payload);
         toast.success(t("rolesPage.updateSuccess"));
       } else {
-        await api.roles.create(formData);
+        await api.roles.create(payload);
         toast.success(t("rolesPage.createSuccess"));
       }
       setIsModalOpen(false);
@@ -219,24 +226,29 @@ const RolesPage = () => {
             </div>
           ))}
 
-          {["is_superuser", "is_staff", "is_active"].map((field) => (
-            <label
-              key={field}
-              className="flex items-center gap-2 text-sm font-medium text-gray-700"
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t("rolesPage.role")}
+            <select
+              value={formData.role}
+              onChange={updateField("role")}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
-              <input
-                type="checkbox"
-                checked={formData[field]}
-                onChange={updateField(field)}
-                className="h-4 w-4 rounded border-gray-300 text-red-700 focus:ring-red-500"
-              />
-              {field === "is_superuser"
-                ? t("rolesPage.superuser")
-                : field === "is_staff"
-                  ? t("rolesPage.staff")
-                  : t("rolesPage.active")}
-            </label>
-          ))}
+              <option value="administrator">
+                {t("rolesPage.administrator")}
+              </option>
+              <option value="staff">{t("rolesPage.staff")}</option>
+            </select>
+          </label>
+
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <input
+              type="checkbox"
+              checked={formData.is_active}
+              onChange={updateField("is_active")}
+              className="h-4 w-4 rounded border-gray-300 text-red-700 focus:ring-red-500"
+            />
+            {t("rolesPage.active")}
+          </label>
 
           <div className="flex justify-end gap-3 pt-4">
             <button

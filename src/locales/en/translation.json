@@ -44,6 +44,8 @@
     "email":"Email",
     "firstName":"First name",
     "lastName":"Last name",
+    "role":"Role",
+    "administrator":"Administrator",
     "superuser":"Superuser",
     "staff":"Staff",
     "active":"Active",

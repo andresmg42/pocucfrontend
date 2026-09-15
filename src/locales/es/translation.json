@@ -46,6 +46,8 @@
     "email":"Correo electrónico",
     "firstName":"Nombre",
     "lastName":"Apellido",
+    "role":"Rol",
+    "administrator":"Administrador",
     "superuser":"Administrador",
     "staff":"Personal",
     "active":"Activo",

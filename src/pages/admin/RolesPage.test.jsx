@@ -111,6 +111,10 @@ describe("RolesPage", () => {
       screen.getAllByRole("textbox")[1],
       "newuser@example.com",
     );
+    await currentUser.selectOptions(
+      screen.getByRole("combobox"),
+      "administrator",
+    );
     await currentUser.click(
       screen.getByRole("button", { name: "rolesPage.create" }),
     );
@@ -121,8 +125,8 @@ describe("RolesPage", () => {
         email: "newuser@example.com",
         first_name: "",
         last_name: "",
-        is_superuser: false,
-        is_staff: false,
+        is_superuser: true,
+        is_staff: true,
         is_active: true,
       }),
     );
@@ -139,6 +143,7 @@ describe("RolesPage", () => {
     const usernameInput = screen.getAllByRole("textbox")[0];
     await currentUser.clear(usernameInput);
     await currentUser.type(usernameInput, "updated-user");
+    await currentUser.selectOptions(screen.getByRole("combobox"), "staff");
     await currentUser.click(
       screen.getByRole("button", { name: "rolesPage.update" }),
     );
@@ -149,7 +154,7 @@ describe("RolesPage", () => {
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
-        is_superuser: true,
+        is_superuser: false,
         is_staff: true,
         is_active: true,
       }),
