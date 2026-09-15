@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useEffect } from "react";
@@ -106,9 +106,8 @@ describe("RolesPage", () => {
     await currentUser.click(
       screen.getByRole("button", { name: /rolesPage.addNew/i }),
     );
-    await currentUser.type(screen.getAllByRole("textbox")[0], "newuser");
     await currentUser.type(
-      screen.getAllByRole("textbox")[1],
+      screen.getAllByRole("textbox")[0],
       "newuser@example.com",
     );
     await currentUser.selectOptions(
@@ -121,7 +120,6 @@ describe("RolesPage", () => {
 
     await waitFor(() =>
       expect(api.roles.create).toHaveBeenCalledWith({
-        username: "newuser",
         email: "newuser@example.com",
         first_name: "",
         last_name: "",
@@ -133,6 +131,21 @@ describe("RolesPage", () => {
     expect(toast.success).toHaveBeenCalledWith("rolesPage.createSuccess");
   });
 
+  it("rejects a user without an email", async () => {
+    render(<RolesPage />);
+
+    await waitFor(() => expect(api.roles.list).toHaveBeenCalled());
+    await userEvent
+      .setup()
+      .click(screen.getByRole("button", { name: /rolesPage.addNew/i }));
+    fireEvent.submit(
+      screen.getByRole("button", { name: "rolesPage.create" }).closest("form"),
+    );
+
+    expect(toast.error).toHaveBeenCalledWith("rolesPage.emailRequired");
+    expect(api.roles.create).not.toHaveBeenCalled();
+  });
+
   it("updates a selected user", async () => {
     const currentUser = userEvent.setup();
     render(<RolesPage />);
@@ -140,9 +153,6 @@ describe("RolesPage", () => {
     await waitFor(() => expect(api.roles.list).toHaveBeenCalled());
     await currentUser.click(screen.getByRole("button", { name: "edit-row" }));
 
-    const usernameInput = screen.getAllByRole("textbox")[0];
-    await currentUser.clear(usernameInput);
-    await currentUser.type(usernameInput, "updated-user");
     await currentUser.selectOptions(screen.getByRole("combobox"), "staff");
     await currentUser.click(
       screen.getByRole("button", { name: "rolesPage.update" }),
@@ -150,7 +160,6 @@ describe("RolesPage", () => {
 
     await waitFor(() =>
       expect(api.roles.update).toHaveBeenCalledWith(1, {
-        username: "updated-user",
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,

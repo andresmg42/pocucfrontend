@@ -8,7 +8,6 @@ import api from "../../services/apiAdmin";
 import { useTranslation } from "react-i18next";
 
 const emptyForm = {
-  username: "",
   email: "",
   first_name: "",
   last_name: "",
@@ -64,7 +63,6 @@ const RolesPage = () => {
   const handleEdit = (item) => {
     setEditingItem(item);
     setFormData({
-      username: item.username || "",
       email: item.email || "",
       first_name: item.first_name || "",
       last_name: item.last_name || "",
@@ -90,9 +88,16 @@ const RolesPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const email = formData.email.trim();
+    if (!email) {
+      toast.error(t("rolesPage.emailRequired"));
+      return;
+    }
+
     try {
       const payload = {
         ...formData,
+        email,
         is_superuser: formData.role === "administrator",
         is_staff: true,
       };
@@ -123,7 +128,6 @@ const RolesPage = () => {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "username", label: t("rolesPage.username") },
     { key: "email", label: t("rolesPage.email") },
     { key: "first_name", label: t("rolesPage.firstName") },
     { key: "last_name", label: t("rolesPage.lastName") },
@@ -134,10 +138,6 @@ const RolesPage = () => {
     {
       key: "is_staff",
       label: t("rolesPage.staff"),
-    },
-    {
-      key: "is_active",
-      label: t("rolesPage.active"),
     },
     { key: "last_login", label: t("rolesPage.lastLogin"), render: formatDate },
     {
@@ -207,7 +207,6 @@ const RolesPage = () => {
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           {[
-            ["username", t("rolesPage.username"), "text"],
             ["email", t("rolesPage.email"), "email"],
             ["first_name", t("rolesPage.firstName"), "text"],
             ["last_name", t("rolesPage.lastName"), "text"],
@@ -215,13 +214,14 @@ const RolesPage = () => {
             <div key={field}>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {label}
+                {field === "email" && <span className="text-red-600"> *</span>}
               </label>
               <input
                 type={type}
                 value={formData[field]}
                 onChange={updateField(field)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                required={field === "username" || field === "email"}
+                required={field === "email"}
               />
             </div>
           ))}
@@ -238,16 +238,6 @@ const RolesPage = () => {
               </option>
               <option value="staff">{t("rolesPage.staff")}</option>
             </select>
-          </label>
-
-          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-            <input
-              type="checkbox"
-              checked={formData.is_active}
-              onChange={updateField("is_active")}
-              className="h-4 w-4 rounded border-gray-300 text-red-700 focus:ring-red-500"
-            />
-            {t("rolesPage.active")}
           </label>
 
           <div className="flex justify-end gap-3 pt-4">

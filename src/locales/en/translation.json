@@ -42,6 +42,7 @@
     "addNew":"Add New",
     "username":"Username",
     "email":"Email",
+    "emailRequired":"Email is required",
     "firstName":"First name",
     "lastName":"Last name",
     "role":"Role",
