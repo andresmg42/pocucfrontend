@@ -11,6 +11,7 @@ import SurveyPage from "./SurveyPage.jsx";
 import SurveysessionPage from "./SurveysessionPage.jsx";
 import VisitPage from "./VisitPage.jsx";
 import ResponsePage from "./ResponsePage.jsx";
+import RolesPage from "./RolesPage.jsx";
 
 const pageMap = {
   campus: CampusPage,
@@ -23,6 +24,7 @@ const pageMap = {
   surveysession: SurveysessionPage,
   visit: VisitPage,
   response: ResponsePage,
+  roles: RolesPage,
 };
 
 export default function AdminLayout() {

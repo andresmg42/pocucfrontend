@@ -11,6 +11,7 @@
     "surveysession": "Sesiones de Encuesta",
     "visit": "Visitas",
     "response": "Respuestas"
+    
   },
   "dataTable":{
     "actions":"Acciones",
@@ -37,6 +38,37 @@
     "editCampus":"Editar Campus",
     "createCampus":"Crear Campus"
     
+  },
+  "rolesPage":{
+    "title":"Usuarios y roles",
+    "addNew":"Agregar nuevo",
+    "username":"Nombre de usuario",
+    "email":"Correo electrónico",
+    "emailRequired":"El correo electrónico es obligatorio",
+    "firstName":"Nombre",
+    "lastName":"Apellido",
+    "role":"Rol",
+    "administrator":"Administrador",
+    "superuser":"Administrador",
+    "staff":"Personal",
+    "active":"Activo",
+    "lastLogin":"Último inicio de sesión",
+    "dateJoined":"Fecha de registro",
+    "yes":"Sí",
+    "no":"No",
+    "editTitle":"Editar usuario",
+    "createTitle":"Crear usuario",
+    "cancel":"Cancelar",
+    "update":"Actualizar",
+    "create":"Crear",
+    "loading":"Cargando...",
+    "loadError":"Error al cargar los usuarios",
+    "deleteConfirm":"¿Estás seguro de que deseas eliminar a \"{{email}}\"?",
+    "deleteSuccess":"Usuario eliminado correctamente",
+    "deleteError":"Error al eliminar el usuario",
+    "createSuccess":"Usuario creado correctamente",
+    "updateSuccess":"Usuario actualizado correctamente",
+    "saveError":"Error al guardar el usuario"
   },
   "surveyPage":{
     "title":"Encuestas",

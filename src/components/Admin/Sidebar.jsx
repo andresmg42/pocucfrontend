@@ -26,6 +26,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
     { id: "surveysession", labelKey: "menu.surveysession", icon: Users },
     { id: "visit", labelKey: "menu.visit", icon: Calendar },
     { id: "response", labelKey: "menu.response", icon: FileText },
+    { id: "roles", labelKey: "Roles", icon: FileText },
   ];
 
   return (
